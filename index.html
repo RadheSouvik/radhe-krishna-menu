@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="en" class="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Radhe Krishna Menu</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#FF9933',
+                        secondary: '#14532d',
+                        darkBg: '#121212',
+                        cardDark: '#1e1e1e'
+                    },
+                    fontFamily: { sans: ['Poppins', 'sans-serif'] }
+                }
+            }
+        }
+    </script>
+    <style>
+        .scroll-hide::-webkit-scrollbar { display: none; }
+        .glass { background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(5px); }
+        .dark .glass { background: rgba(18, 18, 18, 0.95); }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-800 dark:bg-darkBg dark:text-gray-100 transition-colors duration-300 font-sans pb-28">
+
+    <!-- Header -->
+    <header class="fixed top-0 w-full z-50 glass shadow-sm transition-colors duration-300 border-b dark:border-gray-800">
+        <div class="container mx-auto px-4 py-3 flex justify-between items-center">
+            <div class="flex items-center gap-2">
+                <i class="fas fa-om text-primary text-2xl"></i>
+                <div>
+                    <h1 class="font-bold text-lg leading-tight text-primary">RADHE KRISHNA</h1>
+                    <p class="text-[10px] text-gray-500 dark:text-gray-400 font-semibold tracking-wider">PURE VEG NIGHT MENU</p>
+                </div>
+            </div>
+            <div class="flex gap-3">
+                <button onclick="toggleLang()" class="w-8 h-8 rounded-full bg-gray-100 dark:bg-gray-800 border dark:border-gray-700 flex items-center justify-center font-bold text-xs shadow-sm">
+                    <span id="langBtn">EN</span>
+                </button>
+                <button onclick="toggleTheme()" class="w-8 h-8 rounded-full bg-gray-100 dark:bg-gray-800 border dark:border-gray-700 flex items-center justify-center shadow-sm text-primary">
+                    <i id="themeIcon" class="fas fa-moon"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Info Banner -->
+    <div class="mt-20 container mx-auto px-4">
+        <div class="bg-gradient-to-br from-primary to-orange-600 rounded-2xl p-5 text-white shadow-xl mb-6 relative overflow-hidden">
+            <div class="absolute top-0 right-0 opacity-10 transform translate-x-2 -translate-y-2">
+                <i class="fas fa-leaf text-9xl"></i>
+            </div>
+            <div class="relative z-10">
+                <p class="text-sm font-semibold mb-1 flex items-center gap-2"><i class="fas fa-clock"></i> 9:00 PM – 12:00 AM</p>
+                <p class="text-xs opacity-90 mb-3 bg-black/20 inline-block px-2 py-1 rounded">⚠️ Last Order: 5:00 PM</p>
+                <div class="flex flex-wrap gap-2">
+                    <span class="bg-white text-orange-600 px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wide">Pure Veg</span>
+                    <span class="bg-white text-orange-600 px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wide">No Onion</span>
+                    <span class="bg-white text-orange-600 px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wide">No Garlic</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Categories -->
+        <div class="flex overflow-x-auto gap-3 pb-2 scroll-hide mb-4 sticky top-[68px] z-40 py-2 bg-gray-50 dark:bg-darkBg transition-colors" id="categoryContainer"></div>
+
+        <!-- Search -->
+        <div class="relative mb-6">
+            <input type="text" id="searchInput" class="w-full pl-11 pr-4 py-3 rounded-xl bg-white dark:bg-cardDark border dark:border-gray-700 shadow-sm focus:ring-2 focus:ring-primary outline-none transition-all" placeholder="Search...">
+            <i class="fas fa-search absolute left-4 top-3.5 text-gray-400"></i>
+        </div>
+    </div>
+
+    <!-- Menu Grid -->
+    <div class="container mx-auto px-4">
+        <div id="menuContainer" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 pb-10">
+            <div class="text-center col-span-full py-20">
+                <i class="fas fa-circle-notch fa-spin text-3xl text-primary"></i>
+                <p class="mt-2 text-gray-500">Loading Menu...</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Cart Floating Bar -->
+    <div id="cartBar" onclick="openCartModal()" class="fixed bottom-6 left-4 right-4 bg-secondary text-white p-4 rounded-2xl shadow-2xl flex justify-between items-center transform translate-y-40 transition-transform duration-500 z-40 cursor-pointer border border-green-700/50 backdrop-blur-sm">
+        <div class="flex flex-col">
+            <span class="text-[10px] opacity-80 uppercase tracking-wider" data-translate="items">ITEMS</span>
+            <span class="font-bold text-lg leading-none"><span id="cartCount">0</span></span>
+        </div>
+        <div class="flex items-center gap-3">
+            <span class="font-bold text-xl">₹<span id="cartTotal">0</span></span>
+            <div class="bg-white/20 w-8 h-8 rounded-full flex items-center justify-center backdrop-blur-md">
+                <i class="fas fa-chevron-right text-sm"></i>
+            </div>
+        </div>
+    </div>
+
+    <!-- Cart Modal -->
+    <div id="cartModal" class="fixed inset-0 z-[60] hidden">
+        <div class="absolute inset-0 bg-black/60 backdrop-blur-sm transition-opacity" onclick="closeCartModal()"></div>
+        <div class="absolute bottom-0 w-full bg-white dark:bg-cardDark rounded-t-3xl p-6 min-h-[60vh] max-h-[90vh] flex flex-col transition-transform duration-300 transform translate-y-full shadow-2xl">
+            <div class="w-16 h-1.5 bg-gray-300 dark:bg-gray-600 rounded-full mx-auto mb-6"></div>
+            
+            <h2 class="text-2xl font-bold mb-6 flex items-center gap-2">
+                <i class="fas fa-shopping-bag text-primary"></i> 
+                <span data-translate="yourOrder">Your Order</span>
+            </h2>
+            
+            <div id="cartItemsContainer" class="flex-1 overflow-y-auto mb-4 space-y-4 pr-2"></div>
+
+            <div class="border-t dark:border-gray-700 pt-4 mt-auto">
+                <div class="flex justify-between text-xl font-bold mb-6">
+                    <span data-translate="total">Total</span>
+                    <span class="text-primary">₹<span id="modalTotal">0</span></span>
+                </div>
+                
+                <div class="space-y-3 mb-4">
+                    <input type="text" id="custName" placeholder="Your Name" class="w-full p-3.5 rounded-xl bg-gray-100 dark:bg-gray-800 border-none outline-none focus:ring-1 focus:ring-primary transition-all">
+                    <textarea id="custAddress" placeholder="Delivery Address (Village, Landmark...)" class="w-full p-3.5 rounded-xl bg-gray-100 dark:bg-gray-800 border-none outline-none focus:ring-1 focus:ring-primary transition-all h-24 resize-none"></textarea>
+                </div>
+
+                <button onclick="placeOrder()" class="w-full bg-[#25D366] hover:bg-[#20bd5a] text-white font-bold py-4 rounded-xl flex justify-center items-center gap-2 shadow-lg transition-all active:scale-[0.98]">
+                    <i class="fab fa-whatsapp text-2xl"></i>
+                    <span data-translate="placeOrder" class="uppercase tracking-wide">Order on WhatsApp</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Firebase SDK (Version 8) -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+
+    <script>
+        // আপনার দেওয়া কনফিগ (Realtime Database URL সহ)
+        const firebaseConfig = {
+            apiKey: "AIzaSyDifkwUmP5MehfgXdhFTs6DQzX-pNR2snE",
+            authDomain: "radhe-krishna-1bc79.firebaseapp.com",
+            databaseURL: "https://radhe-krishna-1bc79-default-rtdb.asia-southeast1.firebasedatabase.app",
+            projectId: "radhe-krishna-1bc79",
+            storageBucket: "radhe-krishna-1bc79.firebasestorage.app",
+            messagingSenderId: "755534416421",
+            appId: "1:755534416421:web:6b97cac0c954d223094dcc"
+        };
+        
+        // Initialize Firebase
+        if (!firebase.apps.length) {
+            firebase.initializeApp(firebaseConfig);
+        }
+        const db = firebase.database(); // Realtime Database
+
+        let menuData = [];
+        let cart = {};
+        let currentLang = 'EN';
+
+        const translations = {
+            EN: { items: "ITEMS", yourOrder: "Your Order", total: "Total", placeOrder: "Order on WhatsApp", add: "ADD", search: "Search items..." },
+            BN: { items: "আইটেম", yourOrder: "আপনার অর্ডার", total: "মোট", placeOrder: "হোয়াটসঅ্যাপে অর্ডার করুন", add: "যুক্ত", search: "খাবার খুঁজুন..." }
+        };
+
+        // --- UI Logic ---
+        function toggleTheme() {
+            document.documentElement.classList.toggle('dark');
+            const icon = document.getElementById('themeIcon');
+            icon.className = document.documentElement.classList.contains('dark') ? 'fas fa-sun' : 'fas fa-moon';
+        }
+
+        function toggleLang() {
+            currentLang = currentLang === 'EN' ? 'BN' : 'EN';
+            document.getElementById('langBtn').innerText = currentLang;
+            updateUIText();
+        }
+
+        function updateUIText() {
+            document.querySelectorAll('[data-translate]').forEach(el => {
+                el.innerText = translations[currentLang][el.getAttribute('data-translate')];
+            });
+            document.getElementById('searchInput').placeholder = translations[currentLang].search;
+            renderMenu(menuData);
+        }
+
+        // --- DATA FETCHING (Realtime DB) ---
+        const menuRef = db.ref('menu');
+        menuRef.on('value', (snapshot) => {
+            menuData = [];
+            const data = snapshot.val();
+            if (data) {
+                // Convert Object to Array
+                for (let id in data) {
+                    menuData.push({ id: id, ...data[id] });
+                }
+            }
+            renderCategories();
+            renderMenu(menuData);
+        });
+
+        // --- RENDERING ---
+        function renderCategories() {
+            const categories = ['All', ...new Set(menuData.map(item => item.category))];
+            document.getElementById('categoryContainer').innerHTML = categories.map((cat, i) => `
+                <button onclick="filterCategory('${cat}')" class="whitespace-nowrap px-5 py-2 rounded-full text-sm font-medium transition-all ${i === 0 ? 'bg-primary text-white shadow-md' : 'bg-white dark:bg-cardDark text-gray-600 dark:text-gray-300 border dark:border-gray-700'}">
+                    ${cat}
+                </button>
+            `).join('');
+        }
+
+        function filterCategory(cat) {
+            document.querySelectorAll('#categoryContainer button').forEach(btn => {
+                const isActive = btn.innerText.includes(cat);
+                btn.className = `whitespace-nowrap px-5 py-2 rounded-full text-sm font-medium transition-all ${isActive ? 'bg-primary text-white shadow-md' : 'bg-white dark:bg-cardDark text-gray-600 dark:text-gray-300 border dark:border-gray-700'}`;
+            });
+            renderMenu(cat === 'All' ? menuData : menuData.filter(i => i.category === cat));
+        }
+
+        function renderMenu(items) {
+            const container = document.getElementById('menuContainer');
+            if(items.length === 0) {
+                container.innerHTML = `<p class="col-span-full text-center text-gray-400 py-10">No items found</p>`;
+                return;
+            }
+            container.innerHTML = items.map(item => `
+                <div class="bg-white dark:bg-cardDark rounded-2xl p-3 shadow-sm border border-gray-100 dark:border-gray-800 flex gap-3 h-full">
+                    <div class="w-24 h-24 flex-shrink-0 rounded-xl bg-gray-100 dark:bg-gray-800 overflow-hidden relative">
+                        <img src="${item.image || 'https://via.placeholder.com/150?text=Food'}" class="w-full h-full object-cover">
+                    </div>
+                    <div class="flex-1 flex flex-col justify-between">
+                        <div>
+                            <h3 class="font-bold text-gray-800 dark:text-white leading-tight">${item.name}</h3>
+                            <p class="text-[10px] text-gray-500 dark:text-gray-400 mt-1 line-clamp-2">${item.desc || ''}</p>
+                        </div>
+                        <div class="flex justify-between items-end mt-2">
+                            <span class="font-bold text-lg text-gray-800 dark:text-gray-200">₹${item.price}</span>
+                            <div class="flex items-center">
+                                ${cart[item.id] ? `
+                                    <div class="flex items-center bg-gray-100 dark:bg-gray-700 rounded-lg overflow-hidden">
+                                        <button onclick="updateCart('${item.id}', -1)" class="px-2 py-1 text-gray-600 dark:text-white">-</button>
+                                        <span class="px-2 text-sm font-bold text-primary">${cart[item.id].qty}</span>
+                                        <button onclick="updateCart('${item.id}', 1)" class="px-2 py-1 text-gray-600 dark:text-white">+</button>
+                                    </div>
+                                ` : `
+                                    <button onclick="addToCart('${item.id}')" class="bg-white dark:bg-transparent border border-primary text-primary px-4 py-1.5 rounded-lg text-xs font-bold shadow-sm uppercase hover:bg-primary hover:text-white transition-all">
+                                        ${translations[currentLang].add}
+                                    </button>
+                                `}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // --- CART LOGIC ---
+        function addToCart(id) {
+            const item = menuData.find(i => i.id === id);
+            cart[id] = { ...item, qty: 1 };
+            updateCartUI();
+        }
+
+        function updateCart(id, change) {
+            cart[id].qty += change;
+            if (cart[id].qty <= 0) delete cart[id];
+            updateCartUI();
+        }
+
+        function updateCartUI() {
+            const totalQty = Object.values(cart).reduce((a, b) => a + b.qty, 0);
+            const totalPrice = Object.values(cart).reduce((a, b) => a + (b.price * b.qty), 0);
+            
+            document.getElementById('cartCount').innerText = totalQty;
+            document.getElementById('cartTotal').innerText = totalPrice;
+            document.getElementById('modalTotal').innerText = totalPrice;
+            
+            const cartBar = document.getElementById('cartBar');
+            renderMenu(menuData.filter(item => {
+                 // Keep current filter view logic if needed, but for now re-render all to show +/-
+                 // Ideally store current filter state, but simple re-render is okay
+                 return true; 
+            })); 
+            // Re-apply filter visual fix
+            const activeBtn = document.querySelector('#categoryContainer button.bg-primary');
+            if(activeBtn) filterCategory(activeBtn.innerText.trim());
+            else renderMenu(menuData);
+
+            renderCartItems();
+
+            if (totalQty > 0) cartBar.classList.remove('translate-y-40');
+            else cartBar.classList.add('translate-y-40');
+        }
+
+        function renderCartItems() {
+            const container = document.getElementById('cartItemsContainer');
+            if (Object.keys(cart).length === 0) {
+                container.innerHTML = `<div class="text-center py-10 opacity-50"><i class="fas fa-shopping-basket text-4xl mb-2"></i><p>Empty Cart</p></div>`;
+                return;
+            }
+            container.innerHTML = Object.values(cart).map(item => `
+                <div class="flex justify-between items-center bg-gray-50 dark:bg-gray-800/50 p-4 rounded-xl border dark:border-gray-700">
+                    <div class="flex-1">
+                        <div class="text-sm font-bold text-gray-800 dark:text-white">${item.name}</div>
+                        <div class="text-xs text-gray-500">₹${item.price} x ${item.qty}</div>
+                    </div>
+                    <div class="font-bold text-gray-700 dark:text-gray-300 mr-4">₹${item.price * item.qty}</div>
+                    <div class="flex items-center gap-3 bg-white dark:bg-gray-700 rounded-lg px-2 py-1 shadow-sm">
+                        <button onclick="updateCart('${item.id}', -1)" class="text-red-500"><i class="fas fa-minus text-xs"></i></button>
+                        <span class="text-sm font-bold w-4 text-center">${item.qty}</span>
+                        <button onclick="updateCart('${item.id}', 1)" class="text-green-600"><i class="fas fa-plus text-xs"></i></button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // --- MODALS ---
+        function openCartModal() {
+            document.getElementById('cartModal').classList.remove('hidden');
+            setTimeout(() => document.querySelector('#cartModal > div:last-child').classList.remove('translate-y-full'), 10);
+        }
+        function closeCartModal() {
+            document.querySelector('#cartModal > div:last-child').classList.add('translate-y-full');
+            setTimeout(() => document.getElementById('cartModal').classList.add('hidden'), 300);
+        }
+
+        // --- WHATSAPP ORDER ---
+        function placeOrder() {
+            const name = document.getElementById('custName').value.trim();
+            const address = document.getElementById('custAddress').value.trim();
+            
+            if (!name || !address) {
+                alert("Please enter Name and Address!");
+                return;
+            }
+
+            // Fetch WhatsApp Number from Realtime DB
+            db.ref('settings/whatsappNumber').once('value').then((snapshot) => {
+                const whatsappNumber = snapshot.val();
+                
+                if (!whatsappNumber) {
+                    alert("Admin has not set a WhatsApp number yet!");
+                    return;
+                }
+
+                let message = `*RADHE KRISHNA - NEW ORDER* 🌿\n`;
+                message += `-----------------------------\n`;
+                message += `👤 Name: ${name}\n`;
+                message += `📍 Address: ${address}\n`;
+                message += `-----------------------------\n`;
+                
+                let total = 0;
+                Object.values(cart).forEach(item => {
+                    message += `🍱 ${item.name} x ${item.qty} = ₹${item.price * item.qty}\n`;
+                    total += item.price * item.qty;
+                });
+                
+                message += `-----------------------------\n`;
+                message += `💰 *PAYABLE: ₹${total}*\n`;
+                
+                const url = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`;
+                window.open(url, '_blank');
+            }).catch((error) => {
+                console.error(error);
+                alert("Connection Error!");
+            });
+        }
+
+        document.getElementById('searchInput').addEventListener('input', (e) => {
+            const val = e.target.value.toLowerCase();
+  
