@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin - Radhe Krishna</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>body { font-family: 'Poppins', sans-serif; }</style>
+</head>
+<body class="bg-gray-100 text-gray-800 pb-20">
+
+    <div class="max-w-4xl mx-auto p-4">
+        <!-- Header -->
+        <div class="flex flex-col md:flex-row justify-between items-center mb-6 bg-white p-5 rounded-xl shadow-sm border border-gray-200 gap-4">
+            <div>
+                <h1 class="text-2xl font-bold text-orange-600">ADMIN PANEL</h1>
+                <p class="text-xs text-gray-500">Realtime Database Manager</p>
+            </div>
+            <div class="flex gap-3">
+                 <button onclick="loadDefaultMenu()" class="bg-gray-800 hover:bg-black text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors flex items-center gap-2">
+                    <i class="fas fa-cloud-upload-alt"></i> Load Default Menu
+                </button>
+                <a href="index.html" target="_blank" class="bg-orange-100 text-orange-600 px-4 py-2 rounded-lg text-sm font-bold">
+                    View User Panel
+                </a>
+            </div>
+        </div>
+
+        <!-- WhatsApp Settings -->
+        <div class="bg-white p-6 rounded-xl shadow-md mb-8 border border-green-100 relative overflow-hidden">
+            <h2 class="text-lg font-bold mb-4 text-gray-700 flex items-center gap-2">
+                <i class="fab fa-whatsapp text-green-600"></i> WhatsApp Configuration
+            </h2>
+            <div class="flex flex-col md:flex-row gap-4 items-end">
+                <div class="flex-1 w-full">
+                    <label class="block text-xs font-bold text-gray-500 mb-1">Receiver Number (e.g. 918609386272)</label>
+                    <input type="text" id="waNumber" class="w-full p-3 border rounded-lg bg-gray-50 focus:border-green-500 outline-none">
+                </div>
+                <button onclick="saveWhatsApp()" class="bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-6 rounded-lg w-full md:w-auto">SAVE</button>
+            </div>
+        </div>
+
+        <!-- Add/Edit Item Form -->
+        <div class="bg-white p-6 rounded-xl shadow-md mb-8 border border-gray-200" id="formSection">
+            <h2 class="text-lg font-bold mb-4 border-b pb-2 text-gray-700" id="formTitle">Add New Item</h2>
+            <form id="itemForm" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <input type="hidden" id="editId"> <!-- Hidden ID for Editing -->
+                
+                <div>
+                    <label class="block text-xs font-bold text-gray-500 mb-1">Item Name</label>
+                    <input type="text" id="itemName" required class="w-full p-2.5 border rounded-lg bg-gray-50 focus:border-orange-500 outline-none">
+                </div>
+
+                <div>
+                    <label class="block text-xs font-bold text-gray-500 mb-1">Price (₹)</label>
+                    <input type="number" id="itemPrice" required class="w-full p-2.5 border rounded-lg bg-gray-50 focus:border-orange-500 outline-none">
+                </div>
+
+                <div>
+                    <label class="block text-xs font-bold text-gray-500 mb-1">Category</label>
+                    <select id="itemCategory" class="w-full p-2.5 border rounded-lg bg-gray-50 outline-none">
+                        <option value="Thali Special">Thali Special</option>
+                        <option value="Rice & Biriyani">Rice & Biriyani</option>
+                        <option value="Dal & Curry">Dal & Curry</option>
+                        <option value="Roti & Paratha">Roti / Luchi / Paratha</option>
+                        <option value="Snacks & Rolls">Snacks & Rolls</option>
+                        <option value="Maggi Special">Maggi Special</option>
+                        <option value="Extra">Extra</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-bold text-gray-500 mb-1">Image URL</label>
+                    <input type="url" id="itemImage" class="w-full p-2.5 border rounded-lg bg-gray-50 focus:border-orange-500 outline-none">
+                </div>
+
+                <div class="md:col-span-2">
+                    <label class="block text-xs font-bold text-gray-500 mb-1">Description</label>
+                    <textarea id="itemDesc" class="w-full p-2.5 border rounded-lg bg-gray-50 focus:border-orange-500 outline-none h-20"></textarea>
+                </div>
+
+                <div class="md:col-span-2 flex gap-3">
+                    <button type="submit" id="submitBtn" class="flex-1 bg-orange-600 hover:bg-orange-700 text-white font-bold py-3 rounded-lg transition-colors shadow-lg">
+                        ADD TO MENU
+                    </button>
+                    <button type="button" onclick="resetForm()" id="cancelBtn" class="hidden px-6 bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-3 rounded-lg">
+                        CANCEL
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Menu List -->
+        <div class="bg-white p-6 rounded-xl shadow-md border border-gray-200">
+            <h2 class="text-lg font-bold mb-4 text-gray-700">Current Menu Items</h2>
+            <div id="adminMenuList" class="space-y-3">
+                <p class="text-center text-gray-400 py-4">Loading...</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Firebase SDK (Version 8) -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+
+    <script>
+        const firebaseConfig = {
+            apiKey: "AIzaSyDifkwUmP5MehfgXdhFTs6DQzX-pNR2snE",
+            authDomain: "radhe-krishna-1bc79.firebaseapp.com",
+            databaseURL: "https://radhe-krishna-1bc79-default-rtdb.asia-southeast1.firebasedatabase.app",
+            projectId: "radhe-krishna-1bc79",
+            storageBucket: "radhe-krishna-1bc79.firebasestorage.app",
+            messagingSenderId: "755534416421",
+            appId: "1:755534416421:web:6b97cac0c954d223094dcc"
+        };
+
+        if (!firebase.apps.length) {
+            firebase.initializeApp(firebaseConfig);
+        }
+        const db = firebase.database();
+
+        // 1. WhatsApp Logic (Realtime DB)
+        function getWhatsApp() {
+            db.ref('settings/whatsappNumber').on('value', (snapshot) => {
+                const val = snapshot.val();
+                if(val) {
+                    document.getElementById('waNumber').value = val;
+                }
+            });
+        }
+        getWhatsApp();
+
+        function saveWhatsApp() {
+            const num = document.getElementById('waNumber').value.trim();
+            if(!num) return alert("Please enter a number");
+            db.ref('settings/whatsappNumber').set(num)
+            .then(() => alert("WhatsApp Number Updated!"));
+        }
+
+        // 2. Load & Render Menu (Realtime DB)
+        let allItems = []; 
+        
+        db.ref('menu').on('value', (snapshot) => {
+            const list = document.getElementById('adminMenuList');
+            list.innerHTML = "";
+            allItems = [];
+            const data = snapshot.val();
+
+            if(!data) {
+                list.innerHTML = "<p class='text-center text-gray-400'>No items found.</p>";
+                return;
+            }
+
+            // Convert object to array and store
+            for(let id in data) {
+                allItems.push({ id: id, ...data[id] });
+            }
+            
+            // Sort by category (Optional, manual sort required in JS)
+            allItems.sort((a, b) => a.category.localeCompare(b.category));
+
+            allItems.forEach((item) => {
+                const div = document.createElement('div');
+                div.className = "flex items-center justify-between bg-gray-50 p-3 rounded-lg border border-gray-100 hover:shadow-sm transition-shadow";
+                div.innerHTML = `
+                    <div class="flex items-center gap-3">
+                        <img src="${item.image || 'https://via.placeholder.com/50'}" class="w-12 h-12 rounded-lg object-cover bg-gray-200">
+                        <div>
+                            <h4 class="font-bold text-gray-800 text-sm">${item.name}</h4>
+                            <p class="text-[10px] text-gray-500 uppercase tracking-wide font-semibold">${item.category} | ₹${item.price}</p>
+                        </div>
+                    </div>
+                    <div class="flex gap-2">
+                        <button onclick="editItem('${item.id}')" class="bg-blue-100 text-blue-600 hover:bg-blue-200 w-8 h-8 rounded-full flex items-center justify-center transition-colors">
+                            <i class="fas fa-pencil-alt text-xs"></i>
+                        </button>
+                        <button onclick="deleteItem('${item.id}')" class="bg-red-100 text-red-500 hover:bg-red-200 w-8 h-8 rounded-full flex items-center justify-center transition-colors">
+                            <i class="fas fa-trash text-xs"></i>
+                        </button>
+                    </div>
+                `;
+                list.appendChild(div);
+            });
+        });
+
+        // 3. Add / Update Logic
+        document.getElementById('itemForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const id = document.getElementById('editId').value;
+            
+            const data = {
+                name: document.getElementById('itemName').value,
+                price: Number(document.getElementById('itemPrice').value),
+                category: document.getElementById('itemCategory').value,
+                desc: document.getElementById('itemDesc').value,
+                image: document.getElementById('itemImage').value
+            };
+
+            if (id) {
+                // UPDATE (Realtime DB)
+                db.ref('menu/' + id).update(data).then(() => {
+                    alert("Item Updated Successfully!");
+                    resetForm();
+                }).catch(err => alert("Error: " + err.message));
+            } else {
+                // ADD (Realtime DB push creates unique ID)
+                db.ref('menu').push(data).then(() => {
+                    alert("Item Added Successfully!");
+                    resetForm();
+                }).catch(err => alert("Error: " + err.message));
+            }
+        });
+
+        // 4. Edit Function
+        window.editItem = function(id) {
+            const item = allItems.find(i => i.id === id);
+            if(item) {
+                document.getElementById('editId').value = id;
+                document.getElementById('itemName').value = item.name;
+                document.getElementById('itemPrice').value = item.price;
+                document.getElementById('itemCategory').value = item.category;
+                document.getElementById('itemDesc').value = item.desc;
+                document.getElementById('itemImage').value = item.image;
+
+                // UI Changes
+                document.getElementById('formTitle').innerText = "Edit Item";
+                document.getElementById('submitBtn').innerText = "UPDATE ITEM";
+                document.getElementById('submitBtn').classList.remove('bg-orange-600', 'hover:bg-orange-700');
+                document.getElementById('submitBtn').classList.add('bg-blue-600', 'hover:bg-blue-700');
+                document.getElementById('cancelBtn').classList.remove('hidden');
+                
+                document.getElementById('formSection').scrollIntoView({ behavior: 'smooth' });
+            }
+        }
+
+        // 5. Delete Function
+        window.deleteItem = function(id) {
+            if(confirm("Are you sure?")) {
+                db.ref('menu/' + id).remove();
+            }
+        }
+
+        // 6. Reset Form
+        window.resetForm = function() {
+            document.getElementById('itemForm').reset();
+            document.getElementById('editId').value = "";
+            document.getElementById('formTitle').innerText = "Add New Item";
+            document.getElementById('submitBtn').innerText = "ADD TO MENU";
+            document.getElementById('submitBtn').classList.add('bg-orange-600', 'hover:bg-orange-700');
+            document.getElementById('submitBtn').classList.remove('bg-blue-600', 'hover:bg-blue-700');
+            document.getElementById('cancelBtn').classList.add('hidden');
+        }
+
+        // 7. Default Menu Data
+        const defaultMenuData = [
+            { name: "Dal Thali", price: 70, category: "Thali Special", desc: "Rice (1 bowl) + Dal (1 bowl) + Papad (3 pcs)" },
+            { name: "Paneer Thali", price: 90, category: "Thali Special", desc: "Rice (1 bowl) + Paneer Curry (1 bowl)" },
+            { name: "Soyabean Thali", price: 85, category: "Thali Special", desc: "Rice (1 bowl) + Soyabean Curry (1 bowl)" },
+            { name: "Papad Curry Thali", price: 95, category: "Thali Special", desc: "Rice (1 bowl) + Papad Curry (1 bowl)" },
+            { name: "Special Combo Thali", price: 150, category: "Thali Special", desc: "Rice + Dal + Paneer Curry + Begun Bhaja (2) + Papad (3) + Water" },
+            { name: "Veg Fried Rice", price: 85, category: "Rice & Biriyani", desc: "" },
+            { name: "Veg Pulao", price: 95, category: "Rice & Biriyani", desc: "" },
+            { name: "Plain Rice", price: 50, category: "Rice & Biriyani", desc: "" },
+            { name: "Fried Rice + Paneer Masala", price: 185, category: "Rice & Biriyani", desc: "Combo Pack" },
+            { name: "Pulao + Paneer Masala", price: 190, category: "Rice & Biriyani", desc: "Combo Pack" },
+            { name: "Veg Biriyani", price: 75, category: "Rice & Biriyani", desc: "" },
+            { name: "Paneer Biriyani", price: 90, category: "Rice & Biriyani", desc: "" },
+            { name: "Soyabean Biriyani", price: 85, category: "Rice & Biriyani", desc: "" },
+            { name: "Gobindobhog Khichuri", price: 100, category: "Rice & Biriyani", desc: "" },
+            { name: "Matar Dal", price: 60, category: "Dal & Curry", desc: "" },
+            { name: "Cholar Dal", price: 70, category: "Dal & Curry", desc: "" },
+            { name: "Paneer Masala", price: 120, category: "Dal & Curry", desc: "" },
+            { name: "Paneer Bhapa", price: 90, category: "Dal & Curry", desc: "" },
+            { name: "Luchi (5 pcs)", price: 50, category: "Roti & Paratha", desc: "" },
+            { name: "Roti (2 pcs)", price: 20, category: "Roti & Paratha", desc: "" },
+            { name: "Roti (4 pcs) + Aloo Sabzi", price: 80, category: "Roti & Paratha", desc: "" },
+            { name: "Paratha (2 pcs)", price: 40, category: "Roti & Paratha", desc: "" },
+            { name: "Paratha (2 pcs) + Aloo Sabzi", price: 85, category: "Roti & Paratha", desc: "" },
+            { name: "Soyabean Pakora", price: 10, category: "Snacks & Rolls", desc: "Per pc" },
+            { name: "Paneer Pakora", price: 15, category: "Snacks & Rolls", desc: "Per pc" },
+            { name: "Aloo Paneer Pakora", price: 10, category: "Snacks & Rolls", desc: "Per pc" },
+            { name: "Maggi Pakora", price: 15, category: "Snacks & Rolls", desc: "Per pc" },
+            { name: "Veg Roll", price: 50, category: "Snacks & Rolls", desc: "" },
+            { name: "Paneer Roll", price: 80, category: "Snacks & Rolls", desc: "" },
+            { name: "Veg Maggi", price: 70, category: "Maggi Special", desc: "" },
+            { name: "Masala Maggi", price: 80, category: "Maggi Special", desc: "" },
+            { name: "Paneer Maggi", price: 140, category: "Maggi Special", desc: "" },
+            { name: "Water Bottle", price: 10, category: "Extra", desc: "" }
+        ];
+
+        window.loadDefaultMenu = function() {
+            if(confirm("Add all default items to database?")) {
+                defaultMenuData.forEach((item) => {
+                    db.ref('menu').push({ ...item, image: "" });
+                });
+                alert("Items Loaded!");
+            }
+        }
+    </script>
+</body>
+                                                                       </html>
