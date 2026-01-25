@@ -8,23 +8,18 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         body { font-family: 'Inter', sans-serif; margin: 0; background: #f3f4f6; display: flex; height: 100vh; overflow: hidden; }
-        
         .loader-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255,255,255,0.8); z-index: 9999; display: none; justify-content: center; align-items: center; flex-direction: column; }
         .spinner { border: 4px solid #f3f3f3; border-top: 4px solid #3498db; border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-
         .sidebar { width: 250px; background: #1e293b; padding: 20px; display: flex; flex-direction: column; color: #94a3b8; }
         .nav-btn { padding: 12px; margin-bottom: 5px; cursor: pointer; border-radius: 6px; display: flex; align-items: center; gap: 10px; }
         .nav-btn.active, .nav-btn:hover { background: #334155; color: white; }
-
         .main { flex: 1; padding: 30px; overflow-y: auto; }
         .page { display: none; } .page.active { display: block; }
         .card { background: white; padding: 25px; border-radius: 10px; margin-bottom: 20px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); }
-
         input, select { width: 100%; padding: 10px; margin: 10px 0; border: 1px solid #ccc; border-radius: 6px; box-sizing: border-box; }
         .btn { padding: 10px 20px; border: none; border-radius: 6px; color: white; cursor: pointer; }
         .bg-blue { background: #3b82f6; } .bg-red { background: #ef4444; } .bg-green { background: #10b981; }
-
         .switch { position: relative; display: inline-block; width: 40px; height: 22px; }
         .switch input { opacity: 0; width: 0; height: 0; }
         .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #ccc; transition: .4s; border-radius: 34px; }
@@ -35,10 +30,7 @@
 </head>
 <body>
 
-    <div class="loader-overlay" id="loader">
-        <div class="spinner"></div>
-        <p style="margin-top:10px; font-weight:600;">Updating...</p>
-    </div>
+    <div class="loader-overlay" id="loader"><div class="spinner"></div><p style="margin-top:10px; font-weight:600;">Updating...</p></div>
 
     <div class="sidebar">
         <h3 style="color:white; margin-top:0;">Radhe Admin</h3>
@@ -53,16 +45,14 @@
             <h2>Dashboard</h2>
             <div class="card">
                 <div style="display:flex; justify-content:space-between; align-items:center;">
-                    <strong>Restaurant Status (Open/Close)</strong>
+                    <strong>Restaurant Status</strong>
                     <label class="switch"><input type="checkbox" id="shop-open"><span class="slider"></span></label>
                 </div>
             </div>
             <div class="card">
-                <h3>Contact Numbers (10 Digits Only)</h3>
-                <label>Order WhatsApp Number:</label>
-                <input type="number" id="wa-ord" placeholder="Ex: 9876543210">
-                <label>Call Button Number:</label>
-                <input type="number" id="wa-call" placeholder="Ex: 9876543210">
+                <h3>Contact Numbers (10 Digits)</h3>
+                <label>Order WhatsApp:</label><input type="number" id="wa-ord" placeholder="Ex: 9876543210">
+                <label>Call Button:</label><input type="number" id="wa-call" placeholder="Ex: 9876543210">
             </div>
             <div class="card">
                 <h3>Marquee Text</h3>
@@ -91,15 +81,14 @@
                 <input type="text" id="i-desc" placeholder="Description">
                 <button class="btn bg-green" onclick="addItem()">Add Item</button>
             </div>
-            <div class="card">
-                <h3>Manage Items</h3>
-                <div id="item-list"></div>
-            </div>
+            <div class="card"><h3>Manage Items</h3><div id="item-list"></div></div>
         </div>
 
         <div id="design" class="page">
             <h2>Banners</h2>
             <div class="card">
+                <label>Banner Speed (Seconds):</label><input type="number" id="ban-speed" placeholder="3">
+                <br>
                 <input type="text" id="b1" placeholder="Banner 1 Link">
                 <input type="text" id="b2" placeholder="Banner 2 Link">
                 <input type="text" id="b3" placeholder="Banner 3 Link">
@@ -111,7 +100,6 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js";
         import { getDatabase, ref, onValue, update, push, remove } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-database.js";
-
         const firebaseConfig = {
             apiKey: "AIzaSyDifkwUmP5MehfgXdhFTs6DQzX-pNR2snE",
             authDomain: "radhe-krishna-1bc79.firebaseapp.com",
@@ -121,10 +109,8 @@
             messagingSenderId: "755534416421",
             appId: "1:755534416421:web:6b97cac0c954d223094dcc"
         };
-
         const app = initializeApp(firebaseConfig);
         const db = getDatabase(app);
-
         let cats={}, menu={};
         const loader = document.getElementById('loader');
         const showLoad = () => loader.style.display = 'flex';
@@ -140,139 +126,47 @@
         onValue(ref(db, 'config'), snap => {
             const c = snap.val() || {};
             document.getElementById('shop-open').checked = c.restaurantOpen;
-            
-            // Auto Strip 91 for display
-            let wa = c.whatsappOrderNumber || "";
-            if(wa.startsWith("91")) wa = wa.substring(2);
-            document.getElementById('wa-ord').value = wa;
-
-            let call = c.contactCallNumber || "";
-            if(call.startsWith("91")) call = call.substring(2);
-            document.getElementById('wa-call').value = call;
-
+            let wa = c.whatsappOrderNumber || ""; if(wa.startsWith("91")) wa = wa.substring(2); document.getElementById('wa-ord').value = wa;
+            let call = c.contactCallNumber || ""; if(call.startsWith("91")) call = call.substring(2); document.getElementById('wa-call').value = call;
             document.getElementById('marquee-txt').value = c.marqueeText || '';
-            if(c.banners){
-                document.getElementById('b1').value=c.banners[0]||'';
-                document.getElementById('b2').value=c.banners[1]||'';
-                document.getElementById('b3').value=c.banners[2]||'';
-            }
+            document.getElementById('ban-speed').value = c.bannerSpeed || 3;
+            if(c.banners){ document.getElementById('b1').value=c.banners[0]||''; document.getElementById('b2').value=c.banners[1]||''; document.getElementById('b3').value=c.banners[2]||''; }
         });
-
         onValue(ref(db, 'categories'), snap => { cats = snap.val() || {}; renderCats(); });
         onValue(ref(db, 'menu'), snap => { menu = snap.val() || {}; renderMenu(); });
 
         window.saveSettings = () => {
             showLoad();
-            
-            // Auto Add 91 prefix
-            let rawWa = document.getElementById('wa-ord').value;
-            let finalWa = rawWa ? "91" + rawWa : "";
-
-            let rawCall = document.getElementById('wa-call').value;
-            let finalCall = rawCall ? "91" + rawCall : "";
-
-            update(ref(db, 'config'), {
-                restaurantOpen: document.getElementById('shop-open').checked,
-                whatsappOrderNumber: finalWa,
-                contactCallNumber: finalCall,
-                marqueeText: document.getElementById('marquee-txt').value
-            }).then(() => { hideLoad(); alert('Settings Saved!'); });
+            let rawWa = document.getElementById('wa-ord').value; let finalWa = rawWa ? "91" + rawWa : "";
+            let rawCall = document.getElementById('wa-call').value; let finalCall = rawCall ? "91" + rawCall : "";
+            update(ref(db, 'config'), { restaurantOpen: document.getElementById('shop-open').checked, whatsappOrderNumber: finalWa, contactCallNumber: finalCall, marqueeText: document.getElementById('marquee-txt').value }).then(() => { hideLoad(); alert('Settings Saved!'); });
         }
 
         window.saveBanners = () => {
             showLoad();
-            update(ref(db, 'config'), {
-                banners: [
-                    document.getElementById('b1').value,
-                    document.getElementById('b2').value,
-                    document.getElementById('b3').value
-                ]
-            }).then(() => { hideLoad(); alert('Banners Updated!'); });
+            update(ref(db, 'config'), { bannerSpeed: parseInt(document.getElementById('ban-speed').value), banners: [ document.getElementById('b1').value, document.getElementById('b2').value, document.getElementById('b3').value ] }).then(() => { hideLoad(); alert('Banners Updated!'); });
         }
 
-        window.addCat = () => {
-            const n = document.getElementById('cat-name').value;
-            if(!n) return;
-            showLoad();
-            push(ref(db, 'categories'), { name: n }).then(()=>{
-                hideLoad(); document.getElementById('cat-name').value='';
-            });
-        }
-
-        window.delCat = (id) => {
-            for(let key in menu) {
-                if(menu[key].category === id) {
-                    alert("Cannot delete! Remove items from this category first.");
-                    return;
-                }
-            }
-            if(confirm("Delete Category?")) {
-                showLoad();
-                remove(ref(db, `categories/${id}`)).then(hideLoad);
-            }
-        }
+        window.addCat = () => { const n = document.getElementById('cat-name').value; if(!n) return; showLoad(); push(ref(db, 'categories'), { name: n }).then(()=>{ hideLoad(); document.getElementById('cat-name').value=''; }); }
+        window.delCat = (id) => { for(let key in menu) { if(menu[key].category === id) { alert("Cannot delete! Remove items first."); return; } } if(confirm("Delete Category?")) { showLoad(); remove(ref(db, `categories/${id}`)).then(hideLoad); } }
 
         function renderCats() {
-            const list = document.getElementById('cat-list');
-            const sel = document.getElementById('i-cat');
-            list.innerHTML = ''; sel.innerHTML = '';
-            for(let id in cats) {
-                list.innerHTML += `<div style="display:flex; justify-content:space-between; padding:8px; border-bottom:1px solid #ddd;"><b>${cats[id].name}</b> <button class="btn bg-red" style="padding:5px;" onclick="delCat('${id}')">X</button></div>`;
-                sel.innerHTML += `<option value="${id}">${cats[id].name}</option>`;
-            }
+            const list = document.getElementById('cat-list'); const sel = document.getElementById('i-cat'); list.innerHTML = ''; sel.innerHTML = '';
+            for(let id in cats) { list.innerHTML += `<div style="display:flex; justify-content:space-between; padding:8px; border-bottom:1px solid #ddd;"><b>${cats[id].name}</b> <button class="btn bg-red" style="padding:5px;" onclick="delCat('${id}')">X</button></div>`; sel.innerHTML += `<option value="${id}">${cats[id].name}</option>`; }
         }
 
         window.addItem = () => {
-            const name = document.getElementById('i-name').value;
-            if(!name) return;
-            showLoad();
-            push(ref(db, 'menu'), {
-                name: name,
-                price: parseInt(document.getElementById('i-price').value),
-                category: document.getElementById('i-cat').value,
-                image: document.getElementById('i-img').value,
-                description: document.getElementById('i-desc').value,
-                isAvailable: true
-            }).then(()=>{
-                hideLoad();
-                document.getElementById('i-name').value='';
-                document.getElementById('i-price').value='';
-                document.getElementById('i-img').value='';
-                document.getElementById('i-desc').value='';
-            });
+            const name = document.getElementById('i-name').value; if(!name) return; showLoad();
+            push(ref(db, 'menu'), { name: name, price: parseInt(document.getElementById('i-price').value), category: document.getElementById('i-cat').value, image: document.getElementById('i-img').value, description: document.getElementById('i-desc').value, isAvailable: true }).then(()=>{ hideLoad(); document.getElementById('i-name').value=''; document.getElementById('i-price').value=''; document.getElementById('i-img').value=''; document.getElementById('i-desc').value=''; });
         }
 
-        window.toggleItem = (id, status) => {
-            update(ref(db, `menu/${id}`), { isAvailable: status });
-        }
-
-        window.delItem = (id) => {
-            if(confirm("Delete Item?")) {
-                showLoad();
-                remove(ref(db, `menu/${id}`)).then(hideLoad);
-            }
-        }
+        window.toggleItem = (id, status) => { update(ref(db, `menu/${id}`), { isAvailable: status }); }
+        window.delItem = (id) => { if(confirm("Delete Item?")) { showLoad(); remove(ref(db, `menu/${id}`)).then(hideLoad); } }
 
         function renderMenu() {
-            const list = document.getElementById('item-list');
-            list.innerHTML = '';
-            for(let id in menu) {
-                let i = menu[id];
-                let checked = i.isAvailable !== false ? 'checked' : '';
-                list.innerHTML += `
-                <div style="background:white; padding:10px; border-bottom:1px solid #eee; display:flex; justify-content:space-between; align-items:center;">
-                    <div>
-                        <b>${i.name}</b> (${i.price})<br>
-                        <small>${cats[i.category]?.name || 'Unknown'}</small>
-                    </div>
-                    <div style="display:flex; gap:10px; align-items:center;">
-                        <label class="switch"><input type="checkbox" ${checked} onchange="toggleItem('${id}', this.checked)"><span class="slider"></span></label>
-                        <button class="btn bg-red" style="padding:5px 10px;" onclick="delItem('${id}')"><i class="fas fa-trash"></i></button>
-                    </div>
-                </div>`;
-            }
+            const list = document.getElementById('item-list'); list.innerHTML = '';
+            for(let id in menu) { let i = menu[id]; let checked = i.isAvailable !== false ? 'checked' : ''; list.innerHTML += `<div style="background:white; padding:10px; border-bottom:1px solid #eee; display:flex; justify-content:space-between; align-items:center;"><div><b>${i.name}</b> (${i.price})<br><small>${cats[i.category]?.name || 'Unknown'}</small></div><div style="display:flex; gap:10px; align-items:center;"><label class="switch"><input type="checkbox" ${checked} onchange="toggleItem('${id}', this.checked)"><span class="slider"></span></label><button class="btn bg-red" style="padding:5px 10px;" onclick="delItem('${id}')"><i class="fas fa-trash"></i></button></div></div>`; }
         }
-
     </script>
 </body>
 </html>
