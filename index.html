@@ -13,7 +13,7 @@
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         body.modal-open { overflow: hidden; height: 100vh; }
         body { margin: 0; font-family: 'Manrope', 'Hind Siliguri', sans-serif; background: var(--bg-body); color: var(--text-main); padding-bottom: 140px; -webkit-user-select: none; user-select: none; }
-        img { pointer-events: none; } /* Disable Image Save */
+        img { pointer-events: none; -webkit-touch-callout: none; }
 
         /* Toast */
         .custom-toast { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0.9); background: rgba(0, 0, 0, 0.85); color: white; padding: 15px 25px; border-radius: 50px; font-weight: 600; z-index: 9999; opacity: 0; visibility: hidden; transition: all 0.3s ease; pointer-events: none; display: flex; align-items: center; gap: 10px; }
@@ -31,8 +31,9 @@
         .slide { width: 100%; height: 100%; object-fit: cover; position: absolute; opacity: 0; transition: opacity 0.8s; }
         .slide.active { opacity: 1; }
 
+        /* Cat & Menu */
         .cat-row { display: flex; gap: 10px; overflow-x: auto; padding-bottom: 5px; scrollbar-width: none; margin-bottom: 20px; }
-        .cat-pill { background: var(--bg-surface); padding: 8px 16px; border-radius: 50px; font-weight: 600; font-size: 0.9rem; color: var(--text-light); border: 1px solid transparent; cursor: pointer; white-space: nowrap; }
+        .cat-pill { background: var(--bg-surface); padding: 8px 16px; border-radius: 50px; font-weight: 600; font-size: 0.9rem; color: var(--text-light); border: 1px solid transparent; cursor: pointer; white-space: nowrap; transition: 0.2s; }
         .cat-pill.active { background: var(--primary); color: white; }
 
         .menu-item { background: var(--bg-surface); padding: 12px; border-radius: 16px; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; box-shadow: var(--shadow); cursor: pointer; }
@@ -43,44 +44,45 @@
         .qty-control { position: absolute; bottom: -8px; background: var(--primary); color: white; display: flex; align-items: center; border-radius: 6px; height: 32px; box-shadow: 0 2px 8px rgba(0,0,0,0.2); overflow: hidden; }
         .q-btn { width: 30px; height: 100%; display: flex; align-items: center; justify-content: center; font-weight: bold; cursor: pointer; }
 
-        /* Location */
-        .location-box { background: var(--bg-surface); padding: 15px; border-radius: 16px; margin-top: 25px; box-shadow: var(--shadow); text-align: center; }
-        .map-frame { width: 100%; height: 200px; border-radius: 12px; border: 0; margin-bottom: 15px; background: #eee; }
-        .btn-dir { background: #3498db; color: white; padding: 12px 20px; border-radius: 50px; text-decoration: none; font-weight: 700; display: inline-flex; align-items: center; gap: 8px; box-shadow: 0 4px 10px rgba(52, 152, 219, 0.3); }
-
+        /* Floating UI */
         .float-cart { position: fixed; bottom: 80px; left: 50%; transform: translateX(-50%); width: 90%; max-width: 500px; background: #2c3e50; color: white; padding: 12px 20px; border-radius: 50px; display: none; justify-content: space-between; align-items: center; box-shadow: 0 10px 25px rgba(0,0,0,0.2); z-index: 10; cursor: pointer; }
         .bottom-nav { position: fixed; bottom: 0; left: 0; width: 100%; background: var(--bg-surface); padding: 10px 15px; display: flex; gap: 15px; box-shadow: 0 -5px 20px rgba(0,0,0,0.05); z-index: 90; }
         .nav-btn { flex: 1; padding: 12px; border-radius: 12px; border: none; font-weight: 700; font-size: 1rem; display: flex; align-items: center; justify-content: center; gap: 8px; cursor: pointer; color: white; }
         .btn-call { background: #2980b9; } .btn-wa { background: var(--primary); }
 
-        /* Modals (Cart & Details) */
+        /* Location Box */
+        .location-box { background: var(--bg-surface); padding: 15px; border-radius: 16px; margin-top: 25px; box-shadow: var(--shadow); text-align: center; }
+        .map-frame { width: 100%; height: 200px; border-radius: 12px; border: 0; margin-bottom: 15px; background: #eee; }
+        .btn-dir { background: #3498db; color: white; padding: 12px 20px; border-radius: 50px; text-decoration: none; font-weight: 700; display: inline-flex; align-items: center; gap: 8px; box-shadow: 0 4px 10px rgba(52, 152, 219, 0.3); }
+
+        /* Modals */
         .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 1000; display: none; justify-content: center; align-items: flex-end; backdrop-filter: blur(5px); transition: opacity 0.3s; }
-        .modal-sheet { background: var(--bg-surface); width: 100%; max-width: 600px; border-radius: 25px 25px 0 0; padding: 0 25px 25px 25px; max-height: 90vh; overflow-y: auto; animation: slideUp 0.3s ease-out; position: relative; }
+        .modal-sheet { background: var(--bg-surface); width: 100%; max-width: 600px; border-radius: 25px 25px 0 0; padding: 0 25px 25px 25px; max-height: 92vh; overflow-y: auto; animation: slideUp 0.3s ease-out; position: relative; }
         @keyframes slideUp { from{transform:translateY(100%)} to{transform:translateY(0)} }
         
         .handle { width: 100%; padding: 15px 0; display: flex; justify-content: center; }
         .handle-bar { width: 50px; height: 6px; background: #e0e0e0; border-radius: 10px; }
 
-        /* Item Details Specific */
-        .detail-img { width: 100%; height: 250px; object-fit: cover; border-radius: 16px; margin-bottom: 15px; }
-        .detail-title { font-size: 1.5rem; font-weight: 800; margin-bottom: 5px; color: var(--text-main); }
-        .detail-price { font-size: 1.2rem; font-weight: 700; color: var(--primary); margin-bottom: 15px; }
-        .detail-desc { color: var(--text-light); line-height: 1.6; font-size: 0.95rem; }
+        /* Details */
+        .detail-img { width: 100%; height: 260px; object-fit: cover; border-radius: 16px; margin-bottom: 15px; background: #eee; }
+        .detail-title { font-size: 1.5rem; font-weight: 800; }
+        .detail-price { font-size: 1.3rem; font-weight: 700; color: var(--primary); margin-bottom: 15px; }
 
-        input, select, textarea { width: 100%; padding: 14px; margin-bottom: 12px; border: 1px solid #ddd; border-radius: 12px; background: var(--bg-body); color: var(--text-main); font-family: inherit; }
+        /* Inputs */
+        input, select, textarea { width: 100%; padding: 14px; margin-bottom: 12px; border: 1px solid #ddd; border-radius: 12px; background: var(--bg-body); color: var(--text-main); font-family: inherit; font-size: 1rem; outline: none; }
         .btn-confirm { background: #25D366; color: white; width: 100%; padding: 16px; border-radius: 12px; font-size: 1.1rem; font-weight: 800; border: none; cursor: pointer; display: flex; justify-content: center; align-items: center; gap: 10px; }
     </style>
 </head>
-<body oncontextmenu="return false;"> <!-- Disable Right Click -->
+<body oncontextmenu="return false;">
 
     <div id="toast" class="custom-toast"><span class="toast-icon"></span><span id="toast-msg"></span></div>
 
     <div class="header">
         <div class="brand"><i class="fas fa-leaf"></i> Radhe Krishna</div>
-        <div onclick="document.body.classList.toggle('dark-mode')" style="cursor:pointer;"><i class="fas fa-moon"></i></div>
+        <div onclick="document.body.classList.toggle('dark-mode')" style="cursor:pointer; width:35px; height:35px; background:var(--bg-body); display:flex; align-items:center; justify-content:center; border-radius:50%;"><i class="fas fa-moon"></i></div>
     </div>
 
-    <div class="marquee-container"><div class="marquee-content" id="scroller">Loading...</div></div>
+    <div class="marquee-container"><div class="marquee-content" id="scroller">Loading updates...</div></div>
 
     <div class="container">
         <div class="banner-box" id="banner-slider"></div>
@@ -89,7 +91,7 @@
         <div id="menu-list"></div>
 
         <div class="location-box" id="loc-section" style="display:none;">
-            <h3 style="margin-top:0; margin-bottom:15px;"><i class="fas fa-map-marker-alt"></i> Visit Us</h3>
+            <h3 style="margin:0 0 15px 0;"><i class="fas fa-map-marker-alt"></i> Visit Us</h3>
             <iframe id="map-frame" class="map-frame" loading="lazy"></iframe>
             <a id="dir-btn" href="#" target="_blank" class="btn-dir"><i class="fas fa-directions"></i> Get Directions</a>
         </div>
@@ -109,32 +111,32 @@
     <div class="modal-overlay" id="modal-cart">
         <div class="modal-sheet" id="sheet-cart">
             <div class="handle"><div class="handle-bar"></div></div>
-            <h2 style="margin:0 0 20px 0; text-align:center;">Complete Order</h2>
-            <div style="background:var(--bg-body); padding:15px; border-radius:12px; margin-bottom:20px;">
+            <h2 style="margin:0 0 20px 0; text-align:center;">Complete Your Order</h2>
+            <div style="background:var(--bg-body); padding:15px; border-radius:15px; margin-bottom:20px;">
                 <div id="cart-items"></div>
-                <div style="display:flex; justify-content:space-between; font-weight:800; font-size:1.2rem; border-top:1px dashed #ccc; padding-top:10px; margin-top:10px;"><span>Total</span><span>₹<span id="m-total">0</span></span></div>
+                <div style="display:flex; justify-content:space-between; font-weight:800; font-size:1.3rem; border-top:1px dashed #ccc; padding-top:10px; margin-top:10px;"><span>Total</span><span>₹<span id="m-total">0</span></span></div>
             </div>
-            <h3 style="margin-bottom:15px;">Delivery Info</h3>
-            <input type="text" id="name" placeholder="Name">
-            <input type="tel" id="phone" placeholder="Mobile">
-            <textarea id="addr" rows="2" placeholder="Address"></textarea>
-            <input type="text" id="land" placeholder="Landmark">
-            <select id="pay"><option value="Cash">Cash on Delivery</option><option value="UPI">UPI Payment</option></select>
-            <select id="time"><option>9 PM - 10 PM</option><option>10 PM - 11 PM</option><option>11 PM - 12 AM</option></select>
-            <button class="btn-confirm" onclick="placeOrder()"><i class="fab fa-whatsapp"></i> Send Order</button>
+            <input type="text" id="name" placeholder="Name (আপনার নাম)">
+            <input type="tel" id="phone" placeholder="Mobile (মোবাইল নাম্বার)">
+            <textarea id="addr" rows="2" placeholder="Full Address (ঠিকানা)"></textarea>
+            <input type="text" id="land" placeholder="Landmark (Optional)">
+            <select id="pay"><option value="Cash on Delivery">Cash on Delivery</option><option value="Online / UPI">Online / UPI Payment</option></select>
+            <select id="time"><option>9:00 PM – 10:00 PM</option><option>10:00 PM – 11:00 PM</option><option>11:00 PM – 12:00 AM</option></select>
+            <textarea id="note" rows="1" placeholder="Special Note (Optional)"></textarea>
+            <button class="btn-confirm" onclick="placeOrder()"><i class="fab fa-whatsapp"></i> Order on WhatsApp</button>
             <div style="height:30px;"></div>
         </div>
     </div>
 
-    <!-- Item Details Modal -->
+    <!-- Detail Modal -->
     <div class="modal-overlay" id="modal-detail">
         <div class="modal-sheet" id="sheet-detail">
             <div class="handle"><div class="handle-bar"></div></div>
             <img src="" id="d-img" class="detail-img">
             <div class="detail-title" id="d-name"></div>
             <div class="detail-price" id="d-price"></div>
-            <div class="detail-desc" id="d-desc"></div>
-            <div style="height:30px;"></div>
+            <div id="d-desc" style="color:var(--text-light); line-height:1.6;"></div>
+            <div style="height:40px;"></div>
         </div>
     </div>
 
@@ -145,8 +147,7 @@
         const app = initializeApp(firebaseConfig);
         const db = getDatabase(app);
 
-        let menu={}, cats={}, conf={}, cart={}, activeCat='all', slideInterval;
-        let currentModal = null; // Track open modal for back button
+        let menu={}, cats={}, conf={}, cart={}, activeCat='all', slideInterval, currentModal=null;
         
         function showToast(msg, type='info') {
             const t = document.getElementById('toast');
@@ -162,85 +163,58 @@
 
         function updateUI() {
             const st = document.getElementById('shop-status');
-            if(conf.restaurantOpen){ st.style.background="#d4edda"; st.style.color="#155724"; st.innerText="Open Now 🟢"; }
-            else{ st.style.background="#f8d7da"; st.style.color="#721c24"; st.innerText="Closed 🔴"; }
-            document.getElementById('scroller').innerText = conf.marqueeText || "Welcome";
+            if(conf.restaurantOpen){ st.style.background="#d4edda"; st.style.color="#155724"; st.innerText="Shop is Open Now 🟢"; }
+            else{ st.style.background="#f8d7da"; st.style.color="#721c24"; st.innerText="Shop is Closed 🔴"; }
+            document.getElementById('scroller').innerText = conf.marqueeText || "Welcome to Radhe Krishna";
             const sl = document.getElementById('banner-slider'); sl.innerHTML = '';
             if(conf.banners) conf.banners.forEach((s,i) => sl.innerHTML += `<img src="${s}" class="slide ${i==0?'active':''}">`);
             if(slideInterval) clearInterval(slideInterval);
             let sIdx=0; slideInterval = setInterval(()=>{ const s=document.querySelectorAll('.slide'); if(s.length){s[sIdx].classList.remove('active'); sIdx=(sIdx+1)%s.length; s[sIdx].classList.add('active');} }, (conf.bannerSpeed||3)*1000);
-            
-            if(conf.mapEmbed && conf.mapLink) {
-                document.getElementById('loc-section').style.display='block';
-                document.getElementById('map-frame').src = conf.mapEmbed;
-                document.getElementById('dir-btn').href = conf.mapLink;
-            } else { document.getElementById('loc-section').style.display='none'; }
+            if(conf.mapEmbed && conf.mapLink) { document.getElementById('loc-section').style.display='block'; document.getElementById('map-frame').src = conf.mapEmbed; document.getElementById('dir-btn').href = conf.mapLink; } else { document.getElementById('loc-section').style.display='none'; }
         }
 
-        function renderCats(){ const d=document.getElementById('cat-list'); let h=`<div class="cat-pill ${activeCat=='all'?'active':''}" onclick="setCat('all')">All</div>`; for(let k in cats) h+=`<div class="cat-pill ${activeCat==k?'active':''}" onclick="setCat('${k}')">${cats[k].name}</div>`; d.innerHTML=h; }
+        function renderCats(){ const d=document.getElementById('cat-list'); let h=`<div class="cat-pill ${activeCat=='all'?'active':''}" onclick="setCat('all')">All Menu</div>`; for(let k in cats) h+=`<div class="cat-pill ${activeCat==k?'active':''}" onclick="setCat('${k}')">${cats[k].name}</div>`; d.innerHTML=h; }
         window.setCat=(c)=>{activeCat=c; renderCats(); renderMenu();}
         
-        function renderMenu(){ 
-            const d=document.getElementById('menu-list'); d.innerHTML=''; 
-            for(let id in menu){ 
-                let i=menu[id]; 
-                if(i.isAvailable===false || (activeCat!=='all' && i.category!==activeCat)) continue; 
-                let q=cart[id]||0; 
-                let btn = q===0 ? `<div class="btn-add" onclick="mod(event, '${id}',1)">ADD</div>` : `<div class="qty-control" onclick="event.stopPropagation()"><div class="q-btn" onclick="mod(event, '${id}',-1)">-</div><div style="padding:0 5px; font-weight:600;">${q}</div><div class="q-btn" onclick="mod(event, '${id}',1)">+</div></div>`; 
-                d.innerHTML+=`
-                <div class="menu-item" onclick="openDetail('${id}')">
-                    <div class="item-left">
-                        <div style="border:1px solid green; width:16px; padding:2px; display:flex; justify-content:center;"><div style="width:8px; height:8px; background:green; border-radius:50%;"></div></div>
-                        <div style="font-weight:700; margin:4px 0;">${i.name}</div>
-                        <div style="font-weight:600;">₹${i.price}</div>
-                        <div style="font-size:0.8rem; color:#888;">${i.description||''}</div>
-                    </div>
-                    <div class="item-right">
-                        <img src="${i.image||'https://via.placeholder.com/100'}" class="item-img">
-                        ${btn}
-                    </div>
-                </div>`; 
-            } 
+        function renderMenu(){
+            const d=document.getElementById('menu-list'); d.innerHTML='';
+            for(let id in menu){
+                let i=menu[id]; if(i.isAvailable===false || (activeCat!=='all' && i.category!==activeCat)) continue;
+                let q=cart[id]||0;
+                let btn = q===0 ? `<div class="btn-add" onclick="mod(event, '${id}', 1)">ADD</div>` : `<div class="qty-control" onclick="event.stopPropagation()"><div class="q-btn" onclick="mod(event, '${id}', -1)">-</div><div style="padding:0 5px; font-weight:700;">${q}</div><div class="q-btn" onclick="mod(event, '${id}', 1)">+</div></div>`;
+                d.innerHTML+=`<div class="menu-item" onclick="openDetail('${id}')"><div class="item-left"><div style="border:1.5px solid green; width:16px; height:16px; display:flex; align-items:center; justify-content:center; padding:2px; border-radius:3px;"><div style="width:8px; height:8px; background:green; border-radius:50%;"></div></div><div style="font-weight:800; margin:5px 0 2px 0; font-size:1.1rem;">${i.name}</div><div style="font-weight:700; font-size:1.05rem;">₹${i.price}</div><div style="font-size:0.85rem; color:#888; line-height:1.2;">${i.description||''}</div></div><div class="item-right"><img src="${i.image||'https://via.placeholder.com/100'}" class="item-img">${btn}</div></div>`;
+            }
         }
-        
-        window.mod=(e,id,v)=>{ 
-            e.stopPropagation(); // Stop opening detail modal
-            if(!conf.restaurantOpen){showToast("Closed!",'error');return;} 
-            if(!cart[id]) cart[id]=0; cart[id]+=v; if(cart[id]<=0) delete cart[id]; renderMenu(); updateCart(); 
-        }
-        
+
+        window.mod=(e,id,v)=>{ e.stopPropagation(); if(!conf.restaurantOpen){showToast("Restaurant Closed!",'error');return;} if(!cart[id]) cart[id]=0; cart[id]+=v; if(cart[id]<=0) delete cart[id]; renderMenu(); updateCart(); }
         function updateCart(){ let c=0, t=0; for(let id in cart){c+=cart[id]; t+=cart[id]*menu[id].price;} document.getElementById('c-count').innerText=c; document.getElementById('c-total').innerText=t; document.getElementById('float-cart').style.display=c>0?'flex':'none'; }
-        
-        // Modal Logic (Generic)
+
+        // Modal Logic
         window.openModal = (type) => {
             currentModal = 'modal-' + type;
             document.getElementById(currentModal).style.display = 'flex';
             document.body.classList.add('modal-open');
             window.history.pushState({modal: true}, null, "");
-            
-            if(type === 'cart') renderCartItems();
+            if(type === 'cart') {
+                let d=document.getElementById('cart-items'); d.innerHTML=''; let t=0;
+                for(let id in cart){ let i=menu[id], st=i.price*cart[id]; t+=st; d.innerHTML+=`<div style="display:flex; justify-content:space-between; margin-bottom:12px; font-weight:600;"><div>${i.name} <span style="color:#888;">x ${cart[id]}</span></div><div>₹${st}</div></div>`; }
+                document.getElementById('m-total').innerText=t;
+            }
         }
 
         window.openDetail = (id) => {
             const i = menu[id];
             document.getElementById('d-img').src = i.image || 'https://via.placeholder.com/400';
             document.getElementById('d-name').innerText = i.name;
-            document.getElementById('d-price').innerText = '₹' + i.price;
-            document.getElementById('d-desc').innerText = i.description || 'No description available.';
+            document.getElementById('d-price').innerText = 'Price: ₹' + i.price;
+            document.getElementById('d-desc').innerText = i.description || 'Pure Veg | No Onion | No Garlic';
             openModal('detail');
-        }
-
-        function renderCartItems() {
-            let d=document.getElementById('cart-items'); d.innerHTML=''; let t=0; 
-            for(let id in cart){ let i=menu[id],st=i.price*cart[id]; t+=st; d.innerHTML+=`<div style="display:flex; justify-content:space-between; margin-bottom:8px;"><div>${i.name} x ${cart[id]}</div><div>₹${st}</div></div>`; } 
-            document.getElementById('m-total').innerText=t;
         }
 
         function closeModal() {
             if(currentModal) {
                 document.getElementById(currentModal).style.display = 'none';
                 document.body.classList.remove('modal-open');
-                // Reset transforms for swipe
                 document.getElementById('sheet-cart').style.transform = '';
                 document.getElementById('sheet-detail').style.transform = '';
                 currentModal = null;
@@ -249,29 +223,43 @@
 
         window.addEventListener('popstate', () => { if(currentModal) closeModal(); });
 
-        // Swipe Logic for Both Modals
+        // Swipe
         ['sheet-cart', 'sheet-detail'].forEach(id => {
-            const sheet = document.getElementById(id);
-            let startY = 0;
-            sheet.addEventListener('touchstart', (e) => startY = e.touches[0].clientY);
-            sheet.addEventListener('touchmove', (e) => {
-                const currentY = e.touches[0].clientY;
-                if(currentY > startY) sheet.style.transform = `translateY(${currentY - startY}px)`;
-            });
-            sheet.addEventListener('touchend', (e) => {
-                const endY = e.changedTouches[0].clientY;
-                if(endY - startY > 100) window.history.back();
-                else sheet.style.transform = `translateY(0)`;
-            });
+            const s = document.getElementById(id); let sY = 0;
+            s.addEventListener('touchstart', (e) => sY = e.touches[0].clientY);
+            s.addEventListener('touchmove', (e) => { const cY = e.touches[0].clientY; if(cY > sY) s.style.transform = `translateY(${cY - sY}px)`; });
+            s.addEventListener('touchend', (e) => { const eY = e.changedTouches[0].clientY; if(eY - sY > 100) window.history.back(); else s.style.transform = `translateY(0)`; });
         });
 
         window.makeCall=()=>{ window.open(`tel:${conf.contactCallNumber}`, '_self'); }
         window.openWhatsApp=()=>{ window.open(`https://wa.me/${conf.whatsappOrderNumber}`, '_blank'); }
+
         window.placeOrder=()=>{
-            const n=document.getElementById('name').value, p=document.getElementById('phone').value, a=document.getElementById('addr').value;
-            if(!n||!p||!a){showToast("Missing Info!",'error'); return;}
-            let txt="", t=0; for(let id in cart){ let i=menu[id]; txt+=`▪ ${i.name} x ${cart[id]} = ₹${i.price*cart[id]}\n`; t+=i.price*cart[id]; }
-            let msg=`🛒 *ORDER*\n👤 ${n}\n📞 ${p}\n📍 ${a}\n🗺️ ${document.getElementById('land').value}\n----------------\n${txt}----------------\n💰 Total: ₹${t}\n💳 ${document.getElementById('pay').value}\n⏰ ${document.getElementById('time').value}`;
+            const n=document.getElementById('name').value.trim(), p=document.getElementById('phone').value.trim(), a=document.getElementById('addr').value.trim(), l=document.getElementById('land').value.trim(), note=document.getElementById('note').value.trim();
+            if(!n||!p||!a){showToast("Required: Name, Mobile, Address",'error'); return;}
+
+            let itemsTxt = ""; let total = 0;
+            for(let id in cart){ let i = menu[id]; itemsTxt += `▫️ *${i.name}* (x${cart[id]}) ... ₹${i.price*cart[id]}\n`; total += i.price*cart[id]; }
+
+            // New Professional Format
+            let msg = `*RADHE KRISHNA – NIGHT MENU*\n`;
+            msg += `🌿 Pure Veg | No Onion | No Garlic\n`;
+            msg += `───────────────\n\n`;
+            msg += `👤 *Customer Details:*\n`;
+            msg += `▫️ *Name:* ${n}\n`;
+            msg += `▫️ *Mobile:* ${p}\n`;
+            msg += `▫️ *Address:* ${a}\n`;
+            if(l) msg += `▫️ *Landmark:* ${l}\n`;
+            msg += `\n🛒 *Order Details:*\n`;
+            msg += itemsTxt;
+            msg += `───────────────\n`;
+            msg += `💰 *Grand Total: ₹${total}*\n`;
+            msg += `───────────────\n\n`;
+            msg += `💳 *Payment:* ${document.getElementById('pay').value}\n`;
+            msg += `⏰ *Delivery:* ${document.getElementById('time').value}\n`;
+            if(note) msg += `📝 *Note:* ${note}\n`;
+            msg += `\n_Sent via Radhe Krishna Digital Menu_`;
+
             window.open(`https://wa.me/${conf.whatsappOrderNumber}?text=${encodeURIComponent(msg)}`,'_blank');
         }
     </script>
