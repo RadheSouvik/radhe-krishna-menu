@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Login</title>
+    <title>Admin</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
@@ -16,20 +16,46 @@
         .spinner { border: 4px solid #f3f3f3; border-top: 4px solid #3498db; border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 
-        /* Login Screen */
-        .login-wrap { position: fixed; top:0; left:0; width:100%; height:100%; background:#1e293b; z-index: 5000; display: flex; justify-content: center; align-items: center; flex-direction: column; }
-        .login-box { background: white; padding: 30px; border-radius: 12px; width: 300px; text-align: center; box-shadow: 0 10px 25px rgba(0,0,0,0.2); }
-        .pin-input { font-size: 1.5rem; letter-spacing: 5px; text-align: center; }
+        /* Modern Login Screen */
+        .login-wrap { 
+            position: fixed; top:0; left:0; width:100%; height:100%; 
+            background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%); 
+            z-index: 5000; display: flex; justify-content: center; align-items: center; 
+        }
+        .login-card { 
+            background: rgba(255, 255, 255, 0.1); 
+            backdrop-filter: blur(10px); 
+            padding: 40px 30px; border-radius: 20px; width: 320px; text-align: center; 
+            box-shadow: 0 20px 50px rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.1);
+            animation: floatUp 0.5s ease-out;
+        }
+        @keyframes floatUp { from{transform:translateY(20px);opacity:0} to{transform:translateY(0);opacity:1} }
+        
+        .login-title { color: white; font-size: 1.8rem; font-weight: 700; margin-bottom: 5px; }
+        .login-sub { color: #94a3b8; font-size: 0.9rem; margin-bottom: 25px; }
+        .pin-input { 
+            background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.2); 
+            color: white; font-size: 1.5rem; letter-spacing: 8px; text-align: center; 
+            padding: 15px; border-radius: 12px; width: 100%; box-sizing: border-box; 
+            margin-bottom: 20px; transition: 0.3s;
+        }
+        .pin-input:focus { border-color: #3b82f6; outline: none; background: rgba(255,255,255,0.1); }
+        .login-btn { 
+            background: #3b82f6; color: white; border: none; padding: 15px; width: 100%; 
+            border-radius: 12px; font-size: 1rem; font-weight: 600; cursor: pointer; 
+            transition: 0.3s; box-shadow: 0 5px 15px rgba(59, 130, 246, 0.3);
+        }
+        .login-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(59, 130, 246, 0.4); }
 
         /* Navigation */
         .top-nav { background: #1e293b; color: white; padding: 15px; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 1000; }
         .burger { font-size: 1.5rem; cursor: pointer; }
-        .sidebar { position: fixed; top: 0; left: -250px; width: 250px; height: 100%; background: #1e293b; padding-top: 60px; transition: 0.3s; z-index: 999; box-shadow: 2px 0 10px rgba(0,0,0,0.2); }
+        .sidebar { position: fixed; top: 0; left: -250px; width: 250px; height: 100%; background: #1e293b; padding-top: 60px; transition: 0.3s; z-index: 999; box-shadow: 2px 0 10px rgba(0,0,0,0.2); display: flex; flex-direction: column; }
         .sidebar.active { left: 0; }
         .overlay { position: fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); z-index:900; display:none; }
         .overlay.active { display:block; }
 
-        .nav-btn { color: #94a3b8; padding: 15px 20px; display: block; text-decoration: none; font-weight: 500; border-left: 4px solid transparent; cursor: pointer; }
+        .nav-btn { color: #94a3b8; padding: 15px 20px; display: flex; align-items: center; gap: 10px; text-decoration: none; font-weight: 500; border-left: 4px solid transparent; cursor: pointer; }
         .nav-btn.active, .nav-btn:hover { background: #334155; color: white; border-left: 4px solid #3b82f6; }
         
         /* Layout */
@@ -55,18 +81,18 @@
 
         /* Modal */
         .modal-wrap { position: fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); z-index: 2000; display: none; justify-content: center; align-items: center; backdrop-filter: blur(3px); }
-        .modal-box { background: white; padding: 25px; border-radius: 12px; width: 90%; max-width: 400px; max-height: 90vh; overflow-y: auto; }
+        .modal-box { background: white; padding: 25px; border-radius: 12px; width: 90%; max-width: 400px; max-height: 90vh; overflow-y: auto; position: relative; }
     </style>
 </head>
 <body>
 
-    <!-- Login Screen -->
+    <!-- New Modern Login Screen -->
     <div id="login-screen" class="login-wrap">
-        <div class="login-box">
-            <h2 style="margin-top:0; color:#1e293b;">Admin Login</h2>
-            <p style="color:#666; margin-bottom:20px;">Enter Access PIN</p>
+        <div class="login-card">
+            <div class="login-title">Admin Access</div>
+            <div class="login-sub">Please enter your security PIN</div>
             <input type="password" id="input-pin" class="pin-input" maxlength="4" placeholder="••••">
-            <button class="btn bg-blue" onclick="checkLogin()">Unlock</button>
+            <button class="login-btn" onclick="checkLogin()">Unlock Dashboard</button>
         </div>
     </div>
 
@@ -81,39 +107,32 @@
 
     <div class="overlay" onclick="toggleMenu()"></div>
     <div class="sidebar" id="sidebar">
-        <div class="nav-btn active" onclick="nav('dash')"><i class="fas fa-home"></i> Dashboard</div>
-        <div class="nav-btn" onclick="nav('cats')"><i class="fas fa-list"></i> Categories</div>
-        <div class="nav-btn" onclick="nav('items')"><i class="fas fa-hamburger"></i> Menu Items</div>
-        <div class="nav-btn" onclick="nav('design')"><i class="fas fa-paint-brush"></i> Banners & Speed</div>
-        <div class="nav-btn" onclick="nav('loc')"><i class="fas fa-map-marker-alt"></i> Location Map</div>
-        <div class="nav-btn" onclick="location.reload()" style="margin-top:auto; color:#ef4444;"><i class="fas fa-sign-out-alt"></i> Logout</div>
+        <div>
+            <div class="nav-btn active" onclick="nav('dash')"><i class="fas fa-home"></i> Dashboard</div>
+            <div class="nav-btn" onclick="nav('cats')"><i class="fas fa-list"></i> Categories</div>
+            <div class="nav-btn" onclick="nav('items')"><i class="fas fa-hamburger"></i> Menu Items</div>
+            <div class="nav-btn" onclick="nav('design')"><i class="fas fa-paint-brush"></i> Banners & Speed</div>
+            <div class="nav-btn" onclick="nav('loc')"><i class="fas fa-map-marker-alt"></i> Location Map</div>
+        </div>
+        <div style="margin-top: auto;">
+            <div class="nav-btn" onclick="openPinModal()"><i class="fas fa-key"></i> Change PIN</div>
+            <div class="nav-btn" onclick="location.reload()" style="color:#ef4444;"><i class="fas fa-sign-out-alt"></i> Logout</div>
+        </div>
     </div>
 
     <div class="main">
         <!-- Dashboard -->
         <div id="dash" class="page active">
             <h2>Dashboard</h2>
-            
-            <div class="card" style="border-left: 4px solid #ef4444;">
-                <h3>🔐 Admin Security</h3>
-                <label>Change PIN (Default: 1234)</label>
-                <div style="display:flex; gap:10px;">
-                    <input type="text" id="new-pin" placeholder="Enter new PIN" maxlength="4">
-                    <button class="btn bg-blue" style="width:auto; margin-top:8px;" onclick="saveNewPin()">Update PIN</button>
-                </div>
-            </div>
-
             <div class="card" style="display:flex; justify-content:space-between; align-items:center;">
                 <span>Restaurant Status</span>
                 <label class="switch"><input type="checkbox" id="shop-open"><span class="slider"></span></label>
             </div>
-            
             <div class="card">
                 <h3>Contact Numbers</h3>
                 <label>Order WhatsApp:</label><input type="number" id="wa-ord" placeholder="Ex: 9876543210">
                 <label>Call Button:</label><input type="number" id="wa-call" placeholder="Ex: 9876543210">
             </div>
-            
             <div class="card">
                 <h3>Marquee Text</h3>
                 <input type="text" id="marquee-txt" placeholder="Scrolling text...">
@@ -172,6 +191,19 @@
         </div>
     </div>
 
+    <!-- PIN Change Modal -->
+    <div class="modal-wrap" id="modal-pin">
+        <div class="modal-box">
+            <h3>Change Security PIN</h3>
+            <p style="color:#666; font-size:0.9rem;">Enter new 4-digit PIN</p>
+            <input type="number" id="new-pin" placeholder="1234" style="text-align:center; font-size:1.5rem; letter-spacing:5px;">
+            <div style="display:flex; gap:10px; margin-top:15px;">
+                <button class="btn bg-blue" onclick="saveNewPin()">Update</button>
+                <button class="btn bg-red" onclick="closeModals()">Cancel</button>
+            </div>
+        </div>
+    </div>
+
     <!-- Category Edit Modal -->
     <div class="modal-wrap" id="modal-cat">
         <div class="modal-box">
@@ -212,7 +244,6 @@
         let cats={}, menu={}, currentPin="1234";
         const loader = document.getElementById('loader');
         
-        // Login Logic
         window.checkLogin = () => {
             const input = document.getElementById('input-pin').value;
             if(input === currentPin) {
@@ -223,7 +254,6 @@
             }
         }
 
-        // Helpers
         window.toggleMenu = () => { 
             document.getElementById('sidebar').classList.toggle('active'); 
             document.querySelector('.overlay').classList.toggle('active');
@@ -232,12 +262,15 @@
         window.nav = (id) => { document.querySelectorAll('.page').forEach(p=>p.classList.remove('active')); document.getElementById(id).classList.add('active'); document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active')); event.currentTarget.classList.add('active'); toggleMenu(); }
         function showToast(msg) { const t=document.getElementById('toast'); t.innerText=msg; t.classList.add('show'); setTimeout(()=>t.classList.remove('show'),2000); }
         function showLoad(){loader.style.display='flex';} function hideLoad(){loader.style.display='none';}
-        window.closeModals = () => { document.getElementById('modal-cat').style.display='none'; document.getElementById('modal-item').style.display='none'; }
+        window.closeModals = () => { 
+            document.getElementById('modal-cat').style.display='none'; 
+            document.getElementById('modal-item').style.display='none'; 
+            document.getElementById('modal-pin').style.display='none';
+        }
 
-        // Data Sync
         onValue(ref(db, 'config'), snap => {
             const c = snap.val() || {};
-            currentPin = c.adminPin || "1234"; // Update PIN from DB
+            currentPin = c.adminPin || "1234";
             document.getElementById('shop-open').checked = c.restaurantOpen;
             let wa = c.whatsappOrderNumber || ""; if(wa.startsWith("91")) wa = wa.substring(2); document.getElementById('wa-ord').value = wa;
             let call = c.contactCallNumber || ""; if(call.startsWith("91")) call = call.substring(2); document.getElementById('wa-call').value = call;
@@ -251,11 +284,19 @@
         onValue(ref(db, 'categories'), snap => { cats = snap.val() || {}; renderCats(); });
         onValue(ref(db, 'menu'), snap => { menu = snap.val() || {}; renderMenu(); });
 
-        // Savings
+        window.openPinModal = () => {
+            toggleMenu(); // Close Sidebar
+            document.getElementById('modal-pin').style.display = 'flex';
+        }
+
         window.saveNewPin = () => {
             const p = document.getElementById('new-pin').value;
             if(p && p.length >= 4) {
-                update(ref(db, 'config'), { adminPin: p }).then(() => { showToast("PIN Updated!"); document.getElementById('new-pin').value=''; });
+                update(ref(db, 'config'), { adminPin: p }).then(() => { 
+                    closeModals(); 
+                    showToast("PIN Updated!"); 
+                    document.getElementById('new-pin').value=''; 
+                });
             } else {
                 showToast("Enter min 4 digit PIN");
             }
@@ -269,7 +310,6 @@
         window.saveBanners = () => { update(ref(db, 'config'), { bannerSpeed: parseInt(document.getElementById('ban-speed').value), banners: [document.getElementById('b1').value, document.getElementById('b2').value, document.getElementById('b3').value] }).then(() => showToast("Banners Saved!")); }
         window.saveLocation = () => { update(ref(db, 'config'), { mapEmbed: document.getElementById('map-embed').value, mapLink: document.getElementById('map-link').value }).then(() => showToast("Location Saved!")); }
 
-        // --- Category Logic ---
         window.addCat = () => { const n=document.getElementById('cat-name').value; if(n) push(ref(db, 'categories'), {name:n}).then(()=>{document.getElementById('cat-name').value=''; showToast("Category Added");}); }
         window.delCat = (id) => { for(let k in menu) if(menu[k].category===id){showToast("Cat not empty!"); return;} if(confirm("Delete?")) remove(ref(db, `categories/${id}`)); }
         
@@ -301,7 +341,6 @@
             }
         }
 
-        // --- Item Logic ---
         window.addItem = () => {
             const n=document.getElementById('i-name').value; if(!n)return; showLoad();
             push(ref(db, 'menu'), { name:n, price:parseInt(document.getElementById('i-price').value), category:document.getElementById('i-cat').value, image:document.getElementById('i-img').value, description:document.getElementById('i-desc').value, isAvailable:true }).then(()=>{ showToast("Item Added"); hideLoad(); document.getElementById('i-name').value=''; });
