@@ -3,168 +3,236 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Radhe Krishna</title>
-    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Hind+Siliguri:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <title>Radhe Krishna | Night Menu</title>
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Hind+Siliguri:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <style>
-        :root { --primary: #27ae60; --bg-body: #f8f9fa; --bg-surface: #ffffff; --text-main: #2c3e50; --text-light: #95a5a6; --shadow: 0 4px 15px rgba(0,0,0,0.05); }
-        body.dark-mode { --bg-body: #121212; --bg-surface: #1e1e1e; --text-main: #ecf0f1; --text-light: #7f8c8d; --shadow: 0 4px 15px rgba(0,0,0,0.3); }
+        :root {
+            --primary: #10b981;
+            --primary-soft: #ecfdf5;
+            --bg: #f8fafc;
+            --card: #ffffff;
+            --text: #0f172a;
+            --text-sub: #64748b;
+            --glass: rgba(255, 255, 255, 0.85);
+            --radius-main: 28px;
+            --shadow-btn: 0 10px 20px -10px rgba(16, 185, 129, 0.5);
+        }
+
+        body.dark-mode {
+            --bg: #020617;
+            --card: #0f172a;
+            --text: #f1f5f9;
+            --text-sub: #94a3b8;
+            --glass: rgba(15, 23, 42, 0.9);
+            --primary-soft: #064e3b;
+        }
+
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         body.modal-open { overflow: hidden; height: 100vh; }
-        body { margin: 0; font-family: 'Manrope', 'Hind Siliguri', sans-serif; background: var(--bg-body); color: var(--text-main); padding-bottom: 140px; -webkit-user-select: none; user-select: none; }
+        body { margin: 0; font-family: 'Outfit', 'Hind Siliguri', sans-serif; background: var(--bg); color: var(--text); padding-bottom: 140px; transition: 0.3s ease; }
         img { pointer-events: none; -webkit-touch-callout: none; }
 
         /* Toast */
-        .custom-toast { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0.9); background: rgba(0, 0, 0, 0.85); color: white; padding: 15px 25px; border-radius: 50px; font-weight: 600; z-index: 9999; opacity: 0; visibility: hidden; transition: all 0.3s ease; pointer-events: none; display: flex; align-items: center; gap: 10px; }
-        .custom-toast.show { opacity: 1; visibility: visible; transform: translate(-50%, -50%) scale(1); }
+        .toast { position: fixed; top: 30px; left: 50%; transform: translateX(-50%) translateY(-20px); background: var(--text); color: var(--card); padding: 12px 24px; border-radius: 50px; font-weight: 600; z-index: 9999; opacity: 0; visibility: hidden; transition: 0.3s; display: flex; align-items: center; gap: 10px; box-shadow: 0 10px 20px rgba(0,0,0,0.2); }
+        .toast.show { opacity: 1; visibility: visible; transform: translateX(-50%) translateY(0); }
 
-        /* --- Updated Header --- */
-        .header { background: var(--bg-surface); padding: 12px 20px; position: sticky; top: 0; z-index: 100; border-bottom: 1px solid rgba(0,0,0,0.05); display: flex; align-items: center; justify-content: space-between; }
-        .brand-box { display: flex; flex-direction: column; }
-        .brand { font-size: 1.3rem; font-weight: 800; color: var(--primary); display: flex; align-items: center; gap: 8px; line-height: 1.2; }
-        .night-menu-tag { font-size: 0.8rem; font-weight: 700; color: var(--text-light); margin-left: 28px; margin-top: -2px; letter-spacing: 0.5px; text-transform: uppercase; }
-        .theme-btn { cursor: pointer; width: 35px; height: 35px; background: var(--bg-body); display: flex; align-items: center; justify-content: center; border-radius: 50%; }
+        /* --- Updated Premium Marquee --- */
+        .marquee-pill-wrapper { padding: 15px 20px; margin-top: 10px; }
+        .marquee-pill { 
+            background: var(--card); 
+            color: var(--text); 
+            border-radius: 50px; 
+            padding: 8px 15px; 
+            display: flex; 
+            align-items: center; 
+            gap: 12px; 
+            overflow: hidden; 
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            border: 1px solid rgba(0,0,0,0.05);
+        }
+        .marquee-icon { 
+            background: var(--primary); 
+            color: white;
+            width: 28px; height: 28px; 
+            border-radius: 50%; 
+            display: flex; align-items: center; justify-content: center; 
+            font-size: 0.75rem; flex-shrink: 0; 
+            box-shadow: 0 4px 10px rgba(16, 185, 129, 0.3);
+        }
+        .marquee-track { flex: 1; overflow: hidden; white-space: nowrap; position: relative; display: flex; align-items: center; }
+        .marquee-content { 
+            display: inline-block; 
+            animation: marquee-animation 15s linear infinite; 
+            font-weight: 700; 
+            font-size: 0.85rem;
+            color: var(--text);
+            padding-left: 100%;
+        }
+        @keyframes marquee-animation {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-100%); }
+        }
 
-        /* Marquee */
-        .marquee-container { background: var(--primary); color: white; overflow: hidden; white-space: nowrap; padding: 6px 0; font-size: 0.85rem; font-weight: 500; }
-        .marquee-content { display: inline-block; padding-left: 100%; animation: scroll 20s linear infinite; }
-        @keyframes scroll { 0% { transform: translateX(0); } 100% { transform: translateX(-100%); } }
+        /* Header */
+        .header { padding: 15px 25px; display: flex; justify-content: space-between; align-items: center; }
+        .brand-logo { display: flex; flex-direction: column; }
+        .brand-logo h1 { margin: 0; font-size: 1.4rem; font-weight: 800; color: var(--primary); line-height: 1; letter-spacing: -0.5px; }
+        .brand-logo span { font-size: 0.75rem; font-weight: 700; color: var(--text-sub); text-transform: uppercase; letter-spacing: 2px; }
+        .mode-btn { width: 40px; height: 40px; background: var(--card); border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 10px rgba(0,0,0,0.05); cursor: pointer; }
 
-        .container { max-width: 600px; margin: 0 auto; padding: 15px; }
-        .banner-box { height: 180px; border-radius: 16px; overflow: hidden; position: relative; margin-bottom: 20px; background: #e0e0e0; box-shadow: var(--shadow); }
-        .slide { width: 100%; height: 100%; object-fit: cover; position: absolute; opacity: 0; transition: opacity 0.8s; }
+        /* Banner */
+        .hero-banner { padding: 0 20px; }
+        .slider-box { width: 100%; height: 200px; border-radius: 30px; overflow: hidden; position: relative; background: #ddd; box-shadow: 0 10px 25px rgba(0,0,0,0.05); }
+        .slide { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0; transition: 1s; }
         .slide.active { opacity: 1; }
-
-        /* Cat & Menu */
-        .cat-row { display: flex; gap: 10px; overflow-x: auto; padding-bottom: 5px; scrollbar-width: none; margin-bottom: 20px; }
-        .cat-pill { background: var(--bg-surface); padding: 8px 16px; border-radius: 50px; font-weight: 600; font-size: 0.9rem; color: var(--text-light); border: 1px solid transparent; cursor: pointer; white-space: nowrap; transition: 0.2s; }
-        .cat-pill.active { background: var(--primary); color: white; }
-
-        .menu-item { background: var(--bg-surface); padding: 12px; border-radius: 16px; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; box-shadow: var(--shadow); cursor: pointer; }
-        .item-left { flex: 1; padding-right: 10px; }
-        .item-right { width: 100px; position: relative; display: flex; flex-direction: column; align-items: center; }
-        .item-img { width: 100px; height: 90px; border-radius: 12px; object-fit: cover; background: #eee; }
-        .btn-add { position: absolute; bottom: -8px; background: var(--bg-surface); color: var(--primary); font-weight: 800; font-size: 0.9rem; padding: 6px 20px; border-radius: 6px; box-shadow: 0 2px 8px rgba(0,0,0,0.15); cursor: pointer; border: 1px solid #eee; }
-        .qty-control { position: absolute; bottom: -8px; background: var(--primary); color: white; display: flex; align-items: center; border-radius: 6px; height: 32px; box-shadow: 0 2px 8px rgba(0,0,0,0.2); overflow: hidden; }
-        .q-btn { width: 30px; height: 100%; display: flex; align-items: center; justify-content: center; font-weight: bold; cursor: pointer; }
-
-        /* Floating UI */
-        .float-cart { position: fixed; bottom: 80px; left: 50%; transform: translateX(-50%); width: 90%; max-width: 500px; background: #2c3e50; color: white; padding: 12px 20px; border-radius: 50px; display: none; justify-content: space-between; align-items: center; box-shadow: 0 10px 25px rgba(0,0,0,0.2); z-index: 10; cursor: pointer; }
-        .bottom-nav { position: fixed; bottom: 0; left: 0; width: 100%; background: var(--bg-surface); padding: 10px 15px; display: flex; gap: 15px; box-shadow: 0 -5px 20px rgba(0,0,0,0.05); z-index: 90; }
-        .nav-btn { flex: 1; padding: 12px; border-radius: 12px; border: none; font-weight: 700; font-size: 1rem; display: flex; align-items: center; justify-content: center; gap: 8px; cursor: pointer; color: white; }
-        .btn-call { background: #2980b9; } .btn-wa { background: var(--primary); }
-
-        /* Location Box */
-        .location-box { background: var(--bg-surface); padding: 15px; border-radius: 16px; margin-top: 25px; box-shadow: var(--shadow); text-align: center; }
-        .map-frame { width: 100%; height: 200px; border-radius: 12px; border: 0; margin-bottom: 15px; background: #eee; }
-        .btn-dir { background: #3498db; color: white; padding: 12px 20px; border-radius: 50px; text-decoration: none; font-weight: 700; display: inline-flex; align-items: center; gap: 8px; box-shadow: 0 4px 10px rgba(52, 152, 219, 0.3); }
-
-        /* Modals */
-        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 1000; display: none; justify-content: center; align-items: flex-end; backdrop-filter: blur(5px); transition: opacity 0.3s; }
-        .modal-sheet { background: var(--bg-surface); width: 100%; max-width: 600px; border-radius: 25px 25px 0 0; padding: 0 25px 25px 25px; max-height: 92vh; overflow-y: auto; animation: slideUp 0.3s ease-out; position: relative; }
-        @keyframes slideUp { from{transform:translateY(100%)} to{transform:translateY(0)} }
         
-        .handle { width: 100%; padding: 15px 0; display: flex; justify-content: center; }
-        .handle-bar { width: 50px; height: 6px; background: #e0e0e0; border-radius: 10px; }
+        .status-tag { position: absolute; top: 15px; right: 15px; background: rgba(255,255,255,0.95); padding: 6px 14px; border-radius: 50px; font-weight: 800; font-size: 0.75rem; color: #1e293b; display: flex; align-items: center; gap: 6px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+        .st-dot { width: 7px; height: 7px; border-radius: 50%; background: #10b981; }
+        .closed .st-dot { background: #ef4444; }
 
-        /* Details */
-        .detail-img { width: 100%; height: 260px; object-fit: cover; border-radius: 16px; margin-bottom: 15px; background: #eee; }
-        .detail-title { font-size: 1.5rem; font-weight: 800; }
-        .detail-price { font-size: 1.3rem; font-weight: 700; color: var(--primary); margin-bottom: 15px; }
+        /* Categories */
+        .tabs { padding: 25px 20px 10px; display: flex; gap: 10px; overflow-x: auto; scrollbar-width: none; }
+        .tab-item { padding: 10px 20px; background: var(--card); border-radius: 50px; font-weight: 700; font-size: 0.85rem; color: var(--text-sub); white-space: nowrap; cursor: pointer; transition: 0.3s; box-shadow: 0 2px 8px rgba(0,0,0,0.02); border: 1px solid transparent; }
+        .tab-item.active { background: var(--primary); color: white; border-color: var(--primary); box-shadow: var(--shadow-btn); }
 
-        /* Inputs */
-        input, select, textarea { width: 100%; padding: 14px; margin-bottom: 12px; border: 1px solid #ddd; border-radius: 12px; background: var(--bg-body); color: var(--text-main); font-family: inherit; font-size: 1rem; outline: none; }
-        .btn-confirm { background: #25D366; color: white; width: 100%; padding: 16px; border-radius: 12px; font-size: 1.1rem; font-weight: 800; border: none; cursor: pointer; display: flex; justify-content: center; align-items: center; gap: 10px; }
+        /* Menu */
+        .menu-grid { padding: 10px 20px; display: flex; flex-direction: column; gap: 15px; }
+        .food-card { background: var(--card); border-radius: 30px; padding: 12px; display: flex; align-items: center; gap: 15px; box-shadow: 0 8px 20px -8px rgba(0,0,0,0.04); position: relative; cursor: pointer; border: 1px solid rgba(0,0,0,0.02); }
+        .food-img-box { width: 100px; height: 100px; border-radius: 50%; overflow: hidden; background: #eee; position: relative; flex-shrink: 0; border: 3px solid var(--primary-soft); }
+        .food-img { width: 100%; height: 100%; object-fit: cover; }
+        .food-info { flex: 1; }
+        .food-name { font-size: 1.1rem; font-weight: 700; color: var(--text); margin-bottom: 2px; }
+        .food-price { font-size: 1.1rem; font-weight: 800; color: var(--primary); }
+        .food-desc { font-size: 0.78rem; color: var(--text-sub); line-height: 1.3; margin-top: 4px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+
+        /* Plus Button */
+        .add-area { position: absolute; bottom: 12px; right: 12px; }
+        .plus-btn { width: 35px; height: 35px; background: var(--text); color: var(--card); border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1rem; box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
+        .qty-pill { display: flex; align-items: center; background: var(--text); color: var(--card); border-radius: 12px; height: 35px; padding: 0 8px; gap: 10px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
+
+        /* Dock Hub */
+        .dock-hub { position: fixed; bottom: 25px; left: 50%; transform: translateX(-50%); width: 90%; max-width: 400px; z-index: 1000; }
+        .cart-pill { background: var(--text); color: var(--card); border-radius: 50px; padding: 12px 25px; display: none; align-items: center; justify-content: space-between; box-shadow: 0 20px 40px rgba(0,0,0,0.3); margin-bottom: 12px; animation: slideUp 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); cursor: pointer; }
+        .contact-pill { background: var(--glass); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); padding: 8px; border-radius: 50px; display: flex; gap: 10px; border: 1px solid rgba(255,255,255,0.1); box-shadow: 0 10px 30px rgba(0,0,0,0.1); }
+        .c-btn { flex: 1; height: 50px; border-radius: 50px; border: none; display: flex; align-items: center; justify-content: center; gap: 10px; font-weight: 800; color: white; cursor: pointer; }
+
+        /* Bottom Sheet */
+        .modal-bg { position: fixed; inset: 0; background: rgba(0,0,0,0.6); backdrop-filter: blur(10px); z-index: 2000; display: none; align-items: flex-end; justify-content: center; }
+        .sheet { background: var(--card); width: 100%; max-width: 500px; border-radius: 40px 40px 0 0; padding: 0 25px 35px; max-height: 92vh; overflow-y: auto; animation: sheetIn 0.4s ease-out; position: relative; }
+        @keyframes sheetIn { from{transform:translateY(100%)} to{transform:translateY(0)} }
+        .handle { width: 40px; height: 5px; background: #e2e8f0; border-radius: 10px; margin: 15px auto 25px; }
+
+        .d-img { width: 100%; height: 280px; border-radius: 35px; object-fit: cover; margin-bottom: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); border: 4px solid var(--primary-soft); }
+        input, select, textarea { width: 100%; padding: 15px; margin-bottom: 12px; border-radius: 18px; border: 1.5px solid rgba(0,0,0,0.05); background: var(--bg); color: var(--text); font-family: inherit; font-size: 1rem; outline: none; }
+        input:focus { border-color: var(--primary); }
+        .order-btn { background: var(--primary); color: white; width: 100%; padding: 18px; border: none; border-radius: 20px; font-size: 1.1rem; font-weight: 800; cursor: pointer; box-shadow: var(--shadow-btn); }
+
+        /* Location */
+        .loc-section { padding: 10px 20px 30px; display: none; }
+        .loc-card { background: var(--card); border-radius: 35px; overflow: hidden; box-shadow: 0 10px 20px rgba(0,0,0,0.05); text-align: center; }
+        .map-frame { width: 100%; height: 200px; border: none; }
     </style>
 </head>
 <body oncontextmenu="return false;">
 
-    <div id="toast" class="custom-toast"><span class="toast-icon"></span><span id="toast-msg"></span></div>
+    <div id="toast" class="toast"><i class="fas fa-check-circle"></i> <span id="toast-msg">Success</span></div>
 
-    <!-- Updated Header Section -->
+    <!-- Header -->
     <div class="header">
-        <div class="brand-box">
-            <div class="brand"><i class="fas fa-leaf"></i> Radhe Krishna</div>
-            <div class="night-menu-tag">Night Menu</div>
+        <div class="brand-logo">
+            <h1>Radhe Krishna</h1>
+            <span>Night Menu</span>
         </div>
-        <div class="theme-btn" onclick="document.body.classList.toggle('dark-mode')">
-            <i class="fas fa-moon"></i>
-        </div>
+        <div class="mode-btn" onclick="document.body.classList.toggle('dark-mode')"><i class="fas fa-moon"></i></div>
     </div>
 
-    <div class="marquee-container"><div class="marquee-content" id="scroller">Loading updates...</div></div>
-
-    <div class="container">
-        <div class="banner-box" id="banner-slider"></div>
-        <div id="shop-status" style="text-align:center; margin-bottom:20px; font-weight:700; padding:10px; border-radius:8px;"></div>
-        <div class="cat-row" id="cat-list"></div>
-        <div id="menu-list"></div>
-
-        <div class="location-box" id="loc-section" style="display:none;">
-            <h3 style="margin:0 0 15px 0;"><i class="fas fa-map-marker-alt"></i> Visit Us</h3>
-            <iframe id="map-frame" class="map-frame" loading="lazy"></iframe>
-            <a id="dir-btn" href="#" target="_blank" class="btn-dir"><i class="fas fa-directions"></i> Get Directions</a>
-        </div>
-    </div>
-
-    <div class="float-cart" id="float-cart" onclick="openModal('cart')">
-        <div style="font-weight:700;"><span id="c-count">0</span> Items</div>
-        <div style="font-weight:800;">₹<span id="c-total">0</span> <i class="fas fa-chevron-right"></i></div>
-    </div>
-
-    <div class="bottom-nav">
-        <button class="nav-btn btn-call" onclick="makeCall()"><i class="fas fa-phone-alt"></i> Call</button>
-        <button class="nav-btn btn-wa" onclick="openWhatsApp()"><i class="fab fa-whatsapp"></i> WhatsApp</button>
-    </div>
-
-    <!-- Cart Modal -->
-    <div class="modal-overlay" id="modal-cart">
-        <div class="modal-sheet" id="sheet-cart">
-            <div class="handle"><div class="handle-bar"></div></div>
-            <h2 style="margin:0 0 20px 0; text-align:center;">Complete Your Order</h2>
-            <div style="background:var(--bg-body); padding:15px; border-radius:15px; margin-bottom:20px;">
-                <div id="cart-items"></div>
-                <div style="display:flex; justify-content:space-between; font-weight:800; font-size:1.3rem; border-top:1px dashed #ccc; padding-top:10px; margin-top:10px;"><span>Total</span><span>₹<span id="m-total">0</span></span></div>
+    <!-- Improved Marquee Pill -->
+    <div class="marquee-pill-wrapper">
+        <div class="marquee-pill">
+            <div class="marquee-icon"><i class="fas fa-bullhorn"></i></div>
+            <div class="marquee-track">
+                <div class="marquee-content" id="scroll-text">Welcome to Radhe Krishna Night Menu! Pure Veg & Fresh Food...</div>
             </div>
-            <input type="text" id="name" placeholder="Name (আপনার নাম)">
-            <input type="tel" id="phone" placeholder="Mobile (মোবাইল নাম্বার)">
-            <textarea id="addr" rows="2" placeholder="Full Address (ঠিকানা)"></textarea>
-            <input type="text" id="land" placeholder="Landmark (Optional)">
-            <select id="pay"><option value="Cash on Delivery">Cash on Delivery</option><option value="Online / UPI">Online / UPI Payment</option></select>
-            <select id="time"><option>9:00 PM – 10:00 PM</option><option>10:00 PM – 11:00 PM</option><option>11:00 PM – 12:00 AM</option></select>
-            <textarea id="note" rows="1" placeholder="Special Note (Optional)"></textarea>
-            <button class="btn-confirm" onclick="placeOrder()"><i class="fab fa-whatsapp"></i> Order on WhatsApp</button>
-            <div style="height:30px;"></div>
         </div>
     </div>
 
-    <!-- Detail Modal -->
-    <div class="modal-overlay" id="modal-detail">
-        <div class="modal-sheet" id="sheet-detail">
-            <div class="handle"><div class="handle-bar"></div></div>
+    <!-- Banner -->
+    <div class="hero-banner">
+        <div class="slider-box" id="banner-slider"></div>
+    </div>
+
+    <!-- Status & Categories -->
+    <div class="tabs" id="cat-list"></div>
+
+    <!-- Menu -->
+    <div class="menu-grid" id="menu-container"></div>
+
+    <!-- Location -->
+    <div class="loc-section" id="loc-area">
+        <div class="loc-card">
+            <iframe id="map-iframe" class="map-frame" loading="lazy"></iframe>
+            <div style="padding:15px;"><a href="#" id="map-link" target="_blank" style="color:#3b82f6; text-decoration:none; font-weight:800; font-size:0.9rem;">📍 Open Direction in Google Maps</a></div>
+        </div>
+    </div>
+
+    <!-- Bottom Dock Hub -->
+    <div class="dock-hub">
+        <div class="cart-pill" id="cart-pill" onclick="openModal('cart')">
+            <span id="c-total" style="font-weight: 800; font-size: 1.1rem;">₹0</span>
+            <span style="font-weight: 800; font-size: 0.85rem;">VIEW CART <i class="fas fa-arrow-right" style="margin-left:5px;"></i></span>
+        </div>
+        <div class="contact-pill">
+            <button class="c-btn" style="background:#3b82f6;" onclick="triggerCall()"><i class="fas fa-phone-alt"></i> Call</button>
+            <button class="c-btn" style="background:#10b981;" onclick="triggerWA()"><i class="fab fa-whatsapp"></i> Chat</button>
+        </div>
+    </div>
+
+    <!-- Modal Sheets -->
+    <div class="modal-bg" id="modal-cart">
+        <div class="sheet" id="sheet-cart">
+            <div class="handle"></div>
+            <h2 style="font-weight:800; margin-bottom:20px; text-align:center;">Order Review</h2>
+            <div id="cart-items-list" style="background:var(--bg); padding:15px; border-radius:25px; margin-bottom:20px;"></div>
+            <div style="display:flex; justify-content:space-between; padding:0 10px 20px; font-weight:800; font-size:1.4rem;">
+                <span>Grand Total</span><span id="m-total">₹0</span>
+            </div>
+            <input type="text" id="o-name" placeholder="আপনার নাম (Name)">
+            <input type="tel" id="o-phone" placeholder="মোবাইল (Mobile)">
+            <textarea id="o-addr" rows="2" placeholder="পূর্ণ ঠিকানা (Full Address)"></textarea>
+            <input type="text" id="o-land" placeholder="ল্যান্ডমার্ক (Landmark)">
+            <select id="o-pay"><option>Cash on Delivery</option><option>UPI / Online Payment</option></select>
+            <select id="o-time"><option>9:00 PM – 10:00 PM</option><option>10:00 PM – 11:00 PM</option><option>11:00 PM – 12:00 AM</option></select>
+            <button class="order-btn" onclick="confirmOrder()"><i class="fab fa-whatsapp"></i> Place WhatsApp Order</button>
+        </div>
+    </div>
+
+    <div class="modal-bg" id="modal-detail">
+        <div class="sheet" id="sheet-detail">
+            <div class="handle"></div>
             <img src="" id="d-img" class="detail-img">
-            <div class="detail-title" id="d-name"></div>
-            <div class="detail-price" id="d-price"></div>
-            <div id="d-desc" style="color:var(--text-light); line-height:1.6;"></div>
-            <div style="height:40px;"></div>
+            <div style="font-size:1.6rem; font-weight:800;" id="d-name"></div>
+            <div style="font-size:1.3rem; font-weight:700; color:var(--primary); margin:8px 0 15px;" id="d-price"></div>
+            <div id="d-desc" style="color:var(--text-sub); line-height:1.6; font-size:0.95rem;"></div>
+            <div style="height:30px;"></div>
         </div>
     </div>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js";
         import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-database.js";
+        
         const firebaseConfig = { apiKey: "AIzaSyDifkwUmP5MehfgXdhFTs6DQzX-pNR2snE", authDomain: "radhe-krishna-1bc79.firebaseapp.com", databaseURL: "https://radhe-krishna-1bc79-default-rtdb.asia-southeast1.firebasedatabase.app", projectId: "radhe-krishna-1bc79", storageBucket: "radhe-krishna-1bc79.firebasestorage.app", messagingSenderId: "755534416421", appId: "1:755534416421:web:6b97cac0c954d223094dcc" };
         const app = initializeApp(firebaseConfig);
         const db = getDatabase(app);
 
-        let menu={}, cats={}, conf={}, cart={}, activeCat='all', slideInterval, currentModal=null;
-        
-        function showToast(msg, type='info') {
+        let menu={}, cats={}, conf={}, cart={}, activeCat='all', slideInt, curModal=null;
+
+        function showToast(msg) {
             const t = document.getElementById('toast');
             document.getElementById('toast-msg').innerText = msg;
-            document.querySelector('.toast-icon').innerText = type==='error'?'🚫':'✅';
-            t.style.background = type==='error'?'rgba(231,76,60,0.9)':'rgba(0,0,0,0.85)';
             t.classList.add('show'); setTimeout(()=>t.classList.remove('show'),2500);
         }
 
@@ -173,103 +241,143 @@
         onValue(ref(db, 'menu'), snap => { menu=snap.val()||{}; renderMenu(); });
 
         function updateUI() {
-            const st = document.getElementById('shop-status');
-            if(conf.restaurantOpen){ st.style.background="#d4edda"; st.style.color="#155724"; st.innerText="Shop is Open Now 🟢"; }
-            else{ st.style.background="#f8d7da"; st.style.color="#721c24"; st.innerText="Shop is Closed 🔴"; }
-            document.getElementById('scroller').innerText = conf.marqueeText || "Welcome to Radhe Krishna";
+            document.getElementById('scroll-text').innerText = conf.marqueeText || "Welcome to Radhe Krishna";
             const sl = document.getElementById('banner-slider'); sl.innerHTML = '';
             if(conf.banners) conf.banners.forEach((s,i) => sl.innerHTML += `<img src="${s}" class="slide ${i==0?'active':''}">`);
-            if(slideInterval) clearInterval(slideInterval);
-            let sIdx=0; slideInterval = setInterval(()=>{ const s=document.querySelectorAll('.slide'); if(s.length){s[sIdx].classList.remove('active'); sIdx=(sIdx+1)%s.length; s[sIdx].classList.add('active');} }, (conf.bannerSpeed||3)*1000);
-            if(conf.mapEmbed && conf.mapLink) { document.getElementById('loc-section').style.display='block'; document.getElementById('map-frame').src = conf.mapEmbed; document.getElementById('dir-btn').href = conf.mapLink; } else { document.getElementById('loc-section').style.display='none'; }
-        }
+            sl.innerHTML += `<div class="status-tag ${conf.restaurantOpen?'':'closed'}"><div class="st-dot"></div> <span>${conf.restaurantOpen?'OPEN NOW':'CLOSED'}</span></div>`;
 
-        function renderCats(){ const d=document.getElementById('cat-list'); let h=`<div class="cat-pill ${activeCat=='all'?'active':''}" onclick="setCat('all')">All Menu</div>`; for(let k in cats) h+=`<div class="cat-pill ${activeCat==k?'active':''}" onclick="setCat('${k}')">${cats[k].name}</div>`; d.innerHTML=h; }
-        window.setCat=(c)=>{activeCat=c; renderCats(); renderMenu();}
-        
-        function renderMenu(){
-            const d=document.getElementById('menu-list'); d.innerHTML='';
-            for(let id in menu){
-                let i=menu[id]; if(i.isAvailable===false || (activeCat!=='all' && i.category!==activeCat)) continue;
-                let q=cart[id]||0;
-                let btn = q===0 ? `<div class="btn-add" onclick="mod(event, '${id}', 1)">ADD</div>` : `<div class="qty-control" onclick="event.stopPropagation()"><div class="q-btn" onclick="mod(event, '${id}', -1)">-</div><div style="padding:0 5px; font-weight:700;">${q}</div><div class="q-btn" onclick="mod(event, '${id}', 1)">+</div></div>`;
-                d.innerHTML+=`<div class="menu-item" onclick="openDetail('${id}')"><div class="item-left"><div style="border:1.5px solid green; width:16px; height:16px; display:flex; align-items:center; justify-content:center; padding:2px; border-radius:3px;"><div style="width:8px; height:8px; background:green; border-radius:50%;"></div></div><div style="font-weight:800; margin:5px 0 2px 0; font-size:1.1rem;">${i.name}</div><div style="font-weight:700; font-size:1.05rem;">₹${i.price}</div><div style="font-size:0.85rem; color:#888; line-height:1.2;">${i.description||''}</div></div><div class="item-right"><img src="${i.image||'https://via.placeholder.com/100'}" class="item-img">${btn}</div></div>`;
+            if(slideInt) clearInterval(slideInt);
+            let sIdx=0; slideInt = setInterval(()=>{
+                const s=document.querySelectorAll('.slide');
+                if(s.length){s[sIdx].classList.remove('active'); sIdx=(sIdx+1)%s.length; s[sIdx].classList.add('active');}
+            }, (conf.bannerSpeed||3)*1000);
+            
+            if(conf.mapEmbed && conf.mapLink) {
+                document.getElementById('loc-area').style.display='block';
+                document.getElementById('map-iframe').src = conf.mapEmbed;
+                document.getElementById('map-link').href = conf.mapLink;
             }
         }
 
-        window.mod=(e,id,v)=>{ e.stopPropagation(); if(!conf.restaurantOpen){showToast("Restaurant Closed!",'error');return;} if(!cart[id]) cart[id]=0; cart[id]+=v; if(cart[id]<=0) delete cart[id]; renderMenu(); updateCart(); }
-        function updateCart(){ let c=0, t=0; for(let id in cart){c+=cart[id]; t+=cart[id]*menu[id].price;} document.getElementById('c-count').innerText=c; document.getElementById('c-total').innerText=t; document.getElementById('float-cart').style.display=c>0?'flex':'none'; }
+        function renderCats() {
+            const d=document.getElementById('cat-list');
+            let h=`<div class="tab-item ${activeCat=='all'?'active':''}" onclick="setCat('all')">All Menu</div>`;
+            for(let k in cats) h+=`<div class="tab-item ${activeCat==k?'active':''}" onclick="setCat('${k}')">${cats[k].name}</div>`;
+            d.innerHTML=h;
+        }
+        window.setCat=(c)=>{activeCat=c; renderCats(); renderMenu();}
 
-        // Modal Logic
+        function renderMenu() {
+            const d=document.getElementById('menu-container'); d.innerHTML='';
+            for(let id in menu) {
+                let i=menu[id];
+                if(i.isAvailable===false || (activeCat!=='all' && i.category!==activeCat)) continue;
+                let q=cart[id]||0;
+                let action = q===0 
+                    ? `<div class="plus-btn" onclick="upd(event,'${id}',1)"><i class="fas fa-plus"></i></div>`
+                    : `<div class="qty-pill" onclick="event.stopPropagation()"><div onclick="upd(event,'${id}',-1)" style="padding:0 5px;">-</div><div style="font-weight:800;">${q}</div><div onclick="upd(event,'${id}',1)" style="padding:0 5px;">+</div></div>`;
+
+                d.innerHTML += `
+                <div class="food-card" onclick="openDet('${id}')">
+                    <div class="food-img-box">
+                        <img src="${i.image||'https://via.placeholder.com/150'}" class="food-img">
+                        <div class="veg-tag"></div>
+                    </div>
+                    <div class="food-info">
+                        <div class="food-name">${i.name}</div>
+                        <div class="food-price">₹${i.price}</div>
+                        <div class="food-desc">${i.description||'Delicious pure veg delight.'}</div>
+                    </div>
+                    <div class="add-area">${action}</div>
+                </div>`;
+            }
+        }
+
+        window.upd=(e,id,v)=>{
+            e.stopPropagation();
+            if(!conf.restaurantOpen){showToast("Currently Closed");return;}
+            if(!cart[id]) cart[id]=0;
+            cart[id]+=v; if(cart[id]<=0) delete cart[id];
+            renderMenu(); updateCartDock();
+        }
+
+        function updateCartDock() {
+            let c=0, t=0; for(let id in cart){c+=cart[id]; t+=cart[id]*menu[id].price;}
+            document.getElementById('c-total').innerText = `₹${t}`;
+            document.getElementById('cart-pill').style.display = c>0?'flex':'none';
+        }
+
         window.openModal = (type) => {
-            currentModal = 'modal-' + type;
-            document.getElementById(currentModal).style.display = 'flex';
+            curModal = 'modal-' + type;
+            document.getElementById(curModal).style.display = 'flex';
             document.body.classList.add('modal-open');
             window.history.pushState({modal: true}, null, "");
-            if(type === 'cart') {
-                let d=document.getElementById('cart-items'); d.innerHTML=''; let t=0;
-                for(let id in cart){ let i=menu[id], st=i.price*cart[id]; t+=st; d.innerHTML+=`<div style="display:flex; justify-content:space-between; margin-bottom:12px; font-weight:600;"><div>${i.name} <span style="color:#888;">x ${cart[id]}</span></div><div>₹${st}</div></div>`; }
-                document.getElementById('m-total').innerText=t;
+            if(type==='cart') {
+                let d=document.getElementById('cart-items-list'); d.innerHTML=''; let t=0;
+                for(let id in cart){
+                    let i=menu[id], sub=i.price*cart[id]; t+=sub;
+                    d.innerHTML+=`<div style="display:flex; justify-content:space-between; margin-bottom:12px; font-weight:700;"><div>${i.name} <span style="color:var(--text-sub)">x${cart[id]}</span></div><div>₹${sub}</div></div>`;
+                }
+                document.getElementById('m-total').innerText = `₹${t}`;
             }
         }
 
-        window.openDetail = (id) => {
+        window.openDet = (id) => {
             const i = menu[id];
             document.getElementById('d-img').src = i.image || 'https://via.placeholder.com/400';
             document.getElementById('d-name').innerText = i.name;
-            document.getElementById('d-price').innerText = 'Price: ₹' + i.price;
-            document.getElementById('d-desc').innerText = i.description || 'Pure Veg | No Onion | No Garlic';
+            document.getElementById('d-price').innerText = '₹' + i.price;
+            document.getElementById('d-desc').innerText = i.description || 'Delicious Pure Veg Food.';
             openModal('detail');
         }
 
-        function closeModal() {
-            if(currentModal) {
-                document.getElementById(currentModal).style.display = 'none';
+        function closeAny() {
+            if(curModal) {
+                document.getElementById(curModal).style.display = 'none';
                 document.body.classList.remove('modal-open');
                 document.getElementById('sheet-cart').style.transform = '';
                 document.getElementById('sheet-detail').style.transform = '';
-                currentModal = null;
+                curModal = null;
             }
         }
+        window.addEventListener('popstate', () => { if(curModal) closeAny(); });
 
-        window.addEventListener('popstate', () => { if(currentModal) closeModal(); });
-
-        // Swipe
         ['sheet-cart', 'sheet-detail'].forEach(id => {
             const s = document.getElementById(id); let sY = 0;
             s.addEventListener('touchstart', (e) => sY = e.touches[0].clientY);
-            s.addEventListener('touchmove', (e) => { const cY = e.touches[0].clientY; if(cY > sY) s.style.transform = `translateY(${cY - sY}px)`; });
-            s.addEventListener('touchend', (e) => { const eY = e.changedTouches[0].clientY; if(eY - sY > 100) window.history.back(); else s.style.transform = `translateY(0)`; });
+            s.addEventListener('touchmove', (e) => {
+                const cY = e.touches[0].clientY;
+                if(cY > sY) s.style.transform = `translateY(${cY - sY}px)`;
+            });
+            s.addEventListener('touchend', (e) => {
+                const eY = e.changedTouches[0].clientY;
+                if(eY - sY > 100) window.history.back(); else s.style.transform = `translateY(0)`;
+            });
         });
 
-        window.makeCall=()=>{ window.open(`tel:${conf.contactCallNumber}`, '_self'); }
-        window.openWhatsApp=()=>{ window.open(`https://wa.me/${conf.whatsappOrderNumber}`, '_blank'); }
+        window.triggerCall = () => { window.open(`tel:${conf.contactCallNumber}`, '_self'); }
+        window.triggerWA = () => { window.open(`https://wa.me/${conf.whatsappOrderNumber}`, '_blank'); }
 
-        window.placeOrder=()=>{
-            const n=document.getElementById('name').value.trim(), p=document.getElementById('phone').value.trim(), a=document.getElementById('addr').value.trim(), l=document.getElementById('land').value.trim(), note=document.getElementById('note').value.trim();
-            if(!n||!p||!a){showToast("Required: Name, Mobile, Address",'error'); return;}
+        window.confirmOrder = () => {
+            const n=document.getElementById('o-name').value.trim(), p=document.getElementById('o-phone').value.trim(), a=document.getElementById('o-addr').value.trim(), l=document.getElementById('o-land').value.trim();
+            if(!n || !p || !a) { showToast("Missing Info!"); return; }
+            let total = 0, itemsStr = "";
+            for(let id in cart){ let i = menu[id]; itemsStr += `▫️ *${i.name}* (x${cart[id]}) ... ₹${i.price*cart[id]}\n`; total += i.price*cart[id]; }
 
-            let itemsTxt = ""; let total = 0;
-            for(let id in cart){ let i = menu[id]; itemsTxt += `▫️ *${i.name}* (x${cart[id]}) ... ₹${i.price*cart[id]}\n`; total += i.price*cart[id]; }
-
-            let msg = `*RADHE KRISHNA – NIGHT MENU*\n`;
-            msg += `🌿 Pure Veg | No Onion | No Garlic\n`;
-            msg += `───────────────\n\n`;
-            msg += `👤 *Customer Details:*\n`;
-            msg += `▫️ *Name:* ${n}\n`;
-            msg += `▫️ *Mobile:* ${p}\n`;
-            msg += `▫️ *Address:* ${a}\n`;
-            if(l) msg += `▫️ *Landmark:* ${l}\n`;
-            msg += `\n🛒 *Order Details:*\n`;
-            msg += itemsTxt;
-            msg += `───────────────\n`;
+            let msg = `✨ *RADHE KRISHNA — NIGHT ORDER* ✨\n`;
+            msg += `🌿 _Pure Vegetarian Night Menu_\n`;
+            msg += `──────────────────\n\n`;
+            msg += `👤 *Customer:* ${n}\n`;
+            msg += `📞 *Mobile:* ${p}\n`;
+            msg += `📍 *Address:* ${a}\n`;
+            if(l) msg += `🗺️ *Landmark:* ${l}\n`;
+            msg += `\n🛒 *Order Items:*\n${itemsStr}`;
+            msg += `──────────────────\n`;
             msg += `💰 *Grand Total: ₹${total}*\n`;
-            msg += `───────────────\n\n`;
-            msg += `💳 *Payment:* ${document.getElementById('pay').value}\n`;
-            msg += `⏰ *Delivery:* ${document.getElementById('time').value}\n`;
-            if(note) msg += `📝 *Note:* ${note}\n`;
-            msg += `\n_Sent via Radhe Krishna Digital Menu_`;
-
+            msg += `──────────────────\n\n`;
+            msg += `💳 *Payment:* ${document.getElementById('o-pay').value}\n`;
+            msg += `⏰ *Time:* ${document.getElementById('o-time').value}\n\n`;
+            msg += `_Generated via Radhe Krishna App_`;
             window.open(`https://wa.me/${conf.whatsappOrderNumber}?text=${encodeURIComponent(msg)}`,'_blank');
         }
     </script>
