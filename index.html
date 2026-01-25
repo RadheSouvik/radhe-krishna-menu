@@ -3,209 +3,194 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Radhe Krishna | Night Menu</title>
+    <title>Radhe Krishna | Order Food</title>
     <!-- Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Hind+Siliguri:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Okra:wght@300;400;500;600;700;800&family=Hind+Siliguri:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <style>
         :root {
-            --primary: #10b981;
-            --primary-soft: #ecfdf5;
-            --bg: #f8fafc;
-            --card: #ffffff;
-            --text: #0f172a;
-            --text-sub: #64748b;
-            --glass: rgba(255, 255, 255, 0.85);
-            --radius-main: 28px;
-            --shadow-btn: 0 10px 20px -10px rgba(16, 185, 129, 0.5);
+            --zomato-red: #E23744;
+            --bg-gray: #F4F4F4;
+            --white: #ffffff;
+            --text-black: #1C1C1C;
+            --text-gray: #696969;
+            --veg-green: #24963F;
+            --shadow: 0 2px 8px rgba(28, 28, 28, 0.08);
+            --radius-lg: 16px;
         }
 
         body.dark-mode {
-            --bg: #020617;
-            --card: #0f172a;
-            --text: #f1f5f9;
-            --text-sub: #94a3b8;
-            --glass: rgba(15, 23, 42, 0.9);
-            --primary-soft: #064e3b;
+            --bg-gray: #090909;
+            --white: #1C1C1C;
+            --text-black: #FFFFFF;
+            --text-gray: #A9A9A9;
+            --shadow: 0 4px 12px rgba(0,0,0,0.5);
         }
 
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         body.modal-open { overflow: hidden; height: 100vh; }
-        body { margin: 0; font-family: 'Outfit', 'Hind Siliguri', sans-serif; background: var(--bg); color: var(--text); padding-bottom: 140px; transition: 0.3s ease; }
+        body { margin: 0; font-family: 'Okra', 'Hind Siliguri', sans-serif; background: var(--bg-gray); color: var(--text-black); padding-bottom: 160px; transition: 0.3s ease; }
         img { pointer-events: none; -webkit-touch-callout: none; }
 
-        /* Toast */
-        .toast { position: fixed; top: 30px; left: 50%; transform: translateX(-50%) translateY(-20px); background: var(--text); color: var(--card); padding: 12px 24px; border-radius: 50px; font-weight: 600; z-index: 9999; opacity: 0; visibility: hidden; transition: 0.3s; display: flex; align-items: center; gap: 10px; box-shadow: 0 10px 20px rgba(0,0,0,0.2); }
+        /* Custom Toast */
+        .toast { position: fixed; top: 100px; left: 50%; transform: translateX(-50%) translateY(-20px); background: #333; color: white; padding: 12px 24px; border-radius: 12px; font-weight: 600; z-index: 9999; opacity: 0; visibility: hidden; transition: 0.3s; display: flex; align-items: center; gap: 10px; box-shadow: 0 10px 20px rgba(0,0,0,0.2); font-size: 0.9rem; }
         .toast.show { opacity: 1; visibility: visible; transform: translateX(-50%) translateY(0); }
 
-        /* --- Updated Premium Marquee --- */
-        .marquee-pill-wrapper { padding: 15px 20px; margin-top: 10px; }
-        .marquee-pill { 
-            background: var(--card); 
-            color: var(--text); 
-            border-radius: 50px; 
-            padding: 8px 15px; 
-            display: flex; 
-            align-items: center; 
-            gap: 12px; 
-            overflow: hidden; 
-            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
-            border: 1px solid rgba(0,0,0,0.05);
-        }
-        .marquee-icon { 
-            background: var(--primary); 
-            color: white;
-            width: 28px; height: 28px; 
-            border-radius: 50%; 
-            display: flex; align-items: center; justify-content: center; 
-            font-size: 0.75rem; flex-shrink: 0; 
-            box-shadow: 0 4px 10px rgba(16, 185, 129, 0.3);
-        }
-        .marquee-track { flex: 1; overflow: hidden; white-space: nowrap; position: relative; display: flex; align-items: center; }
-        .marquee-content { 
-            display: inline-block; 
-            animation: marquee-animation 15s linear infinite; 
-            font-weight: 700; 
-            font-size: 0.85rem;
-            color: var(--text);
-            padding-left: 100%;
-        }
-        @keyframes marquee-animation {
-            0% { transform: translateX(0); }
-            100% { transform: translateX(-100%); }
-        }
+        /* Fixed Header */
+        .header-fixed { position: sticky; top: 0; z-index: 1000; background: var(--white); border-bottom: 1px solid rgba(0,0,0,0.05); box-shadow: var(--shadow); }
+        .header-content { padding: 12px 20px; display: flex; justify-content: space-between; align-items: center; max-width: 600px; margin: 0 auto; }
+        .brand h1 { margin: 0; font-size: 1.4rem; font-weight: 900; color: var(--zomato-red); letter-spacing: -0.5px; }
+        .brand p { margin: 0; font-size: 0.75rem; font-weight: 700; color: var(--text-gray); text-transform: uppercase; letter-spacing: 1px; }
+        .theme-toggle { width: 38px; height: 38px; border-radius: 10px; background: var(--bg-gray); display: flex; align-items: center; justify-content: center; cursor: pointer; color: var(--text-black); }
 
-        /* Header */
-        .header { padding: 15px 25px; display: flex; justify-content: space-between; align-items: center; }
-        .brand-logo { display: flex; flex-direction: column; }
-        .brand-logo h1 { margin: 0; font-size: 1.4rem; font-weight: 800; color: var(--primary); line-height: 1; letter-spacing: -0.5px; }
-        .brand-logo span { font-size: 0.75rem; font-weight: 700; color: var(--text-sub); text-transform: uppercase; letter-spacing: 2px; }
-        .mode-btn { width: 40px; height: 40px; background: var(--card); border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 10px rgba(0,0,0,0.05); cursor: pointer; }
+        /* Marquee Pill */
+        .marquee-container { padding: 10px 20px; max-width: 600px; margin: 0 auto; }
+        .marquee-pill { background: var(--white); border: 1px solid var(--zomato-red); border-radius: 50px; padding: 6px 15px; display: flex; align-items: center; gap: 10px; overflow: hidden; }
+        .marquee-pill i { color: var(--zomato-red); font-size: 0.8rem; }
+        .marquee-track { flex: 1; overflow: hidden; white-space: nowrap; }
+        .marquee-content { display: inline-block; animation: scroll 15s linear infinite; font-weight: 700; font-size: 0.8rem; color: var(--text-black); padding-left: 100%; }
+        @keyframes scroll { 0% { transform: translateX(0); } 100% { transform: translateX(-100%); } }
 
         /* Banner */
-        .hero-banner { padding: 0 20px; }
-        .slider-box { width: 100%; height: 200px; border-radius: 30px; overflow: hidden; position: relative; background: #ddd; box-shadow: 0 10px 25px rgba(0,0,0,0.05); }
-        .slide { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0; transition: 1s; }
+        .banner-area { padding: 0 20px; max-width: 600px; margin: 0 auto; }
+        .slider-box { width: 100%; height: 180px; border-radius: 18px; overflow: hidden; position: relative; background: #eee; }
+        .slide { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0; transition: 0.8s; }
         .slide.active { opacity: 1; }
+        .status-badge { position: absolute; bottom: 12px; left: 12px; background: var(--white); padding: 5px 12px; border-radius: 50px; font-weight: 800; font-size: 0.7rem; display: flex; align-items: center; gap: 5px; box-shadow: var(--shadow); }
+        .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--veg-green); }
+        .closed .dot { background: var(--zomato-red); }
+
+        /* Categories (Zomato Circle style) */
+        .cats { display: flex; gap: 12px; overflow-x: auto; padding: 20px; scrollbar-width: none; position: sticky; top: 120px; background: var(--bg-gray); z-index: 900; }
+        .cat-item { padding: 8px 18px; background: var(--white); border-radius: 12px; font-weight: 700; font-size: 0.85rem; color: var(--text-gray); white-space: nowrap; cursor: pointer; border: 1px solid transparent; box-shadow: var(--shadow); transition: 0.2s; }
+        .cat-item.active { border-color: var(--zomato-red); color: var(--zomato-red); background: #fff5f6; }
+
+        /* Zomato Style Food Cards */
+        .menu-grid { padding: 0 20px; max-width: 600px; margin: 0 auto; display: grid; gap: 18px; }
+        .food-card { background: var(--white); border-radius: 20px; padding: 15px; display: flex; justify-content: space-between; gap: 15px; box-shadow: var(--shadow); cursor: pointer; position: relative; }
         
-        .status-tag { position: absolute; top: 15px; right: 15px; background: rgba(255,255,255,0.95); padding: 6px 14px; border-radius: 50px; font-weight: 800; font-size: 0.75rem; color: #1e293b; display: flex; align-items: center; gap: 6px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
-        .st-dot { width: 7px; height: 7px; border-radius: 50%; background: #10b981; }
-        .closed .st-dot { background: #ef4444; }
+        .food-details { flex: 1; display: flex; flex-direction: column; }
+        .veg-icon { width: 15px; height: 15px; border: 1.5px solid var(--veg-green); border-radius: 3px; display: flex; align-items: center; justify-content: center; margin-bottom: 6px; background: white; }
+        .veg-icon::after { content: ''; width: 6px; height: 6px; background: var(--veg-green); border-radius: 50%; }
+        
+        .food-name { font-size: 1.15rem; font-weight: 700; color: var(--text-black); }
+        .food-price { font-size: 1rem; font-weight: 600; margin-top: 4px; color: var(--text-black); }
+        .food-desc { font-size: 0.8rem; color: var(--text-gray); margin-top: 8px; line-height: 1.4; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
 
-        /* Categories */
-        .tabs { padding: 25px 20px 10px; display: flex; gap: 10px; overflow-x: auto; scrollbar-width: none; }
-        .tab-item { padding: 10px 20px; background: var(--card); border-radius: 50px; font-weight: 700; font-size: 0.85rem; color: var(--text-sub); white-space: nowrap; cursor: pointer; transition: 0.3s; box-shadow: 0 2px 8px rgba(0,0,0,0.02); border: 1px solid transparent; }
-        .tab-item.active { background: var(--primary); color: white; border-color: var(--primary); box-shadow: var(--shadow-btn); }
+        .food-img-container { width: 120px; height: 120px; position: relative; flex-shrink: 0; }
+        .food-img { width: 100%; height: 100%; border-radius: 15px; object-fit: cover; background: #f0f0f0; }
+        
+        /* Zomato Style ADD Button */
+        .add-btn-box { position: absolute; bottom: -10px; left: 50%; transform: translateX(-50%); width: 85px; }
+        .btn-zomato-add { background: var(--white); color: var(--zomato-red); font-weight: 800; font-size: 0.9rem; padding: 6px 0; border-radius: 8px; border: 1px solid #e8e8e8; box-shadow: 0 3px 10px rgba(0,0,0,0.1); text-align: center; cursor: pointer; text-transform: uppercase; }
+        .qty-zomato { background: var(--zomato-red); color: white; display: flex; align-items: center; justify-content: space-between; border-radius: 8px; height: 32px; padding: 0 5px; box-shadow: 0 4px 10px rgba(226, 55, 68, 0.2); }
+        .qty-action { width: 25px; height: 100%; display: flex; align-items: center; justify-content: center; font-weight: 900; cursor: pointer; }
 
-        /* Menu */
-        .menu-grid { padding: 10px 20px; display: flex; flex-direction: column; gap: 15px; }
-        .food-card { background: var(--card); border-radius: 30px; padding: 12px; display: flex; align-items: center; gap: 15px; box-shadow: 0 8px 20px -8px rgba(0,0,0,0.04); position: relative; cursor: pointer; border: 1px solid rgba(0,0,0,0.02); }
-        .food-img-box { width: 100px; height: 100px; border-radius: 50%; overflow: hidden; background: #eee; position: relative; flex-shrink: 0; border: 3px solid var(--primary-soft); }
-        .food-img { width: 100%; height: 100%; object-fit: cover; }
-        .food-info { flex: 1; }
-        .food-name { font-size: 1.1rem; font-weight: 700; color: var(--text); margin-bottom: 2px; }
-        .food-price { font-size: 1.1rem; font-weight: 800; color: var(--primary); }
-        .food-desc { font-size: 0.78rem; color: var(--text-sub); line-height: 1.3; margin-top: 4px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+        /* Floating Dock */
+        .dock { position: fixed; bottom: 25px; left: 50%; transform: translateX(-50%); width: 92%; max-width: 450px; z-index: 1000; }
+        .cart-bar { background: var(--zomato-red); color: white; border-radius: 14px; padding: 14px 20px; display: none; align-items: center; justify-content: space-between; box-shadow: 0 10px 30px rgba(226, 55, 68, 0.4); margin-bottom: 12px; cursor: pointer; font-weight: 700; }
+        .contact-bar { background: var(--white); border-radius: 16px; padding: 8px; display: flex; gap: 10px; box-shadow: 0 8px 25px rgba(0,0,0,0.1); border: 1px solid rgba(0,0,0,0.05); }
+        .c-btn { flex: 1; height: 48px; border-radius: 12px; border: none; display: flex; align-items: center; justify-content: center; gap: 8px; font-weight: 800; color: white; cursor: pointer; }
 
-        /* Plus Button */
-        .add-area { position: absolute; bottom: 12px; right: 12px; }
-        .plus-btn { width: 35px; height: 35px; background: var(--text); color: var(--card); border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1rem; box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
-        .qty-pill { display: flex; align-items: center; background: var(--text); color: var(--card); border-radius: 12px; height: 35px; padding: 0 8px; gap: 10px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
+        /* Modals */
+        .modal-bg { position: fixed; inset: 0; background: rgba(0,0,0,0.7); backdrop-filter: blur(5px); z-index: 2000; display: none; align-items: flex-end; justify-content: center; }
+        .sheet { background: var(--white); width: 100%; max-width: 550px; border-radius: 25px 25px 0 0; padding: 0 25px 35px; max-height: 95vh; overflow-y: auto; animation: sheetUp 0.4s ease; position: relative; }
+        @keyframes sheetUp { from{transform:translateY(100%)} to{transform:translateY(0)} }
+        .handle { width: 45px; height: 5px; background: #e0e0e0; border-radius: 10px; margin: 15px auto 20px; }
 
-        /* Dock Hub */
-        .dock-hub { position: fixed; bottom: 25px; left: 50%; transform: translateX(-50%); width: 90%; max-width: 400px; z-index: 1000; }
-        .cart-pill { background: var(--text); color: var(--card); border-radius: 50px; padding: 12px 25px; display: none; align-items: center; justify-content: space-between; box-shadow: 0 20px 40px rgba(0,0,0,0.3); margin-bottom: 12px; animation: slideUp 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); cursor: pointer; }
-        .contact-pill { background: var(--glass); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); padding: 8px; border-radius: 50px; display: flex; gap: 10px; border: 1px solid rgba(255,255,255,0.1); box-shadow: 0 10px 30px rgba(0,0,0,0.1); }
-        .c-btn { flex: 1; height: 50px; border-radius: 50px; border: none; display: flex; align-items: center; justify-content: center; gap: 10px; font-weight: 800; color: white; cursor: pointer; }
+        /* Detail Modal Specific */
+        .detail-img { width: 100%; height: 250px; border-radius: 20px; object-fit: cover; margin-bottom: 18px; box-shadow: 0 5px 15px rgba(0,0,0,0.08); border: 1px solid rgba(0,0,0,0.05); }
+        .detail-name { font-size: 1.6rem; font-weight: 800; color: var(--text-black); line-height: 1.2; }
+        .detail-price { font-size: 1.3rem; font-weight: 700; color: var(--zomato-red); margin: 5px 0 15px; }
 
-        /* Bottom Sheet */
-        .modal-bg { position: fixed; inset: 0; background: rgba(0,0,0,0.6); backdrop-filter: blur(10px); z-index: 2000; display: none; align-items: flex-end; justify-content: center; }
-        .sheet { background: var(--card); width: 100%; max-width: 500px; border-radius: 40px 40px 0 0; padding: 0 25px 35px; max-height: 92vh; overflow-y: auto; animation: sheetIn 0.4s ease-out; position: relative; }
-        @keyframes sheetIn { from{transform:translateY(100%)} to{transform:translateY(0)} }
-        .handle { width: 40px; height: 5px; background: #e2e8f0; border-radius: 10px; margin: 15px auto 25px; }
+        /* Cart Receipt Design */
+        .receipt-box { background: var(--bg-gray); border-radius: 18px; padding: 18px; margin-bottom: 20px; border: 1px solid rgba(0,0,0,0.03); }
+        .cart-row { display: flex; justify-content: space-between; margin-bottom: 10px; font-weight: 600; font-size: 0.95rem; }
+        .cart-total-row { display: flex; justify-content: space-between; padding-top: 12px; border-top: 1.5px dashed #ccc; margin-top: 12px; font-weight: 800; font-size: 1.4rem; color: var(--zomato-red); }
 
-        .d-img { width: 100%; height: 280px; border-radius: 35px; object-fit: cover; margin-bottom: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); border: 4px solid var(--primary-soft); }
-        input, select, textarea { width: 100%; padding: 15px; margin-bottom: 12px; border-radius: 18px; border: 1.5px solid rgba(0,0,0,0.05); background: var(--bg); color: var(--text); font-family: inherit; font-size: 1rem; outline: none; }
-        input:focus { border-color: var(--primary); }
-        .order-btn { background: var(--primary); color: white; width: 100%; padding: 18px; border: none; border-radius: 20px; font-size: 1.1rem; font-weight: 800; cursor: pointer; box-shadow: var(--shadow-btn); }
+        input, select, textarea { width: 100%; padding: 15px; margin-bottom: 12px; border-radius: 12px; border: 1px solid #ddd; background: var(--white); color: var(--text-black); font-family: inherit; font-size: 1rem; outline: none; }
+        .checkout-btn { background: var(--zomato-red); color: white; width: 100%; padding: 18px; border: none; border-radius: 15px; font-size: 1.1rem; font-weight: 800; cursor: pointer; box-shadow: 0 8px 20px rgba(226, 55, 68, 0.3); }
 
-        /* Location */
-        .loc-section { padding: 10px 20px 30px; display: none; }
-        .loc-card { background: var(--card); border-radius: 35px; overflow: hidden; box-shadow: 0 10px 20px rgba(0,0,0,0.05); text-align: center; }
-        .map-frame { width: 100%; height: 200px; border: none; }
+        /* Map Section */
+        .map-section { padding: 30px 20px; display: none; max-width: 600px; margin: 0 auto; }
+        .map-card { background: var(--white); border-radius: 20px; overflow: hidden; box-shadow: var(--shadow); text-align: center; }
+        .map-iframe { width: 100%; height: 200px; border: none; }
     </style>
 </head>
 <body oncontextmenu="return false;">
 
     <div id="toast" class="toast"><i class="fas fa-check-circle"></i> <span id="toast-msg">Success</span></div>
 
-    <!-- Header -->
-    <div class="header">
-        <div class="brand-logo">
-            <h1>Radhe Krishna</h1>
-            <span>Night Menu</span>
+    <!-- Fixed Header -->
+    <div class="header-fixed">
+        <div class="header-content">
+            <div class="brand">
+                <h1>Radhe Krishna</h1>
+                <p>Midnight Menu</p>
+            </div>
+            <div class="theme-toggle" onclick="document.body.classList.toggle('dark-mode')"><i class="fas fa-moon"></i></div>
         </div>
-        <div class="mode-btn" onclick="document.body.classList.toggle('dark-mode')"><i class="fas fa-moon"></i></div>
-    </div>
-
-    <!-- Improved Marquee Pill -->
-    <div class="marquee-pill-wrapper">
-        <div class="marquee-pill">
-            <div class="marquee-icon"><i class="fas fa-bullhorn"></i></div>
-            <div class="marquee-track">
-                <div class="marquee-content" id="scroll-text">Welcome to Radhe Krishna Night Menu! Pure Veg & Fresh Food...</div>
+        <!-- Premium Marquee -->
+        <div class="marquee-container">
+            <div class="marquee-pill">
+                <i class="fas fa-bullhorn"></i>
+                <div class="marquee-track">
+                    <div class="marquee-content" id="scroll-text">Welcome to Radhe Krishna Night Menu! Order pure vegetarian food till midnight.</div>
+                </div>
             </div>
         </div>
     </div>
 
-    <!-- Banner -->
-    <div class="hero-banner">
+    <!-- Hero Banner -->
+    <div class="banner-area">
         <div class="slider-box" id="banner-slider"></div>
     </div>
 
-    <!-- Status & Categories -->
-    <div class="tabs" id="cat-list"></div>
+    <!-- Categories -->
+    <div class="cats" id="cat-list"></div>
 
-    <!-- Menu -->
+    <!-- Menu Items -->
     <div class="menu-grid" id="menu-container"></div>
 
     <!-- Location -->
-    <div class="loc-section" id="loc-area">
-        <div class="loc-card">
-            <iframe id="map-iframe" class="map-frame" loading="lazy"></iframe>
-            <div style="padding:15px;"><a href="#" id="map-link" target="_blank" style="color:#3b82f6; text-decoration:none; font-weight:800; font-size:0.9rem;">📍 Open Direction in Google Maps</a></div>
+    <div class="map-section" id="loc-area">
+        <div class="map-card">
+            <iframe id="map-iframe" class="map-iframe" loading="lazy"></iframe>
+            <div style="padding:15px;"><a href="#" id="map-link" target="_blank" style="color:#3b82f6; text-decoration:none; font-weight:800; font-size:0.85rem;">📍 Open Direction on Google Maps</a></div>
         </div>
     </div>
 
-    <!-- Bottom Dock Hub -->
-    <div class="dock-hub">
-        <div class="cart-pill" id="cart-pill" onclick="openModal('cart')">
-            <span id="c-total" style="font-weight: 800; font-size: 1.1rem;">₹0</span>
-            <span style="font-weight: 800; font-size: 0.85rem;">VIEW CART <i class="fas fa-arrow-right" style="margin-left:5px;"></i></span>
+    <!-- Floating Dock Hub -->
+    <div class="dock">
+        <div class="cart-bar" id="cart-pill" onclick="openModal('cart')">
+            <span id="c-items-count">0 ITEM</span>
+            <span id="c-total">VIEW CART ₹0 <i class="fas fa-caret-right"></i></span>
         </div>
-        <div class="contact-pill">
-            <button class="c-btn" style="background:#3b82f6;" onclick="triggerCall()"><i class="fas fa-phone-alt"></i> Call</button>
-            <button class="c-btn" style="background:#10b981;" onclick="triggerWA()"><i class="fab fa-whatsapp"></i> Chat</button>
+        <div class="contact-bar">
+            <button class="c-btn" style="background:#1E88E5;" onclick="triggerCall()"><i class="fas fa-phone-alt"></i> Call</button>
+            <button class="c-btn" style="background:#24963F;" onclick="triggerWA()"><i class="fab fa-whatsapp"></i> WhatsApp</button>
         </div>
     </div>
 
-    <!-- Modal Sheets -->
+    <!-- Modals -->
     <div class="modal-bg" id="modal-cart">
         <div class="sheet" id="sheet-cart">
             <div class="handle"></div>
-            <h2 style="font-weight:800; margin-bottom:20px; text-align:center;">Order Review</h2>
-            <div id="cart-items-list" style="background:var(--bg); padding:15px; border-radius:25px; margin-bottom:20px;"></div>
-            <div style="display:flex; justify-content:space-between; padding:0 10px 20px; font-weight:800; font-size:1.4rem;">
-                <span>Grand Total</span><span id="m-total">₹0</span>
+            <h2 style="font-weight:800; margin-bottom:20px; text-align:center;">Order Receipt</h2>
+            <div class="receipt-box">
+                <div id="cart-items-list"></div>
+                <div class="cart-total-row">
+                    <span>Grand Total</span><span id="m-total">₹0</span>
+                </div>
             </div>
-            <input type="text" id="o-name" placeholder="আপনার নাম (Name)">
-            <input type="tel" id="o-phone" placeholder="মোবাইল (Mobile)">
-            <textarea id="o-addr" rows="2" placeholder="পূর্ণ ঠিকানা (Full Address)"></textarea>
+            <input type="text" id="o-name" placeholder="আপনার নাম (Full Name)">
+            <input type="tel" id="o-phone" placeholder="মোবাইল নাম্বার (Mobile Number)">
+            <textarea id="o-addr" rows="2" placeholder="সম্পূর্ণ ঠিকানা (Delivery Address)"></textarea>
             <input type="text" id="o-land" placeholder="ল্যান্ডমার্ক (Landmark)">
-            <select id="o-pay"><option>Cash on Delivery</option><option>UPI / Online Payment</option></select>
+            <select id="o-pay"><option>Cash on Delivery</option><option>Online / UPI Payment</option></select>
             <select id="o-time"><option>9:00 PM – 10:00 PM</option><option>10:00 PM – 11:00 PM</option><option>11:00 PM – 12:00 AM</option></select>
-            <button class="order-btn" onclick="confirmOrder()"><i class="fab fa-whatsapp"></i> Place WhatsApp Order</button>
+            <button class="checkout-btn" onclick="confirmOrder()"><i class="fab fa-whatsapp"></i> Confirm & Send via WhatsApp</button>
         </div>
     </div>
 
@@ -213,9 +198,9 @@
         <div class="sheet" id="sheet-detail">
             <div class="handle"></div>
             <img src="" id="d-img" class="detail-img">
-            <div style="font-size:1.6rem; font-weight:800;" id="d-name"></div>
-            <div style="font-size:1.3rem; font-weight:700; color:var(--primary); margin:8px 0 15px;" id="d-price"></div>
-            <div id="d-desc" style="color:var(--text-sub); line-height:1.6; font-size:0.95rem;"></div>
+            <div class="detail-name" id="d-name"></div>
+            <div class="detail-price" id="d-price"></div>
+            <div id="d-desc" style="color:var(--text-gray); line-height:1.6; font-size:0.95rem; font-weight:500;"></div>
             <div style="height:30px;"></div>
         </div>
     </div>
@@ -244,7 +229,7 @@
             document.getElementById('scroll-text').innerText = conf.marqueeText || "Welcome to Radhe Krishna";
             const sl = document.getElementById('banner-slider'); sl.innerHTML = '';
             if(conf.banners) conf.banners.forEach((s,i) => sl.innerHTML += `<img src="${s}" class="slide ${i==0?'active':''}">`);
-            sl.innerHTML += `<div class="status-tag ${conf.restaurantOpen?'':'closed'}"><div class="st-dot"></div> <span>${conf.restaurantOpen?'OPEN NOW':'CLOSED'}</span></div>`;
+            sl.innerHTML += `<div class="status-badge ${conf.restaurantOpen?'':'closed'}"><div class="dot"></div> <span>${conf.restaurantOpen?'OPEN':'CLOSED'}</span></div>`;
 
             if(slideInt) clearInterval(slideInt);
             let sIdx=0; slideInt = setInterval(()=>{
@@ -261,8 +246,8 @@
 
         function renderCats() {
             const d=document.getElementById('cat-list');
-            let h=`<div class="tab-item ${activeCat=='all'?'active':''}" onclick="setCat('all')">All Menu</div>`;
-            for(let k in cats) h+=`<div class="tab-item ${activeCat==k?'active':''}" onclick="setCat('${k}')">${cats[k].name}</div>`;
+            let h=`<div class="cat-item ${activeCat=='all'?'active':''}" onclick="setCat('all')">All Menu</div>`;
+            for(let k in cats) h+=`<div class="cat-item ${activeCat==k?'active':''}" onclick="setCat('${k}')">${cats[k].name}</div>`;
             d.innerHTML=h;
         }
         window.setCat=(c)=>{activeCat=c; renderCats(); renderMenu();}
@@ -273,22 +258,24 @@
                 let i=menu[id];
                 if(i.isAvailable===false || (activeCat!=='all' && i.category!==activeCat)) continue;
                 let q=cart[id]||0;
+                
+                // Zomato Red ADD Button Logic
                 let action = q===0 
-                    ? `<div class="plus-btn" onclick="upd(event,'${id}',1)"><i class="fas fa-plus"></i></div>`
-                    : `<div class="qty-pill" onclick="event.stopPropagation()"><div onclick="upd(event,'${id}',-1)" style="padding:0 5px;">-</div><div style="font-weight:800;">${q}</div><div onclick="upd(event,'${id}',1)" style="padding:0 5px;">+</div></div>`;
+                    ? `<div class="btn-zomato-add" onclick="upd(event,'${id}',1)">ADD</div>`
+                    : `<div class="qty-zomato" onclick="event.stopPropagation()"><div class="qty-action" onclick="upd(event,'${id}',-1)">-</div><div style="font-weight:900; font-size:0.95rem;">${q}</div><div class="qty-action" onclick="upd(event,'${id}',1)">+</div></div>`;
 
                 d.innerHTML += `
                 <div class="food-card" onclick="openDet('${id}')">
-                    <div class="food-img-box">
-                        <img src="${i.image||'https://via.placeholder.com/150'}" class="food-img">
-                        <div class="veg-tag"></div>
-                    </div>
-                    <div class="food-info">
+                    <div class="food-details">
+                        <div class="veg-icon"></div>
                         <div class="food-name">${i.name}</div>
                         <div class="food-price">₹${i.price}</div>
-                        <div class="food-desc">${i.description||'Delicious pure veg delight.'}</div>
+                        ${i.description ? `<div class="food-desc">${i.description}</div>` : ''}
                     </div>
-                    <div class="add-area">${action}</div>
+                    <div class="food-img-container">
+                        <img src="${i.image||'https://via.placeholder.com/150'}" class="food-img">
+                        <div class="add-btn-box">${action}</div>
+                    </div>
                 </div>`;
             }
         }
@@ -303,7 +290,8 @@
 
         function updateCartDock() {
             let c=0, t=0; for(let id in cart){c+=cart[id]; t+=cart[id]*menu[id].price;}
-            document.getElementById('c-total').innerText = `₹${t}`;
+            document.getElementById('c-items-count').innerText = `${c} ITEM${c>1?'S':''}`;
+            document.getElementById('c-total').innerHTML = `VIEW CART ₹${t} <i class="fas fa-caret-right"></i>`;
             document.getElementById('cart-pill').style.display = c>0?'flex':'none';
         }
 
@@ -316,7 +304,12 @@
                 let d=document.getElementById('cart-items-list'); d.innerHTML=''; let t=0;
                 for(let id in cart){
                     let i=menu[id], sub=i.price*cart[id]; t+=sub;
-                    d.innerHTML+=`<div style="display:flex; justify-content:space-between; margin-bottom:12px; font-weight:700;"><div>${i.name} <span style="color:var(--text-sub)">x${cart[id]}</span></div><div>₹${sub}</div></div>`;
+                    d.innerHTML+=`
+                    <div class="cart-row">
+                        <div style="flex:1;">${i.name}</div>
+                        <div style="margin:0 15px; color:var(--text-gray);">x ${cart[id]}</div>
+                        <div>₹${sub}</div>
+                    </div>`;
                 }
                 document.getElementById('m-total').innerText = `₹${t}`;
             }
@@ -327,7 +320,8 @@
             document.getElementById('d-img').src = i.image || 'https://via.placeholder.com/400';
             document.getElementById('d-name').innerText = i.name;
             document.getElementById('d-price').innerText = '₹' + i.price;
-            document.getElementById('d-desc').innerText = i.description || 'Delicious Pure Veg Food.';
+            const descBox = document.getElementById('d-desc');
+            if(i.description) { descBox.innerText = i.description; descBox.style.display = 'block'; } else { descBox.style.display = 'none'; }
             openModal('detail');
         }
 
@@ -360,24 +354,25 @@
 
         window.confirmOrder = () => {
             const n=document.getElementById('o-name').value.trim(), p=document.getElementById('o-phone').value.trim(), a=document.getElementById('o-addr').value.trim(), l=document.getElementById('o-land').value.trim();
-            if(!n || !p || !a) { showToast("Missing Info!"); return; }
+            if(!n || !p || !a) { showToast("Missing Information!"); return; }
             let total = 0, itemsStr = "";
-            for(let id in cart){ let i = menu[id]; itemsStr += `▫️ *${i.name}* (x${cart[id]}) ... ₹${i.price*cart[id]}\n`; total += i.price*cart[id]; }
+            for(let id in cart){ let i = menu[id]; itemsStr += `▪️ *${i.name}* (x${cart[id]}) ... ₹${i.price*cart[id]}\n`; total += i.price*cart[id]; }
 
-            let msg = `✨ *RADHE KRISHNA — NIGHT ORDER* ✨\n`;
+            let msg = `✨ *RADHE KRISHNA — MIDNIGHT ORDER* ✨\n`;
             msg += `🌿 _Pure Vegetarian Night Menu_\n`;
             msg += `──────────────────\n\n`;
-            msg += `👤 *Customer:* ${n}\n`;
-            msg += `📞 *Mobile:* ${p}\n`;
-            msg += `📍 *Address:* ${a}\n`;
+            msg += `👤 *Customer Details:*\n`;
+            msg += `▫️ *Name:* ${n}\n`;
+            msg += `▫️ *Mobile:* ${p}\n`;
+            msg += `▫️ *Address:* ${a}\n`;
             if(l) msg += `🗺️ *Landmark:* ${l}\n`;
-            msg += `\n🛒 *Order Items:*\n${itemsStr}`;
+            msg += `\n🛒 *Order Summary:*\n${itemsStr}`;
             msg += `──────────────────\n`;
             msg += `💰 *Grand Total: ₹${total}*\n`;
             msg += `──────────────────\n\n`;
             msg += `💳 *Payment:* ${document.getElementById('o-pay').value}\n`;
-            msg += `⏰ *Time:* ${document.getElementById('o-time').value}\n\n`;
-            msg += `_Generated via Radhe Krishna App_`;
+            msg += `⏰ *Delivery:* ${document.getElementById('o-time').value}\n\n`;
+            msg += `_Sent via Radhe Krishna Digital_`;
             window.open(`https://wa.me/${conf.whatsappOrderNumber}?text=${encodeURIComponent(msg)}`,'_blank');
         }
     </script>
