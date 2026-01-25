@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body { font-family: 'Inter', sans-serif; background: #f1f5f9; display: flex; margin: 0; height: 100vh; overflow: hidden; }
+        .sidebar { width: 250px; background: #0f172a; color: #94a3b8; padding: 20px; display: flex; flex-direction: column; }
+        .nav-btn { padding: 12px; margin-bottom: 5px; cursor: pointer; border-radius: 6px; display: flex; gap: 10px; align-items: center; }
+        .nav-btn.active, .nav-btn:hover { background: #1e293b; color: white; }
+        
+        .content { flex: 1; padding: 30px; overflow-y: auto; }
+        .section { display: none; }
+        .section.active { display: block; }
+        
+        .card { background: white; padding: 20px; border-radius: 12px; margin-bottom: 20px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); }
+        input, select { width: 100%; padding: 10px; margin: 10px 0; border: 1px solid #ccc; border-radius: 6px; box-sizing: border-box; }
+        
+        /* Toggle Switch */
+        .switch { position: relative; display: inline-block; width: 44px; height: 24px; }
+        .switch input { opacity: 0; width: 0; height: 0; }
+        .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #ccc; transition: .4s; border-radius: 34px; }
+        .slider:before { position: absolute; content: ""; height: 18px; width: 18px; left: 3px; bottom: 3px; background-color: white; transition: .4s; border-radius: 50%; }
+        input:checked + .slider { background-color: #10b981; }
+        input:checked + .slider:before { transform: translateX(20px); }
+
+        .row { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #eee; padding: 10px 0; }
+        .btn { padding: 8px 15px; border: none; border-radius: 6px; color: white; cursor: pointer; }
+        .bg-blue { background: #3b82f6; } .bg-red { background: #ef4444; } .bg-green { background: #10b981; }
+    </style>
+</head>
+<body>
+
+    <div class="sidebar">
+        <h2 style="color:white; margin-top:0;">Admin</h2>
+        <div class="nav-btn active" onclick="nav('dash')"><i class="fas fa-home"></i> Dashboard</div>
+        <div class="nav-btn" onclick="nav('cats')"><i class="fas fa-tags"></i> Categories</div>
+        <div class="nav-btn" onclick="nav('menu')"><i class="fas fa-utensils"></i> Menu Items</div>
+        <div class="nav-btn" onclick="nav('design')"><i class="fas fa-image"></i> Banners</div>
+    </div>
+
+    <div class="content">
+        
+        <!-- Dashboard -->
+        <div id="dash" class="section active">
+            <h2>Dashboard</h2>
+            <div class="card">
+                <div style="display:flex; justify-content:space-between; align-items:center;">
+                    <span>Restaurant Open/Close</span>
+                    <label class="switch"><input type="checkbox" id="shop-open" onchange="saveConfig()"><span class="slider"></span></label>
+                </div>
+            </div>
+            <div class="card">
+                <h3>Settings</h3>
+                <input type="text" id="wa" placeholder="WhatsApp Number">
+                <input type="text" id="mq" placeholder="Marquee Text">
+                <input type="number" id="sp" placeholder="Speed">
+                <button class="btn bg-blue" onclick="saveConfig()">Save</button>
+            </div>
+        </div>
+
+        <!-- Categories -->
+        <div id="cats" class="section">
+            <h2>Categories</h2>
+            <div class="card">
+                <input type="text" id="new-cat" placeholder="Category Name">
+                <button class="btn bg-blue" onclick="addCat()">Add</button>
+                <div id="cat-list" style="margin-top:20px;"></div>
+            </div>
+        </div>
+
+        <!-- Menu -->
+        <div id="menu" class="section">
+            <h2>Menu</h2>
+            <div class="card" style="border-top: 4px solid #10b981;">
+                <h3>Add Item</h3>
+                <input type="text" id="n-name" placeholder="Name">
+                <input type="number" id="n-price" placeholder="Price">
+                <select id="n-cat"></select>
+                <input type="text" id="n-img" placeholder="Image Link">
+                <input type="text" id="n-desc" placeholder="Description">
+                <button class="btn bg-green" onclick="addItem()">Add Item</button>
+            </div>
+            
+            <div class="card">
+                <h3>Item List (Toggle to Hide/Show)</h3>
+                <div id="menu-list"></div>
+            </div>
+        </div>
+
+        <!-- Design -->
+        <div id="design" class="section">
+            <h2>Banners</h2>
+            <div class="card">
+                <input type="text" id="b1"><input type="text" id="b2"><input type="text" id="b3">
+                <button class="btn bg-blue" onclick="saveBan()">Update</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Modal -->
+    <div id="edit-modal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); justify-content:center; align-items:center;">
+        <div style="background:white; padding:20px; border-radius:10px; width:350px;">
+            <h3>Edit</h3>
+            <input type="hidden" id="e-id">
+            <input type="text" id="e-name">
+            <input type="number" id="e-price">
+            <select id="e-cat"></select>
+            <input type="text" id="e-img">
+            <input type="text" id="e-desc">
+            <button class="btn bg-blue" onclick="saveEdit()">Save</button>
+            <button class="btn bg-red" onclick="document.getElementById('edit-modal').style.display='none'">Close</button>
+        </div>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js";
+        import { getDatabase, ref, onValue, update, push, remove } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-database.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyDifkwUmP5MehfgXdhFTs6DQzX-pNR2snE",
+            authDomain: "radhe-krishna-1bc79.firebaseapp.com",
+            databaseURL: "https://radhe-krishna-1bc79-default-rtdb.asia-southeast1.firebasedatabase.app",
+            projectId: "radhe-krishna-1bc79",
+            storageBucket: "radhe-krishna-1bc79.firebasestorage.app",
+            messagingSenderId: "755534416421",
+            appId: "1:755534416421:web:6b97cac0c954d223094dcc"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase(app);
+        
+        let cats = {}, menu = {};
+
+        // Nav
+        window.nav = (id) => {
+            document.querySelectorAll('.section').forEach(d=>d.classList.remove('active'));
+            document.getElementById(id).classList.add('active');
+            document.querySelectorAll('.nav-btn').forEach(d=>d.classList.remove('active'));
+            event.currentTarget.classList.add('active');
+        }
+
+        // Config
+        onValue(ref(db, 'config'), snap => {
+            const c = snap.val() || {};
+            document.getElementById('shop-open').checked = c.restaurantOpen;
+            document.getElementById('wa').value = c.whatsappNumber || '';
+            document.getElementById('mq').value = c.marqueeText || '';
+            document.getElementById('sp').value = c.marqueeSpeed || 15;
+            if(c.banners){ document.getElementById('b1').value=c.banners[0]||''; document.getElementById('b2').value=c.banners[1]||''; document.getElementById('b3').value=c.banners[2]||''; }
+        });
+        window.saveConfig = () => update(ref(db, 'config'), { restaurantOpen: document.getElementById('shop-open').checked, whatsappNumber: document.getElementById('wa').value, marqueeText: document.getElementById('mq').value, marqueeSpeed: document.getElementById('sp').value });
+        window.saveBan = () => update(ref(db, 'config'), { banners: [document.getElementById('b1').value, document.getElementById('b2').value, document.getElementById('b3').value] });
+
+        // Cats
+        onValue(ref(db, 'categories'), snap => {
+            cats = snap.val() || {};
+            const l = document.getElementById('cat-list');
+            const s = document.getElementById('n-cat');
+            const es = document.getElementById('e-cat');
+            l.innerHTML = ''; s.innerHTML = ''; es.innerHTML = '';
+            for(let id in cats) {
+                l.innerHTML += `<div class="row"><span>${cats[id].name}</span> <button class="btn bg-red" onclick="delCat('${id}')">X</button></div>`;
+                s.innerHTML += `<option value="${id}">${cats[id].name}</option>`;
+                es.innerHTML += `<option value="${id}">${cats[id].name}</option>`;
+            }
+        });
+        window.addCat = () => push(ref(db, 'categories'), { name: document.getElementById('new-cat').value });
+        window.delCat = (id) => remove(ref(db, `categories/${id}`));
+
+        // Menu
+        onValue(ref(db, 'menu'), snap => {
+            menu = snap.val() || {};
+            const l = document.getElementById('menu-list');
+            l.innerHTML = '';
+            for(let id in menu) {
+                const i = menu[id];
+                // TOGGLE LOGIC: Checkbox checks 'isAvailable'
+                const checked = i.isAvailable !== false ? 'checked' : ''; 
+                
+                l.innerHTML += `
+                <div class="row">
+                    <div style="display:flex; align-items:center; gap:10px;">
+                        <img src="${i.image||''}" style="width:40px; height:40px; border-radius:5px;">
+                        <div>
+                            <b>${i.name}</b> (${i.price})<br>
+                            <small>${cats[i.category]?.name || 'Unknown'}</small>
+                        </div>
+                    </div>
+                    <div style="display:flex; align-items:center; gap:10px;">
+                        <label class="switch" title="Show/Hide in User App">
+                            <input type="checkbox" ${checked} onchange="toggleItem('${id}', this.checked)">
+                            <span class="slider"></span>
+                        </label>
+                        <button class="btn bg-blue" onclick="editItem('${id}')"><i class="fas fa-edit"></i></button>
+                        <button class="btn bg-red" onclick="delItem('${id}')"><i class="fas fa-trash"></i></button>
+                    </div>
+                </div>`;
+            }
+        });
+
+        window.addItem = () => {
+            push(ref(db, 'menu'), {
+                name: document.getElementById('n-name').value,
+                price: parseInt(document.getElementById('n-price').value),
+                category: document.getElementById('n-cat').value,
+                image: document.getElementById('n-img').value,
+                description: document.getElementById('n-desc').value,
+                isAvailable: true // Default ON
+            });
+        };
+        
+        // Toggle Function
+        window.toggleItem = (id, status) => {
+            update(ref(db, `menu/${id}`), { isAvailable: status });
+        };
+
+        window.delItem = (id) => { if(confirm("Delete?")) remove(ref(db, `menu/${id}`)); };
+        
+        window.editItem = (id) => {
+            const i = menu[id];
+            document.getElementById('e-id').value = id;
+            document.getElementById('e-name').value = i.name;
+            document.getElementById('e-price').value = i.price;
+            document.getElementById('e-cat').value = i.category;
+            document.getElementById('e-img').value = i.image || '';
+            document.getElementById('e-desc').value = i.description || '';
+            document.getElementById('edit-modal').style.display = 'flex';
+        };
+
+        window.saveEdit = () => {
+            const id = document.getElementById('e-id').value;
+            update(ref(db, `menu/${id}`), {
+                name: document.getElementById('e-name').value,
+                price: parseInt(document.getElementById('e-price').value),
+                category: document.getElementById('e-cat').value,
+                image: document.getElementById('e-img').value,
+                description: document.getElementById('e-desc').value
+            }).then(()=>document.getElementById('edit-modal').style.display = 'none');
+        };
+
+    </script>
+</body>
+</html>
