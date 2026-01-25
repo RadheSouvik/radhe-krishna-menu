@@ -9,42 +9,58 @@
     <style>
         body { font-family: 'Inter', sans-serif; margin: 0; background: #f3f4f6; }
         
+        /* Toast & Loader */
         .custom-toast { position: fixed; top: 20px; left: 50%; transform: translateX(-50%); background: #333; color: white; padding: 12px 25px; border-radius: 50px; z-index: 10000; opacity: 0; transition: 0.3s; pointer-events: none; }
         .custom-toast.show { opacity: 1; top: 30px; }
         .loader-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255,255,255,0.8); z-index: 9999; display: none; justify-content: center; align-items: center; flex-direction: column; }
         .spinner { border: 4px solid #f3f3f3; border-top: 4px solid #3498db; border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 
+        /* Premium Login Screen */
         .login-wrap { 
             position: fixed; top:0; left:0; width:100%; height:100%; 
-            background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%); 
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); 
             z-index: 5000; display: flex; justify-content: center; align-items: center; 
         }
         .login-card { 
-            background: rgba(255, 255, 255, 0.1); 
-            backdrop-filter: blur(10px); 
-            padding: 40px 30px; border-radius: 20px; width: 320px; text-align: center; 
-            box-shadow: 0 20px 50px rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.1);
-            animation: floatUp 0.5s ease-out;
+            background: rgba(255, 255, 255, 0.05); 
+            backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px);
+            padding: 40px; border-radius: 24px; width: 320px; text-align: center; 
+            border: 1px solid rgba(255,255,255,0.1);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            animation: popIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
-        @keyframes floatUp { from{transform:translateY(20px);opacity:0} to{transform:translateY(0);opacity:1} }
+        @keyframes popIn { from{transform:scale(0.9);opacity:0} to{transform:scale(1);opacity:1} }
         
-        .login-title { color: white; font-size: 1.8rem; font-weight: 700; margin-bottom: 5px; }
-        .login-sub { color: #94a3b8; font-size: 0.9rem; margin-bottom: 25px; }
-        .pin-input { 
-            background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.2); 
-            color: white; font-size: 1.5rem; letter-spacing: 8px; text-align: center; 
-            padding: 15px; border-radius: 12px; width: 100%; box-sizing: border-box; 
-            margin-bottom: 20px; transition: 0.3s;
+        .login-icon { 
+            width: 60px; height: 60px; background: rgba(59, 130, 246, 0.2); 
+            border-radius: 50%; display: flex; align-items: center; justify-content: center; 
+            margin: 0 auto 20px; color: #60a5fa; font-size: 1.5rem;
         }
-        .pin-input:focus { border-color: #3b82f6; outline: none; background: rgba(255,255,255,0.1); }
-        .login-btn { 
-            background: #3b82f6; color: white; border: none; padding: 15px; width: 100%; 
-            border-radius: 12px; font-size: 1rem; font-weight: 600; cursor: pointer; 
-            transition: 0.3s; box-shadow: 0 5px 15px rgba(59, 130, 246, 0.3);
+        .login-title { color: white; font-size: 1.5rem; font-weight: 700; margin-bottom: 5px; }
+        .login-sub { color: #94a3b8; font-size: 0.9rem; margin-bottom: 30px; }
+        
+        /* PIN Boxes */
+        .pin-container { display: flex; justify-content: center; gap: 12px; margin-bottom: 30px; }
+        .pin-box {
+            width: 50px; height: 50px; border-radius: 12px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: white; font-size: 1.5rem; text-align: center;
+            outline: none; transition: 0.3s; caret-color: transparent;
         }
-        .login-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(59, 130, 246, 0.4); }
+        .pin-box:focus { border-color: #3b82f6; background: rgba(59, 130, 246, 0.1); transform: translateY(-2px); }
+        .pin-box.error { border-color: #ef4444; animation: shake 0.3s; }
+        @keyframes shake { 0%, 100% {transform: translateX(0);} 25% {transform: translateX(-5px);} 75% {transform: translateX(5px);} }
 
+        .login-btn { 
+            background: #3b82f6; color: white; border: none; padding: 14px; width: 100%; 
+            border-radius: 12px; font-size: 1rem; font-weight: 600; cursor: pointer; 
+            transition: 0.2s; box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+        }
+        .login-btn:active { transform: scale(0.98); }
+
+        /* Navigation */
         .top-nav { background: #1e293b; color: white; padding: 15px; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 1000; }
         .burger { font-size: 1.5rem; cursor: pointer; }
         .sidebar { position: fixed; top: 0; left: -250px; width: 250px; height: 100%; background: #1e293b; padding-top: 60px; transition: 0.3s; z-index: 999; box-shadow: 2px 0 10px rgba(0,0,0,0.2); display: flex; flex-direction: column; }
@@ -79,11 +95,20 @@
 </head>
 <body>
 
+    <!-- New Modern Login Screen with 4-Box PIN -->
     <div id="login-screen" class="login-wrap">
         <div class="login-card">
+            <div class="login-icon"><i class="fas fa-lock"></i></div>
             <div class="login-title">Admin Access</div>
-            <div class="login-sub">Please enter your security PIN</div>
-            <input type="password" id="input-pin" class="pin-input" maxlength="4" placeholder="••••">
+            <div class="login-sub">Enter your 4-digit security PIN</div>
+            
+            <div class="pin-container">
+                <input type="tel" class="pin-box" maxlength="1" oninput="moveFocus(this, 'p2')" id="p1">
+                <input type="tel" class="pin-box" maxlength="1" oninput="moveFocus(this, 'p3')" id="p2">
+                <input type="tel" class="pin-box" maxlength="1" oninput="moveFocus(this, 'p4')" id="p3">
+                <input type="tel" class="pin-box" maxlength="1" oninput="checkSubmit()" id="p4">
+            </div>
+
             <button class="login-btn" onclick="checkLogin()">Unlock Dashboard</button>
         </div>
     </div>
@@ -178,7 +203,7 @@
         </div>
     </div>
 
-    <!-- PIN Change Modal (New Logic) -->
+    <!-- PIN Change Modal -->
     <div class="modal-wrap" id="modal-pin">
         <div class="modal-box">
             <h3>Change Security PIN</h3>
@@ -239,13 +264,33 @@
         let cats={}, menu={}, currentPin="1234";
         const loader = document.getElementById('loader');
         
+        // Auto Focus Logic
+        window.moveFocus = (curr, nextId) => {
+            if(curr.value.length === 1 && nextId) {
+                document.getElementById(nextId).focus();
+            }
+        }
+        window.checkSubmit = () => {
+            // Optional: Auto submit when last digit entered
+        }
+
         window.checkLogin = () => {
-            const input = document.getElementById('input-pin').value;
-            if(input === currentPin) {
+            const p1 = document.getElementById('p1').value;
+            const p2 = document.getElementById('p2').value;
+            const p3 = document.getElementById('p3').value;
+            const p4 = document.getElementById('p4').value;
+            const fullPin = p1 + p2 + p3 + p4;
+
+            if(fullPin === currentPin) {
                 document.getElementById('login-screen').style.display = 'none';
                 showToast("Welcome Admin");
             } else {
-                showToast("Wrong PIN!");
+                document.querySelectorAll('.pin-box').forEach(b => {
+                    b.classList.add('error');
+                    b.value = '';
+                });
+                setTimeout(() => document.querySelectorAll('.pin-box').forEach(b => b.classList.remove('error')), 300);
+                document.getElementById('p1').focus();
             }
         }
 
@@ -281,37 +326,24 @@
 
         window.openPinModal = () => {
             toggleMenu(); 
-            // Clear inputs
             document.getElementById('old-pin').value = '';
             document.getElementById('new-pin').value = '';
             document.getElementById('confirm-pin').value = '';
             document.getElementById('modal-pin').style.display = 'flex';
         }
 
-        // New PIN Change Logic
         window.changePinLogic = () => {
             const oldP = document.getElementById('old-pin').value;
             const newP = document.getElementById('new-pin').value;
             const confP = document.getElementById('confirm-pin').value;
 
-            if (oldP !== currentPin) {
-                showToast("Old PIN is incorrect!");
-                return;
-            }
-            if (newP.length < 4) {
-                showToast("PIN must be 4 digits");
-                return;
-            }
-            if (newP !== confP) {
-                showToast("New PINs do not match!");
-                return;
-            }
+            if (oldP !== currentPin) { showToast("Old PIN is incorrect!"); return; }
+            if (newP.length < 4) { showToast("PIN must be 4 digits"); return; }
+            if (newP !== confP) { showToast("New PINs do not match!"); return; }
 
             showLoad();
             update(ref(db, 'config'), { adminPin: newP }).then(() => { 
-                hideLoad();
-                closeModals(); 
-                showToast("PIN Changed Successfully!"); 
+                hideLoad(); closeModals(); showToast("PIN Changed Successfully!"); 
             });
         }
 
