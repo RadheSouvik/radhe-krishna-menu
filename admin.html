@@ -9,14 +9,12 @@
     <style>
         body { font-family: 'Inter', sans-serif; margin: 0; background: #f3f4f6; }
         
-        /* Toast & Loader */
         .custom-toast { position: fixed; top: 20px; left: 50%; transform: translateX(-50%); background: #333; color: white; padding: 12px 25px; border-radius: 50px; z-index: 10000; opacity: 0; transition: 0.3s; pointer-events: none; }
         .custom-toast.show { opacity: 1; top: 30px; }
         .loader-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255,255,255,0.8); z-index: 9999; display: none; justify-content: center; align-items: center; flex-direction: column; }
         .spinner { border: 4px solid #f3f3f3; border-top: 4px solid #3498db; border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 
-        /* Modern Login Screen */
         .login-wrap { 
             position: fixed; top:0; left:0; width:100%; height:100%; 
             background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%); 
@@ -47,7 +45,6 @@
         }
         .login-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(59, 130, 246, 0.4); }
 
-        /* Navigation */
         .top-nav { background: #1e293b; color: white; padding: 15px; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 1000; }
         .burger { font-size: 1.5rem; cursor: pointer; }
         .sidebar { position: fixed; top: 0; left: -250px; width: 250px; height: 100%; background: #1e293b; padding-top: 60px; transition: 0.3s; z-index: 999; box-shadow: 2px 0 10px rgba(0,0,0,0.2); display: flex; flex-direction: column; }
@@ -58,7 +55,6 @@
         .nav-btn { color: #94a3b8; padding: 15px 20px; display: flex; align-items: center; gap: 10px; text-decoration: none; font-weight: 500; border-left: 4px solid transparent; cursor: pointer; }
         .nav-btn.active, .nav-btn:hover { background: #334155; color: white; border-left: 4px solid #3b82f6; }
         
-        /* Layout */
         .main { padding: 20px; max-width: 800px; margin: 0 auto; padding-bottom: 80px; }
         .page { display: none; animation: fadeIn 0.3s; } .page.active { display: block; }
         @keyframes fadeIn { from{opacity:0}to{opacity:1} }
@@ -66,12 +62,10 @@
         .card { background: white; padding: 20px; border-radius: 12px; margin-bottom: 15px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
         input, select { width: 100%; padding: 12px; margin: 8px 0; border: 1px solid #ccc; border-radius: 8px; box-sizing: border-box; }
         
-        /* Buttons */
         .btn { padding: 12px; width: 100%; border: none; border-radius: 8px; color: white; font-weight: 600; cursor: pointer; margin-top: 10px; }
         .btn-icon { padding: 8px 12px; border: none; border-radius: 6px; color: white; cursor: pointer; margin-left: 5px; font-size: 0.9rem; }
         .bg-blue { background: #3b82f6; } .bg-green { background: #10b981; } .bg-red { background: #ef4444; }
         
-        /* Switch */
         .switch { position: relative; display: inline-block; width: 44px; height: 24px; }
         .switch input { opacity: 0; width: 0; height: 0; }
         .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #ccc; transition: .4s; border-radius: 34px; }
@@ -79,14 +73,12 @@
         input:checked + .slider { background-color: #10b981; }
         input:checked + .slider:before { transform: translateX(20px); }
 
-        /* Modal */
         .modal-wrap { position: fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); z-index: 2000; display: none; justify-content: center; align-items: center; backdrop-filter: blur(3px); }
         .modal-box { background: white; padding: 25px; border-radius: 12px; width: 90%; max-width: 400px; max-height: 90vh; overflow-y: auto; position: relative; }
     </style>
 </head>
 <body>
 
-    <!-- New Modern Login Screen -->
     <div id="login-screen" class="login-wrap">
         <div class="login-card">
             <div class="login-title">Admin Access</div>
@@ -121,7 +113,6 @@
     </div>
 
     <div class="main">
-        <!-- Dashboard -->
         <div id="dash" class="page active">
             <h2>Dashboard</h2>
             <div class="card" style="display:flex; justify-content:space-between; align-items:center;">
@@ -140,7 +131,6 @@
             </div>
         </div>
 
-        <!-- Categories -->
         <div id="cats" class="page">
             <h2>Categories</h2>
             <div class="card">
@@ -150,7 +140,6 @@
             <div id="cat-list"></div>
         </div>
 
-        <!-- Items -->
         <div id="items" class="page">
             <h2>Menu Items</h2>
             <div class="card" style="border-top:4px solid #10b981;">
@@ -165,7 +154,6 @@
             <div id="item-list"></div>
         </div>
 
-        <!-- Design -->
         <div id="design" class="page">
             <h2>Banners</h2>
             <div class="card">
@@ -178,7 +166,6 @@
             </div>
         </div>
 
-        <!-- Location -->
         <div id="loc" class="page">
             <h2>Location Settings</h2>
             <div class="card">
@@ -191,14 +178,22 @@
         </div>
     </div>
 
-    <!-- PIN Change Modal -->
+    <!-- PIN Change Modal (New Logic) -->
     <div class="modal-wrap" id="modal-pin">
         <div class="modal-box">
             <h3>Change Security PIN</h3>
-            <p style="color:#666; font-size:0.9rem;">Enter new 4-digit PIN</p>
-            <input type="number" id="new-pin" placeholder="1234" style="text-align:center; font-size:1.5rem; letter-spacing:5px;">
+            
+            <label>Current PIN:</label>
+            <input type="password" id="old-pin" placeholder="Enter Old PIN" maxlength="4" style="text-align:center; letter-spacing:3px;">
+            
+            <label>New PIN:</label>
+            <input type="password" id="new-pin" placeholder="Enter New PIN" maxlength="4" style="text-align:center; letter-spacing:3px;">
+            
+            <label>Confirm New PIN:</label>
+            <input type="password" id="confirm-pin" placeholder="Re-enter New PIN" maxlength="4" style="text-align:center; letter-spacing:3px;">
+            
             <div style="display:flex; gap:10px; margin-top:15px;">
-                <button class="btn bg-blue" onclick="saveNewPin()">Update</button>
+                <button class="btn bg-blue" onclick="changePinLogic()">Update PIN</button>
                 <button class="btn bg-red" onclick="closeModals()">Cancel</button>
             </div>
         </div>
@@ -285,21 +280,39 @@
         onValue(ref(db, 'menu'), snap => { menu = snap.val() || {}; renderMenu(); });
 
         window.openPinModal = () => {
-            toggleMenu(); // Close Sidebar
+            toggleMenu(); 
+            // Clear inputs
+            document.getElementById('old-pin').value = '';
+            document.getElementById('new-pin').value = '';
+            document.getElementById('confirm-pin').value = '';
             document.getElementById('modal-pin').style.display = 'flex';
         }
 
-        window.saveNewPin = () => {
-            const p = document.getElementById('new-pin').value;
-            if(p && p.length >= 4) {
-                update(ref(db, 'config'), { adminPin: p }).then(() => { 
-                    closeModals(); 
-                    showToast("PIN Updated!"); 
-                    document.getElementById('new-pin').value=''; 
-                });
-            } else {
-                showToast("Enter min 4 digit PIN");
+        // New PIN Change Logic
+        window.changePinLogic = () => {
+            const oldP = document.getElementById('old-pin').value;
+            const newP = document.getElementById('new-pin').value;
+            const confP = document.getElementById('confirm-pin').value;
+
+            if (oldP !== currentPin) {
+                showToast("Old PIN is incorrect!");
+                return;
             }
+            if (newP.length < 4) {
+                showToast("PIN must be 4 digits");
+                return;
+            }
+            if (newP !== confP) {
+                showToast("New PINs do not match!");
+                return;
+            }
+
+            showLoad();
+            update(ref(db, 'config'), { adminPin: newP }).then(() => { 
+                hideLoad();
+                closeModals(); 
+                showToast("PIN Changed Successfully!"); 
+            });
         }
 
         window.saveSettings = () => {
