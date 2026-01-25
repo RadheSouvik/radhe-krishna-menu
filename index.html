@@ -31,17 +31,8 @@
         body.modal-open { overflow: hidden; height: 100vh; }
         body { margin: 0; font-family: 'Manrope', 'Hind Siliguri', sans-serif; background: var(--bg-body); color: var(--text-main); padding-bottom: 140px; }
 
-        /* Custom Toast Notification (Replaces Alert) */
-        .custom-toast {
-            position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0.9);
-            background: rgba(0, 0, 0, 0.85); color: white;
-            padding: 15px 25px; border-radius: 50px;
-            font-weight: 600; font-size: 0.95rem;
-            z-index: 9999; opacity: 0; visibility: hidden;
-            transition: all 0.3s ease; box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-            text-align: center; pointer-events: none;
-            display: flex; align-items: center; gap: 10px;
-        }
+        /* Toast */
+        .custom-toast { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0.9); background: rgba(0, 0, 0, 0.85); color: white; padding: 15px 25px; border-radius: 50px; font-weight: 600; font-size: 0.95rem; z-index: 9999; opacity: 0; visibility: hidden; transition: all 0.3s ease; box-shadow: 0 10px 30px rgba(0,0,0,0.3); text-align: center; pointer-events: none; display: flex; align-items: center; gap: 10px; }
         .custom-toast.show { opacity: 1; visibility: visible; transform: translate(-50%, -50%) scale(1); }
         .toast-icon { font-size: 1.2rem; }
 
@@ -73,7 +64,6 @@
         .item-name { font-weight: 700; font-size: 1.05rem; margin-bottom: 4px; }
         .item-price { font-weight: 600; color: var(--text-main); font-size: 1rem; }
         .item-desc { font-size: 0.8rem; color: var(--text-light); margin-top: 4px; line-height: 1.3; }
-
         .item-right { width: 100px; position: relative; display: flex; flex-direction: column; align-items: center; }
         .item-img { width: 100px; height: 90px; border-radius: 12px; object-fit: cover; background: #eee; }
         
@@ -82,10 +72,8 @@
         .q-btn { width: 30px; height: 100%; display: flex; align-items: center; justify-content: center; font-weight: bold; cursor: pointer; }
         .q-val { padding: 0 5px; font-weight: 600; }
 
-        /* Float Cart */
+        /* Float Cart & Nav */
         .float-cart { position: fixed; bottom: 80px; left: 50%; transform: translateX(-50%); width: 90%; max-width: 500px; background: #2c3e50; color: white; padding: 12px 20px; border-radius: 50px; display: none; justify-content: space-between; align-items: center; box-shadow: 0 10px 25px rgba(0,0,0,0.2); z-index: 10; cursor: pointer; }
-
-        /* Bottom Nav */
         .bottom-nav { position: fixed; bottom: 0; left: 0; width: 100%; background: var(--bg-surface); padding: 10px 15px; display: flex; gap: 15px; box-shadow: 0 -5px 20px rgba(0,0,0,0.05); z-index: 90; }
         .nav-btn { flex: 1; padding: 12px; border-radius: 12px; border: none; font-weight: 700; font-size: 1rem; display: flex; align-items: center; justify-content: center; gap: 8px; cursor: pointer; color: white; }
         .btn-call { background: var(--secondary); box-shadow: 0 4px 10px rgba(41, 128, 185, 0.3); }
@@ -95,35 +83,25 @@
         .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 1000; display: none; justify-content: center; align-items: flex-end; backdrop-filter: blur(5px); transition: opacity 0.3s; }
         .modal-sheet { background: var(--bg-surface); width: 100%; max-width: 600px; border-radius: 25px 25px 0 0; padding: 0 25px 25px 25px; max-height: 90vh; overflow-y: auto; animation: slideUp 0.3s cubic-bezier(0.2, 0.8, 0.2, 1); position: relative; transform: translateY(0); transition: transform 0.2s ease-out; }
         @keyframes slideUp { from{transform:translateY(100%)} to{transform:translateY(0)} }
-
         .sheet-handle-area { width: 100%; padding: 15px 0; cursor: grab; display: flex; justify-content: center; position: sticky; top: 0; background: var(--bg-surface); z-index: 10; }
         .sheet-line { width: 50px; height: 6px; background: #e0e0e0; border-radius: 10px; }
-        
         .order-summary { background: var(--bg-body); padding: 15px; border-radius: 12px; margin-bottom: 20px; }
         .summary-row { display: flex; justify-content: space-between; margin-bottom: 8px; font-size: 0.95rem; }
         .total-row { display: flex; justify-content: space-between; font-weight: 800; font-size: 1.2rem; border-top: 1px dashed #ccc; padding-top: 10px; margin-top: 10px; }
-
         input, select, textarea { width: 100%; padding: 14px; margin-bottom: 12px; border: 1px solid #ddd; border-radius: 12px; background: var(--bg-body); color: var(--text-main); font-family: inherit; }
         .btn-confirm { background: #25D366; color: white; width: 100%; padding: 16px; border-radius: 12px; font-size: 1.1rem; font-weight: 800; border: none; cursor: pointer; box-shadow: 0 5px 15px rgba(37, 211, 102, 0.3); display: flex; justify-content: center; align-items: center; gap: 10px; }
-
     </style>
 </head>
 <body>
 
-    <!-- Custom Toast Element -->
-    <div id="toast" class="custom-toast">
-        <span class="toast-icon">ℹ️</span>
-        <span id="toast-msg">Notification</span>
-    </div>
+    <div id="toast" class="custom-toast"><span class="toast-icon"></span><span id="toast-msg"></span></div>
 
     <div class="header">
         <div class="brand"><i class="fas fa-leaf"></i> Radhe Krishna</div>
         <div class="theme-btn" onclick="document.body.classList.toggle('dark-mode')"><i class="fas fa-moon"></i></div>
     </div>
 
-    <div class="marquee-container">
-        <div class="marquee-content" id="scroller">Loading updates...</div>
-    </div>
+    <div class="marquee-container"><div class="marquee-content" id="scroller">Loading updates...</div></div>
 
     <div class="container">
         <div class="banner-box" id="banner-slider"></div>
@@ -138,12 +116,8 @@
     </div>
 
     <div class="bottom-nav">
-        <button class="nav-btn btn-call" onclick="makeCall()">
-            <i class="fas fa-phone-alt"></i> Call
-        </button>
-        <button class="nav-btn btn-wa" onclick="openWhatsApp()">
-            <i class="fab fa-whatsapp"></i> WhatsApp
-        </button>
+        <button class="nav-btn btn-call" onclick="makeCall()"><i class="fas fa-phone-alt"></i> Call</button>
+        <button class="nav-btn btn-wa" onclick="openWhatsApp()"><i class="fab fa-whatsapp"></i> WhatsApp</button>
     </div>
 
     <div class="modal-overlay" id="modal">
@@ -183,18 +157,15 @@
         const app = initializeApp(firebaseConfig);
         const db = getDatabase(app);
 
-        let menu={}, cats={}, conf={}, cart={}, activeCat='all';
+        let menu={}, cats={}, conf={}, cart={}, activeCat='all', slideInterval;
 
-        // Custom Toast Function
         function showNotification(msg, type='info') {
             const t = document.getElementById('toast');
             const m = document.getElementById('toast-msg');
             const i = document.querySelector('.toast-icon');
-            
             m.innerText = msg;
             i.innerText = type === 'error' ? '🚫' : '✅';
             t.style.background = type === 'error' ? 'rgba(231, 76, 60, 0.9)' : 'rgba(0, 0, 0, 0.85)';
-            
             t.classList.add('show');
             setTimeout(() => t.classList.remove('show'), 2500);
         }
@@ -207,17 +178,24 @@
             const st = document.getElementById('shop-status');
             if(conf.restaurantOpen){ st.style.background="#d4edda"; st.style.color="#155724"; st.innerText="Restaurant Open 🟢"; }
             else{ st.style.background="#f8d7da"; st.style.color="#721c24"; st.innerText="Restaurant Closed 🔴"; }
-            document.getElementById('scroller').innerText = conf.marqueeText || "Welcome to Radhe Krishna";
+            document.getElementById('scroller').innerText = conf.marqueeText || "Welcome";
+            
             const sl = document.getElementById('banner-slider');
             sl.innerHTML = '';
             if(conf.banners) conf.banners.forEach((s,i) => sl.innerHTML += `<img src="${s}" class="slide ${i==0?'active':''}">`);
+            
+            // Dynamic Slider Timer
+            startSlider(conf.bannerSpeed || 3);
         }
 
-        let sIdx=0;
-        setInterval(()=>{
-            const s=document.querySelectorAll('.slide');
-            if(s.length){s[sIdx].classList.remove('active'); sIdx=(sIdx+1)%s.length; s[sIdx].classList.add('active');}
-        },3000);
+        function startSlider(seconds) {
+            if(slideInterval) clearInterval(slideInterval);
+            let sIdx=0;
+            slideInterval = setInterval(()=>{
+                const s=document.querySelectorAll('.slide');
+                if(s.length){s[sIdx].classList.remove('active'); sIdx=(sIdx+1)%s.length; s[sIdx].classList.add('active');}
+            }, seconds * 1000);
+        }
 
         function renderCats(){
             const d=document.getElementById('cat-list');
@@ -246,19 +224,13 @@
                         <div class="item-price">₹${i.price}</div>
                         <div class="item-desc">${i.description||''}</div>
                     </div>
-                    <div class="item-right">
-                        <img src="${i.image||'https://via.placeholder.com/100'}" class="item-img">
-                        ${btn}
-                    </div>
+                    <div class="item-right"><img src="${i.image||'https://via.placeholder.com/100'}" class="item-img">${btn}</div>
                 </div>`;
             }
         }
 
         window.mod=(id,v)=>{
-            if(!conf.restaurantOpen){
-                showNotification("Restaurant is Closed!", 'error');
-                return;
-            }
+            if(!conf.restaurantOpen){ showNotification("Restaurant is Closed!", 'error'); return; }
             if(!cart[id]) cart[id]=0;
             cart[id]+=v;
             if(cart[id]<=0) delete cart[id];
@@ -273,7 +245,6 @@
             document.getElementById('float-cart').style.display=c>0?'flex':'none';
         }
 
-        // Modal Logic
         let isModalOpen = false;
         window.openModal = () => {
             const modal = document.getElementById('modal');
@@ -298,9 +269,7 @@
             isModalOpen = false;
         }
 
-        window.addEventListener('popstate', (e) => {
-            if (isModalOpen) closeModalLogic();
-        });
+        window.addEventListener('popstate', (e) => { if (isModalOpen) closeModalLogic(); });
 
         const sheet = document.getElementById('sheet');
         const handle = document.getElementById('sheet-handle');
@@ -313,29 +282,18 @@
         });
         handle.addEventListener('touchend', (e) => {
             let diff = currentY - startY;
-            if (diff > 100) window.history.back();
-            else sheet.style.transform = `translateY(0)`;
+            if (diff > 100) window.history.back(); else sheet.style.transform = `translateY(0)`;
         });
 
-        window.makeCall = () => {
-            const num = conf.contactCallNumber || "910000000000";
-            window.open(`tel:${num}`, '_self');
-        }
-
-        window.openWhatsApp = () => {
-            const num = conf.whatsappOrderNumber || "910000000000";
-            window.open(`https://wa.me/${num}`, '_blank');
-        }
+        window.makeCall = () => { window.open(`tel:${conf.contactCallNumber}`, '_self'); }
+        window.openWhatsApp = () => { window.open(`https://wa.me/${conf.whatsappOrderNumber}`, '_blank'); }
 
         window.placeOrder = () => {
             const n = document.getElementById('name').value;
             const p = document.getElementById('phone').value;
             const a = document.getElementById('addr').value;
             const l = document.getElementById('land').value;
-            if(!n || !p || !a) {
-                showNotification("Name, Phone & Address required!", 'error');
-                return;
-            }
+            if(!n || !p || !a) { showNotification("Name, Phone & Address required!", 'error'); return; }
 
             let itemsTxt = "";
             let total = 0;
@@ -345,22 +303,11 @@
                 total += i.price*cart[id];
             }
 
-            let msg = `🛒 *NEW ORDER - RADHE KRISHNA*\n`;
-            msg += `----------------------------\n`;
-            msg += `👤 *Customer:* ${n}\n`;
-            msg += `📞 *Mobile:* ${p}\n`;
-            msg += `📍 *Address:* ${a}\n`;
+            let msg = `🛒 *NEW ORDER - RADHE KRISHNA*\n----------------------------\n👤 *Customer:* ${n}\n📞 *Mobile:* ${p}\n📍 *Address:* ${a}\n`;
             if(l) msg += `🗺️ *Landmark:* ${l}\n`;
-            msg += `----------------------------\n`;
-            msg += `🍽 *ORDER DETAILS:*\n`;
-            msg += itemsTxt;
-            msg += `----------------------------\n`;
-            msg += `💰 *TOTAL AMOUNT:* ₹${total}\n`;
-            msg += `💳 *Payment:* ${document.getElementById('pay').value}\n`;
-            msg += `⏰ *Delivery:* ${document.getElementById('time').value}\n`;
+            msg += `----------------------------\n🍽 *ORDER DETAILS:*\n${itemsTxt}----------------------------\n💰 *TOTAL AMOUNT:* ₹${total}\n💳 *Payment:* ${document.getElementById('pay').value}\n⏰ *Delivery:* ${document.getElementById('time').value}\n`;
             
-            const wa = conf.whatsappOrderNumber || "910000000000";
-            window.open(`https://wa.me/${wa}?text=${encodeURIComponent(msg)}`, '_blank');
+            window.open(`https://wa.me/${conf.whatsappOrderNumber}?text=${encodeURIComponent(msg)}`, '_blank');
         }
     </script>
 </body>
