@@ -4,228 +4,229 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Radhe Krishna Menu</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Hind+Siliguri:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Hind+Siliguri:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <style>
         :root {
-            --primary: #008f51; /* Veg Green */
-            --accent: #fbc531;   /* Gold */
-            --bg-body: #f3f4f6;
+            --primary: #27ae60;
+            --primary-dark: #219150;
+            --secondary: #2980b9;
+            --bg-body: #f8f9fa;
             --bg-surface: #ffffff;
-            --text-dark: #1f2937;
-            --text-light: #6b7280;
-            --border: #e5e7eb;
+            --text-main: #2c3e50;
+            --text-light: #95a5a6;
+            --shadow: 0 4px 15px rgba(0,0,0,0.05);
         }
 
         body.dark-mode {
-            --bg-body: #111827;
-            --bg-surface: #1f2937;
-            --text-dark: #f9fafb;
-            --text-light: #9ca3af;
-            --border: #374151;
+            --bg-body: #121212;
+            --bg-surface: #1e1e1e;
+            --text-main: #ecf0f1;
+            --text-light: #7f8c8d;
+            --shadow: 0 4px 15px rgba(0,0,0,0.3);
         }
 
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-        body { margin: 0; font-family: 'Inter', 'Hind Siliguri', sans-serif; background: var(--bg-body); color: var(--text-dark); padding-bottom: 100px; }
+        body { margin: 0; font-family: 'Manrope', 'Hind Siliguri', sans-serif; background: var(--bg-body); color: var(--text-main); padding-bottom: 140px; }
 
-        /* Header */
-        .app-header {
+        /* --- Header (New Design) --- */
+        .header {
             background: var(--bg-surface);
             padding: 15px 20px;
             position: sticky; top: 0; z-index: 100;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-            display: flex; justify-content: space-between; align-items: center;
+            border-bottom: 1px solid rgba(0,0,0,0.05);
+            display: flex; align-items: center; justify-content: space-between;
         }
-        .logo-text { font-size: 1.3rem; font-weight: 800; letter-spacing: -0.5px; color: var(--primary); }
-        .theme-toggle { background: var(--bg-body); width: 35px; height: 35px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; color: var(--text-dark); }
+        .brand { font-size: 1.4rem; font-weight: 800; color: var(--primary); letter-spacing: -0.5px; display: flex; align-items: center; gap: 8px; }
+        .theme-btn { width: 35px; height: 35px; border-radius: 50%; background: var(--bg-body); display: flex; align-items: center; justify-content: center; cursor: pointer; }
 
-        /* Banner */
+        /* --- Smooth Marquee --- */
+        .marquee-container {
+            background: var(--primary); color: white; overflow: hidden; white-space: nowrap; padding: 6px 0; font-size: 0.85rem; font-weight: 500;
+        }
+        .marquee-content {
+            display: inline-block; padding-left: 100%; animation: scroll 20s linear infinite;
+        }
+        @keyframes scroll { 0% { transform: translateX(0); } 100% { transform: translateX(-100%); } }
+
+        /* --- Layout --- */
         .container { max-width: 600px; margin: 0 auto; padding: 15px; }
-        .hero-banner { height: 180px; border-radius: 16px; background: #ddd; position: relative; overflow: hidden; margin-bottom: 20px; }
-        .slide { width: 100%; height: 100%; object-fit: cover; position: absolute; opacity: 0; transition: opacity 0.5s; }
+
+        .banner-box { height: 180px; border-radius: 16px; overflow: hidden; position: relative; margin-bottom: 20px; background: #e0e0e0; box-shadow: var(--shadow); }
+        .slide { width: 100%; height: 100%; object-fit: cover; position: absolute; opacity: 0; transition: opacity 0.8s; }
         .slide.active { opacity: 1; }
 
-        /* Status Bar */
-        .status-alert {
-            padding: 10px; border-radius: 8px; font-weight: 600; font-size: 0.9rem; text-align: center; margin-bottom: 20px;
+        /* Categories */
+        .cat-row { display: flex; gap: 10px; overflow-x: auto; padding-bottom: 5px; scrollbar-width: none; margin-bottom: 20px; }
+        .cat-pill {
+            background: var(--bg-surface); padding: 8px 16px; border-radius: 50px; font-weight: 600; font-size: 0.9rem; color: var(--text-light); border: 1px solid transparent; cursor: pointer; white-space: nowrap;
         }
-        .st-open { background: #d1fae5; color: #065f46; border: 1px solid #a7f3d0; }
-        .st-closed { background: #fee2e2; color: #991b1b; border: 1px solid #fecaca; }
+        .cat-pill.active { background: var(--primary); color: white; box-shadow: 0 4px 10px rgba(39, 174, 96, 0.3); }
 
-        /* Categories (Tabs) */
-        .tab-scroll { display: flex; gap: 15px; overflow-x: auto; padding-bottom: 10px; border-bottom: 1px solid var(--border); margin-bottom: 20px; scrollbar-width: none; }
-        .tab-item {
-            white-space: nowrap; font-weight: 600; color: var(--text-light); padding-bottom: 8px; cursor: pointer; position: relative;
-        }
-        .tab-item.active { color: var(--primary); }
-        .tab-item.active::after {
-            content: ''; position: absolute; bottom: -1px; left: 0; width: 100%; height: 3px; background: var(--primary); border-radius: 3px 3px 0 0;
-        }
-
-        /* Menu List (Food App Style) */
+        /* Menu List */
         .menu-item {
-            background: var(--bg-surface);
-            padding: 15px;
-            border-radius: 12px;
-            margin-bottom: 15px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center; /* Changed to center to handle layout better */
-            border: 1px solid var(--border);
-            position: relative;
+            background: var(--bg-surface); padding: 12px; border-radius: 16px; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; box-shadow: var(--shadow);
         }
+        .item-left { flex: 1; padding-right: 10px; }
+        .veg-icon { width: 16px; height: 16px; border: 1px solid green; display: flex; align-items: center; justify-content: center; padding: 2px; margin-bottom: 4px; }
+        .veg-dot { width: 8px; height: 8px; background: green; border-radius: 50%; }
+        .item-name { font-weight: 700; font-size: 1.05rem; margin-bottom: 4px; }
+        .item-price { font-weight: 600; color: var(--text-main); font-size: 1rem; }
+        .item-desc { font-size: 0.8rem; color: var(--text-light); margin-top: 4px; line-height: 1.3; }
 
-        .item-content { flex: 1; padding-right: 15px; }
-        .is-veg { width: 16px; height: 16px; border: 1px solid #16a34a; padding: 2px; border-radius: 4px; display:flex; align-items:center; justify-content:center; margin-bottom: 5px; }
-        .veg-dot { width: 8px; height: 8px; background: #16a34a; border-radius: 50%; }
+        .item-right { width: 100px; position: relative; display: flex; flex-direction: column; align-items: center; }
+        .item-img { width: 100px; height: 90px; border-radius: 12px; object-fit: cover; background: #eee; }
         
-        .item-name { font-size: 1.1rem; font-weight: 700; margin-bottom: 4px; color: var(--text-dark); }
-        .item-price { font-size: 1rem; font-weight: 600; color: var(--text-dark); margin-bottom: 6px; }
-        .item-desc { font-size: 0.85rem; color: var(--text-light); line-height: 1.4; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+        /* Add Button */
+        .btn-add {
+            position: absolute; bottom: -8px; background: var(--bg-surface); color: var(--primary);
+            font-weight: 800; font-size: 0.9rem; padding: 6px 20px; border-radius: 6px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.15); cursor: pointer; border: 1px solid #eee;
+        }
+        .qty-control {
+            position: absolute; bottom: -8px; background: var(--primary); color: white;
+            display: flex; align-items: center; border-radius: 6px; height: 32px; box-shadow: 0 2px 8px rgba(0,0,0,0.2); overflow: hidden;
+        }
+        .q-btn { width: 30px; height: 100%; display: flex; align-items: center; justify-content: center; font-weight: bold; cursor: pointer; }
+        .q-val { padding: 0 5px; font-weight: 600; }
 
-        /* Image & Button Wrapper */
-        .item-media {
-            position: relative;
-            width: 110px;
-            height: 100px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
+        /* --- Floating Cart --- */
+        .float-cart {
+            position: fixed; bottom: 80px; left: 50%; transform: translateX(-50%);
+            width: 90%; max-width: 500px; background: #2c3e50; color: white;
+            padding: 12px 20px; border-radius: 50px; display: none; justify-content: space-between; align-items: center;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2); z-index: 10; cursor: pointer;
         }
 
-        .item-img {
-            width: 110px; height: 100px;
-            border-radius: 12px;
-            object-fit: cover;
-            background: #f3f4f6;
-        }
-
-        /* Floating ADD Button */
-        .btn-add-float {
-            position: absolute;
-            bottom: -10px; /* Overlap image bottom */
-            background: var(--bg-surface);
-            color: var(--primary);
-            font-weight: 800;
-            font-size: 0.9rem;
-            padding: 6px 20px;
-            border-radius: 6px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-            border: 1px solid var(--border);
-            cursor: pointer;
-            text-transform: uppercase;
-        }
-        
-        /* Counter */
-        .counter-ui {
-            position: absolute;
-            bottom: -10px;
-            background: var(--primary);
-            color: white;
-            display: flex;
-            align-items: center;
-            border-radius: 6px;
-            height: 32px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-            overflow: hidden;
-        }
-        .c-btn { padding: 0 10px; cursor: pointer; font-size: 1.1rem; font-weight: bold; }
-        .c-val { padding: 0 5px; font-weight: 600; font-size: 0.95rem; }
-
-        /* Bottom Cart Bar */
-        .cart-bar {
+        /* --- Bottom Contact Bar --- */
+        .bottom-nav {
             position: fixed; bottom: 0; left: 0; width: 100%;
-            background: var(--primary); color: white;
-            padding: 15px 20px;
-            border-radius: 16px 16px 0 0;
-            display: none; justify-content: space-between; align-items: center;
-            box-shadow: 0 -4px 20px rgba(0,0,0,0.1);
-            z-index: 200; cursor: pointer;
+            background: var(--bg-surface); padding: 10px 15px;
+            display: flex; gap: 15px; box-shadow: 0 -5px 20px rgba(0,0,0,0.05); z-index: 90;
         }
-        .cart-info { font-size: 0.9rem; }
-        .cart-total { font-weight: 800; font-size: 1.1rem; }
-        .view-cart-btn { font-weight: 700; display: flex; align-items: center; gap: 8px; }
+        .nav-btn {
+            flex: 1; padding: 12px; border-radius: 12px; border: none; font-weight: 700; font-size: 1rem;
+            display: flex; align-items: center; justify-content: center; gap: 8px; cursor: pointer; color: white;
+        }
+        .btn-call { background: var(--secondary); box-shadow: 0 4px 10px rgba(41, 128, 185, 0.3); }
+        .btn-wa { background: var(--primary); box-shadow: 0 4px 10px rgba(39, 174, 96, 0.3); }
 
-        /* Modal */
-        .modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 1000; display: none; justify-content: center; align-items: flex-end; }
-        .modal-content { background: var(--bg-surface); width: 100%; max-width: 600px; padding: 25px; border-radius: 20px 20px 0 0; max-height: 90vh; overflow-y: auto; }
+        /* --- Modal (Bottom Sheet Design) --- */
+        .modal-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.6); z-index: 1000; display: none; justify-content: center; align-items: flex-end;
+            backdrop-filter: blur(5px);
+        }
+        .modal-sheet {
+            background: var(--bg-surface); width: 100%; max-width: 600px;
+            border-radius: 25px 25px 0 0; padding: 25px;
+            max-height: 85vh; overflow-y: auto;
+            animation: slideUp 0.3s ease-out;
+            position: relative;
+        }
+        @keyframes slideUp { from{transform:translateY(100%)} to{transform:translateY(0)} }
+
+        .sheet-header { text-align: center; margin-bottom: 20px; position: relative; }
+        .sheet-line { width: 40px; height: 5px; background: #ddd; border-radius: 10px; margin: 0 auto 15px; }
         
-        input, select, textarea { width: 100%; padding: 14px; margin-bottom: 12px; border: 1px solid var(--border); border-radius: 8px; background: var(--bg-body); color: var(--text-dark); }
+        .order-summary { background: var(--bg-body); padding: 15px; border-radius: 12px; margin-bottom: 20px; }
+        .summary-row { display: flex; justify-content: space-between; margin-bottom: 8px; font-size: 0.95rem; }
+        .total-row { display: flex; justify-content: space-between; font-weight: 800; font-size: 1.2rem; border-top: 1px dashed #ccc; padding-top: 10px; margin-top: 10px; }
+
+        input, select, textarea {
+            width: 100%; padding: 14px; margin-bottom: 12px; border: 1px solid #ddd;
+            border-radius: 12px; background: var(--bg-body); color: var(--text-main); font-family: inherit;
+        }
         
-        .btn-order { background: #25D366; color: white; width: 100%; padding: 16px; border: none; border-radius: 8px; font-size: 1rem; font-weight: 700; cursor: pointer; display: flex; justify-content: center; gap: 8px; }
+        .btn-confirm {
+            background: #25D366; color: white; width: 100%; padding: 16px; border-radius: 12px;
+            font-size: 1.1rem; font-weight: 800; border: none; cursor: pointer;
+            box-shadow: 0 5px 15px rgba(37, 211, 102, 0.3); display: flex; justify-content: center; align-items: center; gap: 10px;
+        }
 
     </style>
 </head>
 <body>
 
-    <div class="app-header">
-        <div class="logo-text">Radhe Krishna 🌿</div>
-        <div class="theme-toggle" onclick="document.body.classList.toggle('dark-mode')">
-            <i class="fas fa-adjust"></i>
-        </div>
+    <!-- Header -->
+    <div class="header">
+        <div class="brand"><i class="fas fa-leaf"></i> Radhe Krishna</div>
+        <div class="theme-btn" onclick="document.body.classList.toggle('dark-mode')"><i class="fas fa-moon"></i></div>
     </div>
 
     <!-- Marquee -->
-    <div style="background:var(--text-dark); color:var(--bg-surface); padding:5px 0; overflow:hidden; font-size:0.8rem;">
-        <div style="white-space:nowrap; animation:scroll 15s linear infinite; padding-left:100%;" id="scroller">Loading...</div>
+    <div class="marquee-container">
+        <div class="marquee-content" id="scroller">Loading updates...</div>
     </div>
-    <style>@keyframes scroll{100%{transform:translateX(-100%)}}</style>
 
     <div class="container">
         <!-- Banner -->
-        <div class="hero-banner" id="banner"></div>
+        <div class="banner-box" id="banner-slider"></div>
 
         <!-- Status -->
-        <div id="status" class="status-alert st-open">Checking...</div>
+        <div id="shop-status" style="text-align:center; margin-bottom:20px; font-weight:700; padding:10px; border-radius:8px;"></div>
 
-        <!-- Tabs -->
-        <div class="tab-scroll" id="cat-tabs"></div>
+        <!-- Categories -->
+        <div class="cat-row" id="cat-list"></div>
 
         <!-- Menu -->
-        <div id="menu-area"></div>
+        <div id="menu-list"></div>
     </div>
 
-    <!-- Cart Bar -->
-    <div class="cart-bar" id="cart-bar" onclick="openModal()">
-        <div class="cart-info">
-            <div id="c-count">0 ITEMS</div>
-            <div class="cart-total">₹<span id="c-total">0</span></div>
-        </div>
-        <div class="view-cart-btn">View Cart <i class="fas fa-shopping-bag"></i></div>
+    <!-- Float Cart Button -->
+    <div class="float-cart" id="float-cart" onclick="openModal()">
+        <div style="font-weight:700;"><span id="c-count">0</span> Items</div>
+        <div style="font-weight:800;">₹<span id="c-total">0</span> <i class="fas fa-chevron-right"></i></div>
     </div>
 
-    <!-- Modal -->
-    <div class="modal" id="modal">
-        <div class="modal-content">
-            <div style="display:flex; justify-content:space-between; margin-bottom:20px;">
-                <h2 style="margin:0;">Your Cart</h2>
-                <i class="fas fa-times" onclick="document.getElementById('modal').style.display='none'" style="font-size:1.5rem; cursor:pointer;"></i>
+    <!-- Bottom Contact Bar -->
+    <div class="bottom-nav">
+        <button class="nav-btn btn-call" onclick="makeCall()">
+            <i class="fas fa-phone-alt"></i> Call
+        </button>
+        <button class="nav-btn btn-wa" onclick="openWhatsApp()">
+            <i class="fab fa-whatsapp"></i> WhatsApp
+        </button>
+    </div>
+
+    <!-- Order Modal -->
+    <div class="modal-overlay" id="modal">
+        <div class="modal-sheet">
+            <div class="sheet-header">
+                <div class="sheet-line"></div>
+                <h2 style="margin:0;">Complete Order</h2>
             </div>
             
-            <div id="cart-list"></div>
-            
-            <div style="border-top:1px solid var(--border); margin:15px 0; padding-top:15px; display:flex; justify-content:space-between; font-weight:800; font-size:1.2rem;">
-                <span>To Pay</span>
-                <span>₹<span id="m-total">0</span></span>
+            <div class="order-summary">
+                <div id="cart-items"></div>
+                <div class="total-row">
+                    <span>Grand Total</span>
+                    <span>₹<span id="m-total">0</span></span>
+                </div>
             </div>
 
-            <h3>Details</h3>
-            <input type="text" id="name" placeholder="Name">
-            <input type="tel" id="phone" placeholder="Mobile">
-            <textarea id="addr" rows="2" placeholder="Address"></textarea>
-            <input type="text" id="land" placeholder="Landmark">
-            <select id="pay"><option value="UPI">UPI</option><option value="Cash">Cash</option></select>
-            <select id="time">
-                <option value="9 PM - 10 PM">9 PM - 10 PM</option>
-                <option value="10 PM - 11 PM">10 PM - 11 PM</option>
-                <option value="11 PM - 12 AM">11 PM - 12 AM</option>
+            <h3 style="margin-bottom:15px;">Delivery Info</h3>
+            <input type="text" id="name" placeholder="আপনার নাম (Name)">
+            <input type="tel" id="phone" placeholder="মোবাইল নাম্বার (Mobile)">
+            <textarea id="addr" rows="2" placeholder="সম্পূর্ণ ঠিকানা (Address)"></textarea>
+            <input type="text" id="land" placeholder="ল্যান্ডমার্ক (Optional)">
+            
+            <select id="pay">
+                <option value="Cash">Cash on Delivery</option>
+                <option value="UPI">UPI Payment</option>
             </select>
-            <textarea id="note" rows="1" placeholder="Note (Optional)"></textarea>
+            
+            <select id="time">
+                <option value="9:00 PM – 10:00 PM">9:00 PM – 10:00 PM</option>
+                <option value="10:00 PM – 11:00 PM">10:00 PM – 11:00 PM</option>
+                <option value="11:00 PM – 12:00 AM">11:00 PM – 12:00 AM</option>
+            </select>
 
-            <button class="btn-order" onclick="order()">
-                <i class="fab fa-whatsapp"></i> Place Order
+            <button class="btn-confirm" onclick="placeOrder()">
+                <i class="fab fa-whatsapp"></i> Send Order
             </button>
+            <div style="text-align:center; margin-top:10px; color:#888; font-size:0.9rem;" onclick="document.getElementById('modal').style.display='none'">Close</div>
         </div>
     </div>
 
@@ -246,126 +247,140 @@
         const app = initializeApp(firebaseConfig);
         const db = getDatabase(app);
 
-        let menu = {}, cats = {}, conf = {}, cart = {};
-        let activeCat = 'all';
+        let menu={}, cats={}, conf={}, cart={}, activeCat='all';
 
-        // Listeners
-        onValue(ref(db, 'config'), snap => { conf = snap.val() || {}; updateUI(); });
-        onValue(ref(db, 'categories'), snap => { cats = snap.val() || {}; renderCats(); renderMenu(); });
-        onValue(ref(db, 'menu'), snap => { menu = snap.val() || {}; renderMenu(); });
+        // Load Data
+        onValue(ref(db, 'config'), snap => { conf=snap.val()||{}; updateUI(); });
+        onValue(ref(db, 'categories'), snap => { cats=snap.val()||{}; renderCats(); renderMenu(); });
+        onValue(ref(db, 'menu'), snap => { menu=snap.val()||{}; renderMenu(); });
 
         function updateUI() {
             // Status
-            const st = document.getElementById('status');
-            if(conf.restaurantOpen) {
-                st.className = 'status-alert st-open';
-                st.innerText = 'Restuarant is Open - Order Now';
-            } else {
-                st.className = 'status-alert st-closed';
-                st.innerText = 'Restaurant is Closed';
-            }
+            const st = document.getElementById('shop-status');
+            if(conf.restaurantOpen){ st.style.background="#d4edda"; st.style.color="#155724"; st.innerText="Restaurant Open 🟢"; }
+            else{ st.style.background="#f8d7da"; st.style.color="#721c24"; st.innerText="Restaurant Closed 🔴"; }
+            
             // Marquee
-            document.getElementById('scroller').innerText = conf.marqueeText || "Welcome";
-            // Banner
-            const b = document.getElementById('banner');
-            b.innerHTML = '';
-            if(conf.banners) conf.banners.forEach((s,i) => b.innerHTML += `<img src="${s}" class="slide ${i==0?'active':''}">`);
+            document.getElementById('scroller').innerText = conf.marqueeText || "Welcome to Radhe Krishna";
+            
+            // Banners
+            const sl = document.getElementById('banner-slider');
+            sl.innerHTML = '';
+            if(conf.banners) conf.banners.forEach((s,i) => sl.innerHTML += `<img src="${s}" class="slide ${i==0?'active':''}">`);
         }
-        
-        // Slider Logic
-        let sIdx = 0;
+
+        let sIdx=0;
         setInterval(()=>{
-            const s = document.querySelectorAll('.slide');
-            if(s.length){ s[sIdx].classList.remove('active'); sIdx=(sIdx+1)%s.length; s[sIdx].classList.add('active'); }
+            const s=document.querySelectorAll('.slide');
+            if(s.length){s[sIdx].classList.remove('active'); sIdx=(sIdx+1)%s.length; s[sIdx].classList.add('active');}
         },3000);
 
-        // Cats
-        function renderCats() {
-            const d = document.getElementById('cat-tabs');
-            let h = `<div class="tab-item ${activeCat=='all'?'active':''}" onclick="setCat('all')">All</div>`;
-            for(let k in cats) h += `<div class="tab-item ${activeCat==k?'active':''}" onclick="setCat('${k}')">${cats[k].name}</div>`;
-            d.innerHTML = h;
+        function renderCats(){
+            const d=document.getElementById('cat-list');
+            let h=`<div class="cat-pill ${activeCat=='all'?'active':''}" onclick="setCat('all')">All</div>`;
+            for(let k in cats) h+=`<div class="cat-pill ${activeCat==k?'active':''}" onclick="setCat('${k}')">${cats[k].name}</div>`;
+            d.innerHTML=h;
         }
-        window.setCat = (c) => { activeCat = c; renderCats(); renderMenu(); }
+        window.setCat=(c)=>{activeCat=c; renderCats(); renderMenu();}
 
-        // Menu
-        function renderMenu() {
-            const area = document.getElementById('menu-area');
-            area.innerHTML = '';
-            
-            for(let id in menu) {
-                const item = menu[id];
-                
-                // --- NEW FEATURE: CHECK IF ITEM IS AVAILABLE ---
-                if(item.isAvailable === false) continue; 
-                // ----------------------------------------------
+        function renderMenu(){
+            const d=document.getElementById('menu-list');
+            d.innerHTML='';
+            for(let id in menu){
+                let i=menu[id];
+                if(i.isAvailable===false) continue;
+                if(activeCat!=='all' && i.category!==activeCat) continue;
 
-                if(activeCat !== 'all' && item.category !== activeCat) continue;
-                
-                const q = cart[id] || 0;
-                const img = item.image || 'https://via.placeholder.com/150';
-
+                let q=cart[id]||0;
                 let btn = q===0 
-                    ? `<div class="btn-add-float" onclick="mod('${id}',1)">ADD</div>`
-                    : `<div class="counter-ui"><div class="c-btn" onclick="mod('${id}',-1)">-</div><div class="c-val">${q}</div><div class="c-btn" onclick="mod('${id}',1)">+</div></div>`;
+                ? `<div class="btn-add" onclick="mod('${id}',1)">ADD</div>`
+                : `<div class="qty-control"><div class="q-btn" onclick="mod('${id}',-1)">-</div><div class="q-val">${q}</div><div class="q-btn" onclick="mod('${id}',1)">+</div></div>`;
 
-                area.innerHTML += `
+                d.innerHTML+=`
                 <div class="menu-item">
-                    <div class="item-content">
-                        <div class="is-veg"><div class="veg-dot"></div></div>
-                        <div class="item-name">${item.name}</div>
-                        <div class="item-price">₹${item.price}</div>
-                        <div class="item-desc">${item.description || ''}</div>
+                    <div class="item-left">
+                        <div class="veg-icon"><div class="veg-dot"></div></div>
+                        <div class="item-name">${i.name}</div>
+                        <div class="item-price">₹${i.price}</div>
+                        <div class="item-desc">${i.description||''}</div>
                     </div>
-                    <div class="item-media">
-                        <img src="${img}" class="item-img">
+                    <div class="item-right">
+                        <img src="${i.image||'https://via.placeholder.com/100'}" class="item-img">
                         ${btn}
                     </div>
                 </div>`;
             }
         }
 
-        window.mod = (id, v) => {
-            if(!conf.restaurantOpen) { alert("Closed!"); return; }
-            if(!cart[id]) cart[id] = 0;
-            cart[id] += v;
-            if(cart[id] <= 0) delete cart[id];
-            renderMenu();
-            updateCart();
+        window.mod=(id,v)=>{
+            if(!conf.restaurantOpen){alert("Restaurant Closed!"); return;}
+            if(!cart[id]) cart[id]=0;
+            cart[id]+=v;
+            if(cart[id]<=0) delete cart[id];
+            renderMenu(); updateCart();
         }
 
-        function updateCart() {
-            let c = 0, t = 0;
-            for(let id in cart) { c += cart[id]; t += cart[id]*menu[id].price; }
-            document.getElementById('c-count').innerText = c + " ITEMS";
-            document.getElementById('c-total').innerText = t;
-            document.getElementById('cart-bar').style.display = c>0 ? 'flex' : 'none';
+        function updateCart(){
+            let c=0, t=0;
+            for(let id in cart){c+=cart[id]; t+=cart[id]*menu[id].price;}
+            document.getElementById('c-count').innerText=c;
+            document.getElementById('c-total').innerText=t;
+            document.getElementById('float-cart').style.display=c>0?'flex':'none';
         }
 
-        window.openModal = () => {
-            document.getElementById('modal').style.display = 'flex';
-            const d = document.getElementById('cart-list');
-            d.innerHTML = '';
-            let t = 0;
-            for(let id in cart) {
-                const i = menu[id];
-                const st = i.price*cart[id]; t+=st;
-                d.innerHTML += `<div style="display:flex; justify-content:space-between; margin-bottom:10px;"><div>${i.name} x ${cart[id]}</div><div>₹${st}</div></div>`;
+        window.openModal=()=>{
+            document.getElementById('modal').style.display='flex';
+            const d=document.getElementById('cart-items'); d.innerHTML='';
+            let t=0;
+            for(let id in cart){
+                let i=menu[id], st=i.price*cart[id]; t+=st;
+                d.innerHTML+=`<div class="summary-row"><div>${i.name} x ${cart[id]}</div><div>₹${st}</div></div>`;
             }
-            document.getElementById('m-total').innerText = t;
+            document.getElementById('m-total').innerText=t;
         }
 
-        window.order = () => {
+        window.makeCall = () => {
+            const num = conf.contactCallNumber || "910000000000";
+            window.open(`tel:${num}`, '_self');
+        }
+
+        window.openWhatsApp = () => {
+            const num = conf.whatsappOrderNumber || "910000000000";
+            window.open(`https://wa.me/${num}`, '_blank');
+        }
+
+        window.placeOrder = () => {
             const n = document.getElementById('name').value;
             const p = document.getElementById('phone').value;
             const a = document.getElementById('addr').value;
-            if(!n || !p || !a) return alert("Required: Name, Phone, Address");
+            const l = document.getElementById('land').value;
+            if(!n || !p || !a) return alert("Please fill Name, Phone & Address");
+
+            let itemsTxt = "";
+            let total = 0;
+            for(let id in cart){
+                let i = menu[id];
+                itemsTxt += `▪ ${i.name} x ${cart[id]} = ₹${i.price*cart[id]}\n`;
+                total += i.price*cart[id];
+            }
+
+            // NEW CLEAN FORMAT
+            let msg = `🛒 *NEW ORDER - RADHE KRISHNA*\n`;
+            msg += `----------------------------\n`;
+            msg += `👤 *Customer:* ${n}\n`;
+            msg += `📞 *Mobile:* ${p}\n`;
+            msg += `📍 *Address:* ${a}\n`;
+            if(l) msg += `🗺️ *Landmark:* ${l}\n`;
+            msg += `----------------------------\n`;
+            msg += `🍽 *ORDER DETAILS:*\n`;
+            msg += itemsTxt;
+            msg += `----------------------------\n`;
+            msg += `💰 *TOTAL AMOUNT:* ₹${total}\n`;
+            msg += `💳 *Payment:* ${document.getElementById('pay').value}\n`;
+            msg += `⏰ *Delivery:* ${document.getElementById('time').value}\n`;
             
-            let t = 0, msg = `🛒 *Order*\n\n👤 ${n}\n📞 ${p}\n📍 ${a}\n🗺️ ${document.getElementById('land').value}\n\n`;
-            for(let id in cart) { let i = menu[id]; msg += `▪ ${i.name} (${cart[id]}) ₹${i.price*cart[id]}\n`; t += i.price*cart[id]; }
-            msg += `\n💰 *Total: ₹${t}*\n💳 ${document.getElementById('pay').value}\n⏰ ${document.getElementById('time').value}\n📝 ${document.getElementById('note').value}`;
-            
-            window.open(`https://wa.me/${conf.whatsappNumber}?text=${encodeURIComponent(msg)}`);
+            const wa = conf.whatsappOrderNumber || "910000000000";
+            window.open(`https://wa.me/${wa}?text=${encodeURIComponent(msg)}`, '_blank');
         }
     </script>
 </body>
