@@ -3,254 +3,246 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <title>Radhe Krishna | Admin Panel</title>
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
     <style>
-        body { font-family: 'Inter', sans-serif; margin: 0; background: #f3f4f6; }
+        :root {
+            --primary: #3b82f6;
+            --success: #10b981;
+            --danger: #ef4444;
+            --warning: #f59e0b;
+            --dark: #0f172a;
+            --slate: #64748b;
+            --bg: #f8fafc;
+            --card: #ffffff;
+            --radius: 20px;
+        }
+
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         
-        /* Toast & Loader */
-        .custom-toast { position: fixed; top: 20px; left: 50%; transform: translateX(-50%); background: #333; color: white; padding: 12px 25px; border-radius: 50px; z-index: 10000; opacity: 0; transition: 0.3s; pointer-events: none; }
-        .custom-toast.show { opacity: 1; top: 30px; }
-        .loader-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255,255,255,0.8); z-index: 9999; display: none; justify-content: center; align-items: center; flex-direction: column; }
-        .spinner { border: 4px solid #f3f3f3; border-top: 4px solid #3498db; border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; }
+        /* ব্যাকগ্রাউন্ড স্ক্রল বন্ধ করার জন্য */
+        body.no-scroll { 
+            overflow: hidden; 
+            height: 100vh; 
+        }
+
+        body { margin: 0; font-family: 'Outfit', sans-serif; background: var(--bg); color: var(--dark); transition: background 0.3s; }
+
+        /* Loader & Toast */
+        .loader { position: fixed; inset: 0; background: rgba(255,255,255,0.8); z-index: 9999; display: none; justify-content: center; align-items: center; flex-direction: column; backdrop-filter: blur(5px); }
+        .spinner { width: 45px; height: 45px; border: 5px solid #f3f3f3; border-top: 5px solid var(--primary); border-radius: 50%; animation: spin 1s linear infinite; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-
-        /* Premium Login Screen */
-        .login-wrap { 
-            position: fixed; top:0; left:0; width:100%; height:100%; 
-            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); 
-            z-index: 5000; display: flex; justify-content: center; align-items: center; 
-        }
-        .login-card { 
-            background: rgba(255, 255, 255, 0.05); 
-            backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px);
-            padding: 40px; border-radius: 24px; width: 320px; text-align: center; 
-            border: 1px solid rgba(255,255,255,0.1);
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
-            animation: popIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        }
-        @keyframes popIn { from{transform:scale(0.9);opacity:0} to{transform:scale(1);opacity:1} }
         
-        .login-icon { 
-            width: 60px; height: 60px; background: rgba(59, 130, 246, 0.2); 
-            border-radius: 50%; display: flex; align-items: center; justify-content: center; 
-            margin: 0 auto 20px; color: #60a5fa; font-size: 1.5rem;
-        }
-        .login-title { color: white; font-size: 1.5rem; font-weight: 700; margin-bottom: 5px; }
-        .login-sub { color: #94a3b8; font-size: 0.9rem; margin-bottom: 30px; }
-        
-        /* PIN Boxes */
-        .pin-container { display: flex; justify-content: center; gap: 12px; margin-bottom: 30px; }
-        .pin-box {
-            width: 50px; height: 50px; border-radius: 12px;
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            color: white; font-size: 1.5rem; text-align: center;
-            outline: none; transition: 0.3s; caret-color: transparent;
-        }
-        .pin-box:focus { border-color: #3b82f6; background: rgba(59, 130, 246, 0.1); transform: translateY(-2px); }
-        .pin-box.error { border-color: #ef4444; animation: shake 0.3s; }
-        @keyframes shake { 0%, 100% {transform: translateX(0);} 25% {transform: translateX(-5px);} 75% {transform: translateX(5px);} }
+        .toast { position: fixed; top: 20px; left: 50%; transform: translateX(-50%) translateY(-100px); background: var(--dark); color: white; padding: 12px 25px; border-radius: 50px; font-weight: 600; z-index: 10000; transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); display: flex; align-items: center; gap: 10px; box-shadow: 0 10px 25px rgba(0,0,0,0.2); }
+        .toast.show { transform: translateX(-50%) translateY(0); }
 
-        .login-btn { 
-            background: #3b82f6; color: white; border: none; padding: 14px; width: 100%; 
-            border-radius: 12px; font-size: 1rem; font-weight: 600; cursor: pointer; 
-            transition: 0.2s; box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
-        }
-        .login-btn:active { transform: scale(0.98); }
+        /* Login Screen */
+        .login-overlay { position: fixed; inset: 0; background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%); z-index: 5000; display: flex; justify-content: center; align-items: center; }
+        .login-card { background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); padding: 40px 30px; border-radius: 30px; width: 90%; max-width: 350px; text-align: center; border: 1px solid rgba(255,255,255,0.1); box-shadow: 0 25px 50px rgba(0,0,0,0.3); }
+        .pin-container { display: flex; justify-content: center; gap: 12px; margin: 25px 0; }
+        .pin-dot { width: 50px; height: 55px; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); border-radius: 12px; color: white; font-size: 1.5rem; text-align: center; outline: none; transition: 0.3s; }
+        .pin-dot:focus { border-color: var(--primary); background: rgba(59, 130, 246, 0.2); transform: translateY(-3px); }
 
-        /* Navigation */
-        .top-nav { background: #1e293b; color: white; padding: 15px; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 1000; }
-        .burger { font-size: 1.5rem; cursor: pointer; }
-        .sidebar { position: fixed; top: 0; left: -250px; width: 250px; height: 100%; background: #1e293b; padding-top: 60px; transition: 0.3s; z-index: 999; box-shadow: 2px 0 10px rgba(0,0,0,0.2); display: flex; flex-direction: column; }
+        /* Navigation & Sidebar */
+        .top-bar { background: var(--card); padding: 15px 20px; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 1000; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
+        .menu-toggle { font-size: 1.4rem; cursor: pointer; color: var(--slate); padding: 5px; }
+        .sidebar { position: fixed; top: 0; left: -280px; width: 280px; height: 100%; background: var(--dark); z-index: 2000; transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1); padding: 30px 20px; display: flex; flex-direction: column; }
         .sidebar.active { left: 0; }
-        .overlay { position: fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); z-index:900; display:none; }
-        .overlay.active { display:block; }
+        .sidebar-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 1500; display: none; backdrop-filter: blur(3px); }
+        
+        .nav-link { color: #94a3b8; padding: 14px 18px; border-radius: 15px; text-decoration: none; display: flex; align-items: center; gap: 12px; font-weight: 500; margin-bottom: 5px; transition: 0.3s; cursor: pointer; }
+        .nav-link:hover, .nav-link.active { background: rgba(59, 130, 246, 0.15); color: white; }
+        .nav-link.active { border-left: 4px solid var(--primary); }
 
-        .nav-btn { color: #94a3b8; padding: 15px 20px; display: flex; align-items: center; gap: 10px; text-decoration: none; font-weight: 500; border-left: 4px solid transparent; cursor: pointer; }
-        .nav-btn.active, .nav-btn:hover { background: #334155; color: white; border-left: 4px solid #3b82f6; }
+        /* Main Content */
+        main { padding: 20px; max-width: 900px; margin: 0 auto; }
+        .page { display: none; animation: fadeIn 0.4s ease; }
+        .page.active { display: block; }
+        @keyframes fadeIn { from{opacity: 0; transform: translateY(10px);} to{opacity: 1; transform: translateY(0);} }
+
+        .card { background: var(--card); padding: 25px; border-radius: var(--radius); margin-bottom: 20px; box-shadow: var(--shadow-sm); border: 1px solid rgba(0,0,0,0.03); }
+        h2 { font-size: 1.5rem; font-weight: 800; margin-bottom: 20px; }
+        label { display: block; margin-bottom: 8px; font-weight: 600; color: var(--slate); font-size: 0.9rem; }
         
-        .main { padding: 20px; max-width: 800px; margin: 0 auto; padding-bottom: 80px; }
-        .page { display: none; animation: fadeIn 0.3s; } .page.active { display: block; }
-        @keyframes fadeIn { from{opacity:0}to{opacity:1} }
+        input, select, textarea { width: 100%; padding: 14px; border: 1.5px solid #e2e8f0; border-radius: 12px; font-size: 1rem; font-family: inherit; margin-bottom: 15px; }
         
-        .card { background: white; padding: 20px; border-radius: 12px; margin-bottom: 15px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
-        input, select { width: 100%; padding: 12px; margin: 8px 0; border: 1px solid #ccc; border-radius: 8px; box-sizing: border-box; }
+        .search-wrapper { position: relative; margin-bottom: 20px; }
+        .search-wrapper i { position: absolute; left: 15px; top: 15px; color: var(--slate); }
+        .search-input { padding-left: 45px !important; border-radius: 50px !important; }
+
+        .btn { padding: 14px 20px; border: none; border-radius: 12px; font-weight: 700; cursor: pointer; transition: 0.3s; display: flex; align-items: center; justify-content: center; gap: 8px; }
+        .btn-icon { padding: 8px 12px; border: none; border-radius: 8px; cursor: pointer; color: white; }
+        .bg-blue { background: var(--primary); color: white; }
+        .bg-green { background: var(--success); color: white; }
+        .bg-red { background: var(--danger); color: white; }
         
-        .btn { padding: 12px; width: 100%; border: none; border-radius: 8px; color: white; font-weight: 600; cursor: pointer; margin-top: 10px; }
-        .btn-icon { padding: 8px 12px; border: none; border-radius: 6px; color: white; cursor: pointer; margin-left: 5px; font-size: 0.9rem; }
-        .bg-blue { background: #3b82f6; } .bg-green { background: #10b981; } .bg-red { background: #ef4444; }
-        
-        .switch { position: relative; display: inline-block; width: 44px; height: 24px; }
+        .switch { position: relative; display: inline-block; width: 48px; height: 26px; }
         .switch input { opacity: 0; width: 0; height: 0; }
-        .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #ccc; transition: .4s; border-radius: 34px; }
-        .slider:before { position: absolute; content: ""; height: 18px; width: 18px; left: 3px; bottom: 3px; background-color: white; transition: .4s; border-radius: 50%; }
-        input:checked + .slider { background-color: #10b981; }
-        input:checked + .slider:before { transform: translateX(20px); }
+        .slider { position: absolute; inset: 0; background: #cbd5e1; transition: .4s; border-radius: 34px; cursor: pointer; }
+        .slider:before { position: absolute; content: ""; height: 20px; width: 20px; left: 3px; bottom: 3px; background: white; transition: .4s; border-radius: 50%; }
+        input:checked + .slider { background: var(--success); }
+        input:checked + .slider:before { transform: translateX(22px); }
 
-        .modal-wrap { position: fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); z-index: 2000; display: none; justify-content: center; align-items: center; backdrop-filter: blur(3px); }
-        .modal-box { background: white; padding: 25px; border-radius: 12px; width: 90%; max-width: 400px; max-height: 90vh; overflow-y: auto; position: relative; }
+        .item-row { background: var(--card); padding: 15px; border-radius: 18px; margin-bottom: 10px; display: flex; align-items: center; justify-content: space-between; border: 1px solid rgba(0,0,0,0.03); }
+        .item-info-box { display: flex; align-items: center; gap: 15px; }
+        .item-img-preview { width: 45px; height: 45px; border-radius: 10px; object-fit: cover; background: #eee; }
+        
+        .modal-bg { position: fixed; inset: 0; background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(8px); z-index: 3000; display: none; align-items: flex-end; justify-content: center; }
+        .modal-sheet { background: var(--card); width: 100%; max-width: 500px; border-radius: 30px 30px 0 0; padding: 25px; max-height: 90vh; overflow-y: auto; animation: sheetUp 0.4s ease; }
+        @keyframes sheetUp { from {transform: translateY(100%)} to {transform: translateY(0)} }
     </style>
 </head>
 <body>
 
-    <!-- New Modern Login Screen with 4-Box PIN -->
-    <div id="login-screen" class="login-wrap">
+    <div class="loader" id="loader"><div class="spinner"></div><p style="margin-top:10px; font-weight:600;">Processing...</p></div>
+    <div class="toast" id="toast"><i class="fas fa-check-circle"></i> <span id="toast-msg">Success</span></div>
+
+    <!-- Login -->
+    <div id="login-screen" class="login-overlay">
         <div class="login-card">
-            <div class="login-icon"><i class="fas fa-lock"></i></div>
-            <div class="login-title">Admin Access</div>
-            <div class="login-sub">Enter your 4-digit security PIN</div>
-            
+            <div style="background: rgba(59, 130, 246, 0.2); width: 60px; height: 60px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px; color: var(--primary); font-size: 1.5rem;"><i class="fas fa-shield-alt"></i></div>
+            <h2 style="color:white; margin:0;">Admin Access</h2>
             <div class="pin-container">
-                <input type="tel" class="pin-box" maxlength="1" oninput="moveFocus(this, 'p2')" id="p1">
-                <input type="tel" class="pin-box" maxlength="1" oninput="moveFocus(this, 'p3')" id="p2">
-                <input type="tel" class="pin-box" maxlength="1" oninput="moveFocus(this, 'p4')" id="p3">
-                <input type="tel" class="pin-box" maxlength="1" oninput="checkSubmit()" id="p4">
+                <input type="password" class="pin-dot" maxlength="1" oninput="moveFocus(this,'lp2')" id="lp1">
+                <input type="password" class="pin-dot" maxlength="1" oninput="moveFocus(this,'lp3')" id="lp2">
+                <input type="password" class="pin-dot" maxlength="1" oninput="moveFocus(this,'lp4')" id="lp3">
+                <input type="password" class="pin-dot" maxlength="1" oninput="checkLogin()" id="lp4">
             </div>
-
-            <button class="login-btn" onclick="checkLogin()">Unlock Dashboard</button>
+            <button class="btn bg-blue" style="width:100%" onclick="checkLogin()">Unlock Dashboard</button>
         </div>
     </div>
 
-    <div id="toast" class="custom-toast">Success</div>
-    <div class="loader-overlay" id="loader"><div class="spinner"></div><p style="margin-top:10px; font-weight:600;">Updating...</p></div>
-
-    <div class="top-nav">
-        <div class="burger" onclick="toggleMenu()"><i class="fas fa-bars"></i></div>
-        <div style="font-weight:700; font-size:1.2rem;">Admin Panel</div>
-        <div style="width:24px;"></div>
+    <!-- Header & Sidebar -->
+    <div class="top-bar">
+        <div class="menu-toggle" onclick="toggleSidebar()"><i class="fas fa-bars-staggered"></i></div>
+        <div style="font-weight: 800; font-size: 1.1rem;">Admin Panel</div>
+        <div style="width: 24px;"></div>
     </div>
 
-    <div class="overlay" onclick="toggleMenu()"></div>
-    <div class="sidebar" id="sidebar">
-        <div>
-            <div class="nav-btn active" onclick="nav('dash')"><i class="fas fa-home"></i> Dashboard</div>
-            <div class="nav-btn" onclick="nav('cats')"><i class="fas fa-list"></i> Categories</div>
-            <div class="nav-btn" onclick="nav('items')"><i class="fas fa-hamburger"></i> Menu Items</div>
-            <div class="nav-btn" onclick="nav('design')"><i class="fas fa-paint-brush"></i> Banners & Speed</div>
-            <div class="nav-btn" onclick="nav('loc')"><i class="fas fa-map-marker-alt"></i> Location Map</div>
+    <div class="sidebar-overlay" id="sidebar-overlay" onclick="toggleSidebar()"></div>
+    <aside class="sidebar" id="sidebar">
+        <h1 style="color:white; font-size:1.5rem; margin-bottom:30px; font-weight:800;"><i class="fas fa-leaf" style="color:var(--success);"></i> Radhe Admin</h1>
+        <div class="nav-link active" onclick="nav('dash')"><i class="fas fa-chart-pie"></i> Dashboard</div>
+        <div class="nav-link" onclick="nav('cats-page')"><i class="fas fa-th-large"></i> Categories</div>
+        <div class="nav-link" onclick="nav('items-page')"><i class="fas fa-utensils"></i> Menu Items</div>
+        <div class="nav-link" onclick="nav('banners-page')"><i class="fas fa-image"></i> Banners & Speed</div>
+        <div class="nav-link" onclick="nav('loc-page')"><i class="fas fa-map-marked-alt"></i> Location Map</div>
+        
+        <div style="margin-top: auto; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 20px;">
+            <div class="nav-link" onclick="openPinModal()" style="color:#60a5fa;"><i class="fas fa-key"></i> Change Security PIN</div>
+            <div class="nav-link" onclick="location.reload()" style="color:var(--danger);"><i class="fas fa-sign-out-alt"></i> Logout</div>
         </div>
-        <div style="margin-top: auto;">
-            <div class="nav-btn" onclick="openPinModal()"><i class="fas fa-key"></i> Change PIN</div>
-            <div class="nav-btn" onclick="location.reload()" style="color:#ef4444;"><i class="fas fa-sign-out-alt"></i> Logout</div>
-        </div>
-    </div>
+    </aside>
 
-    <div class="main">
-        <div id="dash" class="page active">
+    <main>
+        <!-- DASHBOARD -->
+        <section id="dash" class="page active">
             <h2>Dashboard</h2>
-            <div class="card" style="display:flex; justify-content:space-between; align-items:center;">
-                <span>Restaurant Status</span>
-                <label class="switch"><input type="checkbox" id="shop-open"><span class="slider"></span></label>
+            <div class="card" style="display:flex; justify-content:space-between; align-items:center; border-left: 5px solid var(--success);">
+                <div>
+                    <h3 style="margin:0; font-size: 1.1rem;">Restaurant Status</h3>
+                    <p style="margin:0; color:var(--slate); font-size:0.85rem;" id="status-label">Loading...</p>
+                </div>
+                <label class="switch"><input type="checkbox" id="shop-toggle" onchange="saveConfig()"><span class="slider"></span></label>
             </div>
             <div class="card">
-                <h3>Contact Numbers</h3>
-                <label>Order WhatsApp:</label><input type="number" id="wa-ord" placeholder="Ex: 9876543210">
-                <label>Call Button:</label><input type="number" id="wa-call" placeholder="Ex: 9876543210">
+                <h3>Contact & Announcement</h3>
+                <label>Order WhatsApp (10 Digits)</label><input type="number" id="wa-number">
+                <label>Call Number (10 Digits)</label><input type="number" id="call-number">
+                <label>Announcement Text (Marquee)</label><textarea id="marquee-text" rows="2"></textarea>
+                <button class="btn bg-blue" style="width:100%" onclick="saveConfig()">Save Dashboard</button>
             </div>
-            <div class="card">
-                <h3>Marquee Text</h3>
-                <input type="text" id="marquee-txt" placeholder="Scrolling text...">
-                <button class="btn bg-blue" onclick="saveSettings()">Save Changes</button>
-            </div>
-        </div>
+        </section>
 
-        <div id="cats" class="page">
-            <h2>Categories</h2>
+        <!-- CATEGORIES -->
+        <section id="cats-page" class="page">
+            <h2>Manage Categories</h2>
             <div class="card">
-                <input type="text" id="cat-name" placeholder="New Category Name">
-                <button class="btn bg-blue" onclick="addCat()">Add Category</button>
+                <label>New Category</label>
+                <div style="display:flex; gap:10px;"><input type="text" id="new-cat-name" style="margin:0;"><button class="btn bg-blue" onclick="addCategory()">Add</button></div>
             </div>
-            <div id="cat-list"></div>
-        </div>
+            <div class="search-wrapper"><i class="fas fa-search"></i><input type="text" class="search-input" placeholder="Search categories..." oninput="searchCats(this.value)"></div>
+            <div id="category-list-render"></div>
+        </section>
 
-        <div id="items" class="page">
-            <h2>Menu Items</h2>
-            <div class="card" style="border-top:4px solid #10b981;">
-                <h3>Add Item</h3>
-                <input type="text" id="i-name" placeholder="Name">
-                <input type="number" id="i-price" placeholder="Price">
-                <select id="i-cat"></select>
-                <input type="text" id="i-img" placeholder="Image URL">
-                <input type="text" id="i-desc" placeholder="Description">
-                <button class="btn bg-green" onclick="addItem()">Add Item</button>
-            </div>
-            <div id="item-list"></div>
-        </div>
-
-        <div id="design" class="page">
-            <h2>Banners</h2>
+        <!-- MENU ITEMS -->
+        <section id="items-page" class="page">
+            <h2>Menu Management</h2>
             <div class="card">
-                <label>Slider Speed (Seconds):</label><input type="number" id="ban-speed">
+                <h3>Add New Item</h3>
+                <div style="display:grid; grid-template-columns: 2fr 1fr; gap:10px;">
+                    <div><label>Name</label><input type="text" id="i-name"></div>
+                    <div><label>Price</label><input type="number" id="i-price"></div>
+                </div>
+                <label>Category</label><select id="i-cat-select"></select>
+                <label>Image Link (URL)</label><input type="text" id="i-image">
+                <label>Description</label><input type="text" id="i-desc">
+                <button class="btn bg-green" onclick="addItem()">Create Item</button>
+            </div>
+            <div class="search-wrapper"><i class="fas fa-search"></i><input type="text" class="search-input" placeholder="Search food..." oninput="searchItems(this.value)"></div>
+            <div id="menu-items-render"></div>
+        </section>
+
+        <!-- BANNERS -->
+        <section id="banners-page" class="page">
+            <h2>Banners & Speed</h2>
+            <div class="card">
+                <label>Slide Speed (Seconds)</label><input type="number" id="banner-speed">
                 <hr style="margin:15px 0; border:0; border-top:1px solid #eee;">
-                <input type="text" id="b1" placeholder="Banner 1 URL">
-                <input type="text" id="b2" placeholder="Banner 2 URL">
-                <input type="text" id="b3" placeholder="Banner 3 URL">
+                <label>Banner 1</label><input type="text" id="b1">
+                <label>Banner 2</label><input type="text" id="b2">
+                <label>Banner 3</label><input type="text" id="b3">
                 <button class="btn bg-blue" onclick="saveBanners()">Update Banners</button>
             </div>
-        </div>
+        </section>
 
-        <div id="loc" class="page">
-            <h2>Location Settings</h2>
+        <!-- LOCATION -->
+        <section id="loc-page" class="page">
+            <h2>Store Location</h2>
             <div class="card">
-                <label>Google Map Embed URL (src):</label>
-                <input type="text" id="map-embed" placeholder="https://www.google.com/maps/embed?pb=...">
-                <label style="margin-top:15px; display:block;">Direction Link:</label>
-                <input type="text" id="map-link" placeholder="https://maps.app.goo.gl/...">
-                <button class="btn bg-blue" onclick="saveLocation()">Save Location</button>
+                <label>Map Embed Link (src)</label><input type="text" id="map-src">
+                <label>Direction Link</label><input type="text" id="map-link">
+                <button class="btn bg-blue" onclick="saveLocation()">Save Map</button>
+            </div>
+        </section>
+    </main>
+
+    <!-- Modals -->
+    <div class="modal-bg" id="modal-pin">
+        <div class="modal-sheet">
+            <h3>Change PIN</h3>
+            <label>Old PIN:</label><input type="password" id="old-pin" maxlength="4" style="text-align:center; letter-spacing:5px;">
+            <label>New PIN:</label><input type="password" id="new-pin" maxlength="4" style="text-align:center; letter-spacing:5px;">
+            <label>Confirm PIN:</label><input type="password" id="confirm-pin" maxlength="4" style="text-align:center; letter-spacing:5px;">
+            <div style="display:flex; gap:10px;">
+                <button class="btn bg-blue" style="flex:1" onclick="updatePinLogic()">Update</button>
+                <button class="btn bg-red" onclick="closeModal()">Cancel</button>
             </div>
         </div>
     </div>
 
-    <!-- PIN Change Modal -->
-    <div class="modal-wrap" id="modal-pin">
-        <div class="modal-box">
-            <h3>Change Security PIN</h3>
-            
-            <label>Current PIN:</label>
-            <input type="password" id="old-pin" placeholder="Enter Old PIN" maxlength="4" style="text-align:center; letter-spacing:3px;">
-            
-            <label>New PIN:</label>
-            <input type="password" id="new-pin" placeholder="Enter New PIN" maxlength="4" style="text-align:center; letter-spacing:3px;">
-            
-            <label>Confirm New PIN:</label>
-            <input type="password" id="confirm-pin" placeholder="Re-enter New PIN" maxlength="4" style="text-align:center; letter-spacing:3px;">
-            
-            <div style="display:flex; gap:10px; margin-top:15px;">
-                <button class="btn bg-blue" onclick="changePinLogic()">Update PIN</button>
-                <button class="btn bg-red" onclick="closeModals()">Cancel</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- Category Edit Modal -->
-    <div class="modal-wrap" id="modal-cat">
-        <div class="modal-box">
+    <div class="modal-bg" id="modal-edit-cat">
+        <div class="modal-sheet">
             <h3>Edit Category</h3>
-            <input type="hidden" id="edit-cat-id">
-            <input type="text" id="edit-cat-name" placeholder="Category Name">
-            <div style="display:flex; gap:10px; margin-top:10px;">
-                <button class="btn bg-blue" onclick="saveCatEdit()">Save</button>
-                <button class="btn bg-red" onclick="closeModals()">Cancel</button>
-            </div>
+            <input type="hidden" id="ecat-id">
+            <input type="text" id="ecat-name">
+            <div style="display:flex; gap:10px;"><button class="btn bg-blue" style="flex:1" onclick="saveCatEdit()">Save</button><button class="btn bg-red" onclick="closeModal()">Close</button></div>
         </div>
     </div>
 
-    <!-- Item Edit Modal -->
-    <div class="modal-wrap" id="modal-item">
-        <div class="modal-box">
-            <h3>Edit Item</h3>
-            <input type="hidden" id="edit-item-id">
-            <label>Name:</label><input type="text" id="edit-item-name">
-            <label>Price:</label><input type="number" id="edit-item-price">
-            <label>Category:</label><select id="edit-item-cat"></select>
-            <label>Image URL:</label><input type="text" id="edit-item-img">
-            <label>Description:</label><input type="text" id="edit-item-desc">
-            <div style="display:flex; gap:10px; margin-top:10px;">
-                <button class="btn bg-blue" onclick="saveItemEdit()">Update</button>
-                <button class="btn bg-red" onclick="closeModals()">Cancel</button>
-            </div>
+    <div class="modal-bg" id="modal-edit-item">
+        <div class="modal-sheet">
+            <h3>Update Food</h3>
+            <input type="hidden" id="eitem-id">
+            <label>Name</label><input type="text" id="eitem-name">
+            <label>Price</label><input type="number" id="eitem-price">
+            <label>Category</label><select id="eitem-cat-select"></select>
+            <label>Image</label><input type="text" id="eitem-image">
+            <label>Desc</label><input type="text" id="eitem-desc">
+            <div style="display:flex; gap:10px;"><button class="btn bg-green" style="flex:1" onclick="saveItemEdit()">Update</button><button class="btn bg-red" onclick="closeModal()">Close</button></div>
         </div>
     </div>
 
@@ -260,178 +252,82 @@
         const firebaseConfig = { apiKey: "AIzaSyDifkwUmP5MehfgXdhFTs6DQzX-pNR2snE", authDomain: "radhe-krishna-1bc79.firebaseapp.com", databaseURL: "https://radhe-krishna-1bc79-default-rtdb.asia-southeast1.firebasedatabase.app", projectId: "radhe-krishna-1bc79", storageBucket: "radhe-krishna-1bc79.firebasestorage.app", messagingSenderId: "755534416421", appId: "1:755534416421:web:6b97cac0c954d223094dcc" };
         const app = initializeApp(firebaseConfig);
         const db = getDatabase(app);
-        
+
         let cats={}, menu={}, currentPin="1234";
-        const loader = document.getElementById('loader');
-        
-        // Auto Focus Logic
-        window.moveFocus = (curr, nextId) => {
-            if(curr.value.length === 1 && nextId) {
-                document.getElementById(nextId).focus();
-            }
-        }
-        window.checkSubmit = () => {
-            // Optional: Auto submit when last digit entered
-        }
 
+        window.moveFocus = (curr, nextId) => { if(curr.value.length === 1) document.getElementById(nextId).focus(); }
         window.checkLogin = () => {
-            const p1 = document.getElementById('p1').value;
-            const p2 = document.getElementById('p2').value;
-            const p3 = document.getElementById('p3').value;
-            const p4 = document.getElementById('p4').value;
-            const fullPin = p1 + p2 + p3 + p4;
-
-            if(fullPin === currentPin) {
-                document.getElementById('login-screen').style.display = 'none';
-                showToast("Welcome Admin");
-            } else {
-                document.querySelectorAll('.pin-box').forEach(b => {
-                    b.classList.add('error');
-                    b.value = '';
-                });
-                setTimeout(() => document.querySelectorAll('.pin-box').forEach(b => b.classList.remove('error')), 300);
-                document.getElementById('p1').focus();
-            }
+            let p = document.getElementById('lp1').value + document.getElementById('lp2').value + document.getElementById('lp3').value + document.getElementById('lp4').value;
+            if(p === currentPin) { document.getElementById('login-screen').style.display='none'; } else { showToast("Wrong PIN!", "error"); }
         }
 
-        window.toggleMenu = () => { 
-            document.getElementById('sidebar').classList.toggle('active'); 
-            document.querySelector('.overlay').classList.toggle('active');
-            document.body.style.overflow = document.body.style.overflow === 'hidden' ? '' : 'hidden';
+        window.toggleSidebar = () => { 
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('sidebar-overlay');
+            sidebar.classList.toggle('active'); 
+            overlay.style.display = sidebar.classList.contains('active') ? 'block' : 'none'; 
+            // ব্যাকগ্রাউন্ড স্ক্রল লক করার লজিক
+            document.body.classList.toggle('no-scroll', sidebar.classList.contains('active'));
         }
-        window.nav = (id) => { document.querySelectorAll('.page').forEach(p=>p.classList.remove('active')); document.getElementById(id).classList.add('active'); document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active')); event.currentTarget.classList.add('active'); toggleMenu(); }
-        function showToast(msg) { const t=document.getElementById('toast'); t.innerText=msg; t.classList.add('show'); setTimeout(()=>t.classList.remove('show'),2000); }
-        function showLoad(){loader.style.display='flex';} function hideLoad(){loader.style.display='none';}
-        window.closeModals = () => { 
-            document.getElementById('modal-cat').style.display='none'; 
-            document.getElementById('modal-item').style.display='none'; 
-            document.getElementById('modal-pin').style.display='none';
-        }
+
+        window.nav = (id) => { document.querySelectorAll('.page').forEach(p=>p.classList.remove('active')); document.getElementById(id).classList.add('active'); document.querySelectorAll('.nav-link').forEach(l=>l.classList.remove('active')); event.currentTarget.classList.add('active'); toggleSidebar(); }
+        window.closeModal = () => { document.querySelectorAll('.modal-bg').forEach(m=>m.style.display='none'); }
+        function showToast(msg) { const t=document.getElementById('toast'); document.getElementById('toast-msg').innerText=msg; t.classList.add('show'); setTimeout(()=>t.classList.remove('show'),2500); }
+        function loader(st) { document.getElementById('loader').style.display = st ? 'flex' : 'none'; }
 
         onValue(ref(db, 'config'), snap => {
-            const c = snap.val() || {};
-            currentPin = c.adminPin || "1234";
-            document.getElementById('shop-open').checked = c.restaurantOpen;
-            let wa = c.whatsappOrderNumber || ""; if(wa.startsWith("91")) wa = wa.substring(2); document.getElementById('wa-ord').value = wa;
-            let call = c.contactCallNumber || ""; if(call.startsWith("91")) call = call.substring(2); document.getElementById('wa-call').value = call;
-            document.getElementById('marquee-txt').value = c.marqueeText || '';
-            document.getElementById('ban-speed').value = c.bannerSpeed || 3;
-            document.getElementById('map-embed').value = c.mapEmbed || '';
+            const c = snap.val() || {}; currentPin = c.adminPin || "1234";
+            document.getElementById('shop-toggle').checked = c.restaurantOpen;
+            document.getElementById('status-label').innerText = c.restaurantOpen ? "Accepting Orders 🟢" : "Shop Closed 🔴";
+            document.getElementById('wa-number').value = (c.whatsappOrderNumber||'').replace('91','');
+            document.getElementById('call-number').value = (c.contactCallNumber||'').replace('91','');
+            document.getElementById('marquee-text').value = c.marqueeText || '';
+            document.getElementById('banner-speed').value = c.bannerSpeed || 3;
+            document.getElementById('map-src').value = c.mapEmbed || '';
             document.getElementById('map-link').value = c.mapLink || '';
             if(c.banners){ document.getElementById('b1').value=c.banners[0]||''; document.getElementById('b2').value=c.banners[1]||''; document.getElementById('b3').value=c.banners[2]||''; }
         });
-        
+
         onValue(ref(db, 'categories'), snap => { cats = snap.val() || {}; renderCats(); });
-        onValue(ref(db, 'menu'), snap => { menu = snap.val() || {}; renderMenu(); });
+        onValue(ref(db, 'menu'), snap => { menu = snap.val() || {}; renderItems(); });
 
-        window.openPinModal = () => {
-            toggleMenu(); 
-            document.getElementById('old-pin').value = '';
-            document.getElementById('new-pin').value = '';
-            document.getElementById('confirm-pin').value = '';
-            document.getElementById('modal-pin').style.display = 'flex';
-        }
+        window.saveConfig = () => { loader(1); update(ref(db, 'config'), { restaurantOpen: document.getElementById('shop-toggle').checked, whatsappOrderNumber: "91"+document.getElementById('wa-number').value, contactCallNumber: "91"+document.getElementById('call-number').value, marqueeText: document.getElementById('marquee-text').value }).then(() => { loader(0); showToast("Dashboard Updated!"); }); }
+        window.saveBanners = () => { loader(1); update(ref(db, 'config'), { bannerSpeed: parseInt(document.getElementById('banner-speed').value), banners: [document.getElementById('b1').value,document.getElementById('b2').value,document.getElementById('b3').value] }).then(() => { loader(0); showToast("Banners Updated!"); }); }
+        window.saveLocation = () => { loader(1); update(ref(db, 'config'), { mapEmbed: document.getElementById('map-src').value, mapLink: document.getElementById('map-link').value }).then(() => { loader(0); showToast("Map Updated!"); }); }
 
-        window.changePinLogic = () => {
-            const oldP = document.getElementById('old-pin').value;
-            const newP = document.getElementById('new-pin').value;
-            const confP = document.getElementById('confirm-pin').value;
+        window.addCategory = () => { const n=document.getElementById('new-cat-name').value; if(n) push(ref(db, 'categories'), {name:n}).then(()=>document.getElementById('new-cat-name').value=''); }
+        window.delCat = (id) => { for(let k in menu) if(menu[k].category===id) return showToast("Category not empty!"); if(confirm("Delete Category?")) remove(ref(db, `categories/${id}`)); }
+        window.openCatEdit = (id, n) => { document.getElementById('ecat-id').value=id; document.getElementById('ecat-name').value=n; document.getElementById('modal-edit-cat').style.display='flex'; }
+        window.saveCatEdit = () => { update(ref(db, `categories/${document.getElementById('ecat-id').value}`), {name:document.getElementById('ecat-name').value}).then(closeModal); }
 
-            if (oldP !== currentPin) { showToast("Old PIN is incorrect!"); return; }
-            if (newP.length < 4) { showToast("PIN must be 4 digits"); return; }
-            if (newP !== confP) { showToast("New PINs do not match!"); return; }
-
-            showLoad();
-            update(ref(db, 'config'), { adminPin: newP }).then(() => { 
-                hideLoad(); closeModals(); showToast("PIN Changed Successfully!"); 
-            });
-        }
-
-        window.saveSettings = () => {
-            let w=document.getElementById('wa-ord').value; w=w?"91"+w:"";
-            let c=document.getElementById('wa-call').value; c=c?"91"+c:"";
-            update(ref(db, 'config'), { restaurantOpen: document.getElementById('shop-open').checked, whatsappOrderNumber: w, contactCallNumber: c, marqueeText: document.getElementById('marquee-txt').value }).then(() => showToast("Saved!"));
-        }
-        window.saveBanners = () => { update(ref(db, 'config'), { bannerSpeed: parseInt(document.getElementById('ban-speed').value), banners: [document.getElementById('b1').value, document.getElementById('b2').value, document.getElementById('b3').value] }).then(() => showToast("Banners Saved!")); }
-        window.saveLocation = () => { update(ref(db, 'config'), { mapEmbed: document.getElementById('map-embed').value, mapLink: document.getElementById('map-link').value }).then(() => showToast("Location Saved!")); }
-
-        window.addCat = () => { const n=document.getElementById('cat-name').value; if(n) push(ref(db, 'categories'), {name:n}).then(()=>{document.getElementById('cat-name').value=''; showToast("Category Added");}); }
-        window.delCat = (id) => { for(let k in menu) if(menu[k].category===id){showToast("Cat not empty!"); return;} if(confirm("Delete?")) remove(ref(db, `categories/${id}`)); }
-        
-        window.openCatEdit = (id, name) => {
-            document.getElementById('edit-cat-id').value = id;
-            document.getElementById('edit-cat-name').value = name;
-            document.getElementById('modal-cat').style.display = 'flex';
-        }
-        window.saveCatEdit = () => {
-            const id = document.getElementById('edit-cat-id').value;
-            const name = document.getElementById('edit-cat-name').value;
-            if(name) update(ref(db, `categories/${id}`), { name: name }).then(() => { closeModals(); showToast("Category Updated"); });
-        }
-
-        function renderCats() {
-            const l=document.getElementById('cat-list'), s=document.getElementById('i-cat'), es=document.getElementById('edit-item-cat');
-            l.innerHTML=''; s.innerHTML=''; es.innerHTML='';
-            for(let k in cats) { 
-                l.innerHTML+=`
-                <div class="card" style="padding:15px; display:flex; justify-content:space-between; align-items:center;">
-                    <b>${cats[k].name}</b> 
-                    <div>
-                        <button class="btn-icon bg-blue" onclick="openCatEdit('${k}', '${cats[k].name}')"><i class="fas fa-edit"></i></button>
-                        <button class="btn-icon bg-red" onclick="delCat('${k}')"><i class="fas fa-trash"></i></button>
-                    </div>
-                </div>`;
-                let opt = `<option value="${k}">${cats[k].name}</option>`;
-                s.innerHTML+=opt; es.innerHTML+=opt;
-            }
-        }
-
-        window.addItem = () => {
-            const n=document.getElementById('i-name').value; if(!n)return; showLoad();
-            push(ref(db, 'menu'), { name:n, price:parseInt(document.getElementById('i-price').value), category:document.getElementById('i-cat').value, image:document.getElementById('i-img').value, description:document.getElementById('i-desc').value, isAvailable:true }).then(()=>{ showToast("Item Added"); hideLoad(); document.getElementById('i-name').value=''; });
-        }
-        
+        window.addItem = () => { loader(1); push(ref(db, 'menu'), { name:document.getElementById('i-name').value, price:parseInt(document.getElementById('i-price').value), category:document.getElementById('i-cat-select').value, image:document.getElementById('i-image').value, description:document.getElementById('i-desc').value, isAvailable:true }).then(()=>{ loader(0); document.getElementById('i-name').value=''; }); }
         window.toggleItem = (id, st) => update(ref(db, `menu/${id}`), { isAvailable: st });
-        window.delItem = (id) => { if(confirm("Delete?")) remove(ref(db, `menu/${id}`)); }
-        
-        window.openItemEdit = (id) => {
-            const i = menu[id];
-            document.getElementById('edit-item-id').value = id;
-            document.getElementById('edit-item-name').value = i.name;
-            document.getElementById('edit-item-price').value = i.price;
-            document.getElementById('edit-item-cat').value = i.category;
-            document.getElementById('edit-item-img').value = i.image || '';
-            document.getElementById('edit-item-desc').value = i.description || '';
-            document.getElementById('modal-item').style.display = 'flex';
-        }
+        window.delItem = (id) => { if(confirm("Delete Item?")) remove(ref(db, `menu/${id}`)); }
+        window.openItemEdit = (id) => { let i=menu[id]; document.getElementById('eitem-id').value=id; document.getElementById('eitem-name').value=i.name; document.getElementById('eitem-price').value=i.price; document.getElementById('eitem-cat-select').value=i.category; document.getElementById('eitem-image').value=i.image||''; document.getElementById('eitem-desc').value=i.description||''; document.getElementById('modal-edit-item').style.display='flex'; }
+        window.saveItemEdit = () => { loader(1); update(ref(db, `menu/${document.getElementById('eitem-id').value}`), { name:document.getElementById('eitem-name').value, price:parseInt(document.getElementById('eitem-price').value), category:document.getElementById('eitem-cat-select').value, image:document.getElementById('eitem-image').value, description:document.getElementById('eitem-desc').value }).then(()=>{ loader(0); closeModal(); }); }
 
-        window.saveItemEdit = () => {
-            const id = document.getElementById('edit-item-id').value;
-            showLoad();
-            update(ref(db, `menu/${id}`), {
-                name: document.getElementById('edit-item-name').value,
-                price: parseInt(document.getElementById('edit-item-price').value),
-                category: document.getElementById('edit-item-cat').value,
-                image: document.getElementById('edit-item-img').value,
-                description: document.getElementById('edit-item-desc').value
-            }).then(() => { hideLoad(); closeModals(); showToast("Item Updated"); });
-        }
+        window.openPinModal = () => { toggleSidebar(); document.getElementById('modal-pin').style.display='flex'; }
+        window.updatePinLogic = () => { if(document.getElementById('old-pin').value==currentPin && document.getElementById('new-pin').value==document.getElementById('confirm-pin').value){ loader(1); update(ref(db, 'config'), {adminPin:document.getElementById('new-pin').value}).then(()=>{ loader(0); closeModal(); showToast("PIN Changed!"); }); }else{ showToast("Invalid Entry!", "error"); } }
 
-        function renderMenu() {
-            const l=document.getElementById('item-list'); l.innerHTML='';
-            for(let id in menu) { 
-                let i=menu[id], c=i.isAvailable!==false?'checked':''; 
-                l.innerHTML+=`
-                <div class="card" style="display:flex; justify-content:space-between; align-items:center;">
-                    <div><b>${i.name}</b> (${i.price})<br><small>${cats[i.category]?.name||''}</small></div>
-                    <div style="display:flex; align-items:center; gap:5px;">
-                        <label class="switch"><input type="checkbox" ${c} onchange="toggleItem('${id}',this.checked)"><span class="slider"></span></label>
-                        <button class="btn-icon bg-blue" onclick="openItemEdit('${id}')"><i class="fas fa-edit"></i></button>
-                        <button class="btn-icon bg-red" onclick="delItem('${id}')"><i class="fas fa-trash"></i></button>
-                    </div>
-                </div>`; 
+        window.renderCats = (q="") => {
+            const list = document.getElementById('category-list-render'); const s = document.getElementById('i-cat-select'); const es = document.getElementById('eitem-cat-select');
+            list.innerHTML=''; s.innerHTML=''; es.innerHTML='';
+            for(let id in cats) {
+                if(q && !cats[id].name.toLowerCase().includes(q.toLowerCase())) continue;
+                list.innerHTML += `<div class="item-row"><b>${cats[id].name}</b> <div><button class="btn-icon bg-blue" onclick="openCatEdit('${id}','${cats[id].name}')"><i class="fas fa-edit"></i></button><button class="btn-icon bg-red" onclick="delCat('${id}')"><i class="fas fa-trash"></i></button></div></div>`;
+                let opt = `<option value="${id}">${cats[id].name}</option>`; s.innerHTML+=opt; es.innerHTML+=opt;
             }
         }
+        window.renderItems = (q="") => {
+            const list = document.getElementById('menu-items-render'); list.innerHTML='';
+            for(let id in menu) {
+                let i = menu[id]; let cName = cats[i.category]?.name || 'Unknown';
+                if(q && !i.name.toLowerCase().includes(q.toLowerCase()) && !cName.toLowerCase().includes(q.toLowerCase())) continue;
+                list.innerHTML += `<div class="item-row"><div class="item-info-box"><img src="${i.image||''}" class="item-img-preview"><div><b>${i.name}</b><br><small>${cName} • ₹${i.price}</small></div></div><div style="display:flex; align-items:center; gap:8px;"><label class="switch"><input type="checkbox" ${i.isAvailable!==false?'checked':''} onchange="toggleItem('${id}',this.checked)"><span class="slider"></span></label><button class="btn-icon bg-blue" onclick="openItemEdit('${id}')"><i class="fas fa-edit"></i></button><button class="btn-icon bg-red" onclick="delItem('${id}')"><i class="fas fa-trash"></i></button></div></div>`;
+            }
+        }
+        window.searchCats = (q) => renderCats(q);
+        window.searchItems = (q) => renderItems(q);
     </script>
 </body>
 </html>
