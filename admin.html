@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin</title>
+    <title>Admin Login</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
@@ -15,6 +15,11 @@
         .loader-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255,255,255,0.8); z-index: 9999; display: none; justify-content: center; align-items: center; flex-direction: column; }
         .spinner { border: 4px solid #f3f3f3; border-top: 4px solid #3498db; border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+        /* Login Screen */
+        .login-wrap { position: fixed; top:0; left:0; width:100%; height:100%; background:#1e293b; z-index: 5000; display: flex; justify-content: center; align-items: center; flex-direction: column; }
+        .login-box { background: white; padding: 30px; border-radius: 12px; width: 300px; text-align: center; box-shadow: 0 10px 25px rgba(0,0,0,0.2); }
+        .pin-input { font-size: 1.5rem; letter-spacing: 5px; text-align: center; }
 
         /* Navigation */
         .top-nav { background: #1e293b; color: white; padding: 15px; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 1000; }
@@ -55,6 +60,16 @@
 </head>
 <body>
 
+    <!-- Login Screen -->
+    <div id="login-screen" class="login-wrap">
+        <div class="login-box">
+            <h2 style="margin-top:0; color:#1e293b;">Admin Login</h2>
+            <p style="color:#666; margin-bottom:20px;">Enter Access PIN</p>
+            <input type="password" id="input-pin" class="pin-input" maxlength="4" placeholder="••••">
+            <button class="btn bg-blue" onclick="checkLogin()">Unlock</button>
+        </div>
+    </div>
+
     <div id="toast" class="custom-toast">Success</div>
     <div class="loader-overlay" id="loader"><div class="spinner"></div><p style="margin-top:10px; font-weight:600;">Updating...</p></div>
 
@@ -71,21 +86,34 @@
         <div class="nav-btn" onclick="nav('items')"><i class="fas fa-hamburger"></i> Menu Items</div>
         <div class="nav-btn" onclick="nav('design')"><i class="fas fa-paint-brush"></i> Banners & Speed</div>
         <div class="nav-btn" onclick="nav('loc')"><i class="fas fa-map-marker-alt"></i> Location Map</div>
+        <div class="nav-btn" onclick="location.reload()" style="margin-top:auto; color:#ef4444;"><i class="fas fa-sign-out-alt"></i> Logout</div>
     </div>
 
     <div class="main">
         <!-- Dashboard -->
         <div id="dash" class="page active">
             <h2>Dashboard</h2>
+            
+            <div class="card" style="border-left: 4px solid #ef4444;">
+                <h3>🔐 Admin Security</h3>
+                <label>Change PIN (Default: 1234)</label>
+                <div style="display:flex; gap:10px;">
+                    <input type="text" id="new-pin" placeholder="Enter new PIN" maxlength="4">
+                    <button class="btn bg-blue" style="width:auto; margin-top:8px;" onclick="saveNewPin()">Update PIN</button>
+                </div>
+            </div>
+
             <div class="card" style="display:flex; justify-content:space-between; align-items:center;">
                 <span>Restaurant Status</span>
                 <label class="switch"><input type="checkbox" id="shop-open"><span class="slider"></span></label>
             </div>
+            
             <div class="card">
                 <h3>Contact Numbers</h3>
                 <label>Order WhatsApp:</label><input type="number" id="wa-ord" placeholder="Ex: 9876543210">
                 <label>Call Button:</label><input type="number" id="wa-call" placeholder="Ex: 9876543210">
             </div>
+            
             <div class="card">
                 <h3>Marquee Text</h3>
                 <input type="text" id="marquee-txt" placeholder="Scrolling text...">
@@ -181,9 +209,20 @@
         const app = initializeApp(firebaseConfig);
         const db = getDatabase(app);
         
-        let cats={}, menu={};
+        let cats={}, menu={}, currentPin="1234";
         const loader = document.getElementById('loader');
         
+        // Login Logic
+        window.checkLogin = () => {
+            const input = document.getElementById('input-pin').value;
+            if(input === currentPin) {
+                document.getElementById('login-screen').style.display = 'none';
+                showToast("Welcome Admin");
+            } else {
+                showToast("Wrong PIN!");
+            }
+        }
+
         // Helpers
         window.toggleMenu = () => { 
             document.getElementById('sidebar').classList.toggle('active'); 
@@ -198,6 +237,7 @@
         // Data Sync
         onValue(ref(db, 'config'), snap => {
             const c = snap.val() || {};
+            currentPin = c.adminPin || "1234"; // Update PIN from DB
             document.getElementById('shop-open').checked = c.restaurantOpen;
             let wa = c.whatsappOrderNumber || ""; if(wa.startsWith("91")) wa = wa.substring(2); document.getElementById('wa-ord').value = wa;
             let call = c.contactCallNumber || ""; if(call.startsWith("91")) call = call.substring(2); document.getElementById('wa-call').value = call;
@@ -212,6 +252,15 @@
         onValue(ref(db, 'menu'), snap => { menu = snap.val() || {}; renderMenu(); });
 
         // Savings
+        window.saveNewPin = () => {
+            const p = document.getElementById('new-pin').value;
+            if(p && p.length >= 4) {
+                update(ref(db, 'config'), { adminPin: p }).then(() => { showToast("PIN Updated!"); document.getElementById('new-pin').value=''; });
+            } else {
+                showToast("Enter min 4 digit PIN");
+            }
+        }
+
         window.saveSettings = () => {
             let w=document.getElementById('wa-ord').value; w=w?"91"+w:"";
             let c=document.getElementById('wa-call').value; c=c?"91"+c:"";
