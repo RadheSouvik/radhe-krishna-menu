@@ -23,10 +23,12 @@
 
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         
-        /* ব্যাকগ্রাউন্ড স্ক্রল বন্ধ করার জন্য */
+        /* ব্যাকগ্রাউন্ড স্ক্রল বন্ধ করার লজিক */
         body.no-scroll { 
-            overflow: hidden; 
-            height: 100vh; 
+            overflow: hidden !important; 
+            height: 100vh !important; 
+            position: fixed;
+            width: 100%;
         }
 
         body { margin: 0; font-family: 'Outfit', sans-serif; background: var(--bg); color: var(--dark); transition: background 0.3s; }
@@ -39,25 +41,25 @@
         .toast { position: fixed; top: 20px; left: 50%; transform: translateX(-50%) translateY(-100px); background: var(--dark); color: white; padding: 12px 25px; border-radius: 50px; font-weight: 600; z-index: 10000; transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); display: flex; align-items: center; gap: 10px; box-shadow: 0 10px 25px rgba(0,0,0,0.2); }
         .toast.show { transform: translateX(-50%) translateY(0); }
 
-        /* Login Screen */
+        /* PIN Login Screen */
         .login-overlay { position: fixed; inset: 0; background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%); z-index: 5000; display: flex; justify-content: center; align-items: center; }
         .login-card { background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); padding: 40px 30px; border-radius: 30px; width: 90%; max-width: 350px; text-align: center; border: 1px solid rgba(255,255,255,0.1); box-shadow: 0 25px 50px rgba(0,0,0,0.3); }
         .pin-container { display: flex; justify-content: center; gap: 12px; margin: 25px 0; }
         .pin-dot { width: 50px; height: 55px; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); border-radius: 12px; color: white; font-size: 1.5rem; text-align: center; outline: none; transition: 0.3s; }
-        .pin-dot:focus { border-color: var(--primary); background: rgba(59, 130, 246, 0.2); transform: translateY(-3px); }
+        .pin-dot:focus { border-color: var(--primary); background: rgba(59, 130, 246, 0.2); }
 
-        /* Navigation & Sidebar */
+        /* Navigation */
         .top-bar { background: var(--card); padding: 15px 20px; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 1000; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
-        .menu-toggle { font-size: 1.4rem; cursor: pointer; color: var(--slate); padding: 5px; }
+        .menu-toggle { font-size: 1.4rem; cursor: pointer; color: var(--slate); }
         .sidebar { position: fixed; top: 0; left: -280px; width: 280px; height: 100%; background: var(--dark); z-index: 2000; transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1); padding: 30px 20px; display: flex; flex-direction: column; }
         .sidebar.active { left: 0; }
         .sidebar-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 1500; display: none; backdrop-filter: blur(3px); }
         
-        .nav-link { color: #94a3b8; padding: 14px 18px; border-radius: 15px; text-decoration: none; display: flex; align-items: center; gap: 12px; font-weight: 500; margin-bottom: 5px; transition: 0.3s; cursor: pointer; }
+        .nav-link { color: #94a3b8; padding: 14px 18px; border-radius: 15px; text-decoration: none; display: flex; align-items: center; gap: 12px; font-weight: 500; margin-bottom: 5px; cursor: pointer; transition: 0.3s; }
         .nav-link:hover, .nav-link.active { background: rgba(59, 130, 246, 0.15); color: white; }
         .nav-link.active { border-left: 4px solid var(--primary); }
 
-        /* Main Content */
+        /* Layout */
         main { padding: 20px; max-width: 900px; margin: 0 auto; }
         .page { display: none; animation: fadeIn 0.4s ease; }
         .page.active { display: block; }
@@ -69,16 +71,12 @@
         
         input, select, textarea { width: 100%; padding: 14px; border: 1.5px solid #e2e8f0; border-radius: 12px; font-size: 1rem; font-family: inherit; margin-bottom: 15px; }
         
-        .search-wrapper { position: relative; margin-bottom: 20px; }
-        .search-wrapper i { position: absolute; left: 15px; top: 15px; color: var(--slate); }
-        .search-input { padding-left: 45px !important; border-radius: 50px !important; }
-
         .btn { padding: 14px 20px; border: none; border-radius: 12px; font-weight: 700; cursor: pointer; transition: 0.3s; display: flex; align-items: center; justify-content: center; gap: 8px; }
         .btn-icon { padding: 8px 12px; border: none; border-radius: 8px; cursor: pointer; color: white; }
         .bg-blue { background: var(--primary); color: white; }
         .bg-green { background: var(--success); color: white; }
         .bg-red { background: var(--danger); color: white; }
-        
+
         .switch { position: relative; display: inline-block; width: 48px; height: 26px; }
         .switch input { opacity: 0; width: 0; height: 0; }
         .slider { position: absolute; inset: 0; background: #cbd5e1; transition: .4s; border-radius: 34px; cursor: pointer; }
@@ -87,9 +85,8 @@
         input:checked + .slider:before { transform: translateX(22px); }
 
         .item-row { background: var(--card); padding: 15px; border-radius: 18px; margin-bottom: 10px; display: flex; align-items: center; justify-content: space-between; border: 1px solid rgba(0,0,0,0.03); }
-        .item-info-box { display: flex; align-items: center; gap: 15px; }
-        .item-img-preview { width: 45px; height: 45px; border-radius: 10px; object-fit: cover; background: #eee; }
-        
+
+        /* Modals */
         .modal-bg { position: fixed; inset: 0; background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(8px); z-index: 3000; display: none; align-items: flex-end; justify-content: center; }
         .modal-sheet { background: var(--card); width: 100%; max-width: 500px; border-radius: 30px 30px 0 0; padding: 25px; max-height: 90vh; overflow-y: auto; animation: sheetUp 0.4s ease; }
         @keyframes sheetUp { from {transform: translateY(100%)} to {transform: translateY(0)} }
@@ -100,11 +97,11 @@
     <div class="loader" id="loader"><div class="spinner"></div><p style="margin-top:10px; font-weight:600;">Processing...</p></div>
     <div class="toast" id="toast"><i class="fas fa-check-circle"></i> <span id="toast-msg">Success</span></div>
 
-    <!-- Login -->
+    <!-- PIN Screen -->
     <div id="login-screen" class="login-overlay">
         <div class="login-card">
-            <div style="background: rgba(59, 130, 246, 0.2); width: 60px; height: 60px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px; color: var(--primary); font-size: 1.5rem;"><i class="fas fa-shield-alt"></i></div>
-            <h2 style="color:white; margin:0;">Admin Access</h2>
+            <h2 style="color:white; margin-top:0;">Admin Access</h2>
+            <p style="color:#94a3b8; font-size: 0.85rem; margin-bottom: 20px;">Enter 4-digit security PIN</p>
             <div class="pin-container">
                 <input type="password" class="pin-dot" maxlength="1" oninput="moveFocus(this,'lp2')" id="lp1">
                 <input type="password" class="pin-dot" maxlength="1" oninput="moveFocus(this,'lp3')" id="lp2">
@@ -115,10 +112,10 @@
         </div>
     </div>
 
-    <!-- Header & Sidebar -->
+    <!-- Navbar -->
     <div class="top-bar">
         <div class="menu-toggle" onclick="toggleSidebar()"><i class="fas fa-bars-staggered"></i></div>
-        <div style="font-weight: 800; font-size: 1.1rem;">Admin Panel</div>
+        <div style="font-weight: 800;">Admin Dashboard</div>
         <div style="width: 24px;"></div>
     </div>
 
@@ -127,7 +124,7 @@
         <h1 style="color:white; font-size:1.5rem; margin-bottom:30px; font-weight:800;"><i class="fas fa-leaf" style="color:var(--success);"></i> Radhe Admin</h1>
         <div class="nav-link active" onclick="nav('dash')"><i class="fas fa-chart-pie"></i> Dashboard</div>
         <div class="nav-link" onclick="nav('cats-page')"><i class="fas fa-th-large"></i> Categories</div>
-        <div class="nav-link" onclick="nav('items-page')"><i class="fas fa-utensils"></i> Menu Items</div>
+        <div class="nav-link" onclick="nav('items-page')"><i class="fas fa-burger"></i> Menu Items</div>
         <div class="nav-link" onclick="nav('banners-page')"><i class="fas fa-image"></i> Banners & Speed</div>
         <div class="nav-link" onclick="nav('loc-page')"><i class="fas fa-map-marked-alt"></i> Location Map</div>
         
@@ -148,12 +145,29 @@
                 </div>
                 <label class="switch"><input type="checkbox" id="shop-toggle" onchange="saveConfig()"><span class="slider"></span></label>
             </div>
+
+            <!-- RESTAURANT TIMING SECTION -->
+            <div class="card">
+                <h3>Restaurant Timing</h3>
+                <div style="display:grid; grid-template-columns: 1fr 1fr; gap:15px;">
+                    <div>
+                        <label>Opening Time</label>
+                        <input type="text" id="open-time" placeholder="e.g. 9:00 PM">
+                    </div>
+                    <div>
+                        <label>Closing Time</label>
+                        <input type="text" id="close-time" placeholder="e.g. 12:00 AM">
+                    </div>
+                </div>
+                <button class="btn bg-blue" style="width:100%" onclick="saveConfig()">Save Timing & Status</button>
+            </div>
+
             <div class="card">
                 <h3>Contact & Announcement</h3>
-                <label>Order WhatsApp (10 Digits)</label><input type="number" id="wa-number">
-                <label>Call Number (10 Digits)</label><input type="number" id="call-number">
-                <label>Announcement Text (Marquee)</label><textarea id="marquee-text" rows="2"></textarea>
-                <button class="btn bg-blue" style="width:100%" onclick="saveConfig()">Save Dashboard</button>
+                <label>WhatsApp Number</label><input type="number" id="wa-number">
+                <label>Call Number</label><input type="number" id="call-number">
+                <label>Announcement Text</label><textarea id="marquee-text" rows="2"></textarea>
+                <button class="btn bg-blue" style="width:100%" onclick="saveConfig()">Save Settings</button>
             </div>
         </section>
 
@@ -164,7 +178,7 @@
                 <label>New Category</label>
                 <div style="display:flex; gap:10px;"><input type="text" id="new-cat-name" style="margin:0;"><button class="btn bg-blue" onclick="addCategory()">Add</button></div>
             </div>
-            <div class="search-wrapper"><i class="fas fa-search"></i><input type="text" class="search-input" placeholder="Search categories..." oninput="searchCats(this.value)"></div>
+            <div class="search-wrapper"><i class="fas fa-search" style="position:absolute; margin:15px;"></i><input type="text" placeholder="Search categories..." oninput="searchCats(this.value)" style="padding-left:40px; border-radius:50px;"></div>
             <div id="category-list-render"></div>
         </section>
 
@@ -173,16 +187,14 @@
             <h2>Menu Management</h2>
             <div class="card">
                 <h3>Add New Item</h3>
-                <div style="display:grid; grid-template-columns: 2fr 1fr; gap:10px;">
-                    <div><label>Name</label><input type="text" id="i-name"></div>
-                    <div><label>Price</label><input type="number" id="i-price"></div>
-                </div>
-                <label>Category</label><select id="i-cat-select"></select>
-                <label>Image Link (URL)</label><input type="text" id="i-image">
-                <label>Description</label><input type="text" id="i-desc">
-                <button class="btn bg-green" onclick="addItem()">Create Item</button>
+                <input type="text" id="i-name" placeholder="Food Name">
+                <input type="number" id="i-price" placeholder="Price">
+                <select id="i-cat-select"></select>
+                <input type="text" id="i-image" placeholder="Image Link">
+                <input type="text" id="i-desc" placeholder="Brief Description">
+                <button class="btn bg-green" onclick="addItem()">Add to Menu</button>
             </div>
-            <div class="search-wrapper"><i class="fas fa-search"></i><input type="text" class="search-input" placeholder="Search food..." oninput="searchItems(this.value)"></div>
+            <div class="search-wrapper"><i class="fas fa-search" style="position:absolute; margin:15px;"></i><input type="text" placeholder="Search items..." oninput="searchItems(this.value)" style="padding-left:40px; border-radius:50px;"></div>
             <div id="menu-items-render"></div>
         </section>
 
@@ -190,7 +202,7 @@
         <section id="banners-page" class="page">
             <h2>Banners & Speed</h2>
             <div class="card">
-                <label>Slide Speed (Seconds)</label><input type="number" id="banner-speed">
+                <label>Slider Speed (Seconds)</label><input type="number" id="banner-speed">
                 <hr style="margin:15px 0; border:0; border-top:1px solid #eee;">
                 <label>Banner 1</label><input type="text" id="b1">
                 <label>Banner 2</label><input type="text" id="b2">
@@ -213,14 +225,11 @@
     <!-- Modals -->
     <div class="modal-bg" id="modal-pin">
         <div class="modal-sheet">
-            <h3>Change PIN</h3>
-            <label>Old PIN:</label><input type="password" id="old-pin" maxlength="4" style="text-align:center; letter-spacing:5px;">
-            <label>New PIN:</label><input type="password" id="new-pin" maxlength="4" style="text-align:center; letter-spacing:5px;">
-            <label>Confirm PIN:</label><input type="password" id="confirm-pin" maxlength="4" style="text-align:center; letter-spacing:5px;">
-            <div style="display:flex; gap:10px;">
-                <button class="btn bg-blue" style="flex:1" onclick="updatePinLogic()">Update</button>
-                <button class="btn bg-red" onclick="closeModal()">Cancel</button>
-            </div>
+            <h3>Change Security PIN</h3>
+            <label>Old PIN:</label><input type="password" id="old-pin" maxlength="4" style="text-align:center;">
+            <label>New PIN:</label><input type="password" id="new-pin" maxlength="4" style="text-align:center;">
+            <label>Confirm PIN:</label><input type="password" id="confirm-pin" maxlength="4" style="text-align:center;">
+            <div style="display:flex; gap:10px;"><button class="btn bg-blue" style="flex:1" onclick="updatePinLogic()">Update</button><button class="btn bg-red" onclick="closeModal()">Cancel</button></div>
         </div>
     </div>
 
@@ -235,13 +244,13 @@
 
     <div class="modal-bg" id="modal-edit-item">
         <div class="modal-sheet">
-            <h3>Update Food</h3>
+            <h3>Update Food Details</h3>
             <input type="hidden" id="eitem-id">
-            <label>Name</label><input type="text" id="eitem-name">
-            <label>Price</label><input type="number" id="eitem-price">
-            <label>Category</label><select id="eitem-cat-select"></select>
-            <label>Image</label><input type="text" id="eitem-image">
-            <label>Desc</label><input type="text" id="eitem-desc">
+            <label>Name:</label><input type="text" id="eitem-name">
+            <label>Price:</label><input type="number" id="eitem-price">
+            <label>Category:</label><select id="eitem-cat-select"></select>
+            <label>Image:</label><input type="text" id="eitem-image">
+            <label>Description:</label><input type="text" id="eitem-desc">
             <div style="display:flex; gap:10px;"><button class="btn bg-green" style="flex:1" onclick="saveItemEdit()">Update</button><button class="btn bg-red" onclick="closeModal()">Close</button></div>
         </div>
     </div>
@@ -255,30 +264,42 @@
 
         let cats={}, menu={}, currentPin="1234";
 
-        window.moveFocus = (curr, nextId) => { if(curr.value.length === 1) document.getElementById(nextId).focus(); }
+        // --- Scroll Control ---
+        function setScroll(st) { document.body.classList.toggle('no-scroll', st); }
+
+        // --- AUTH ---
+        window.moveFocus = (c, n) => { if(c.value.length === 1) document.getElementById(n).focus(); }
         window.checkLogin = () => {
             let p = document.getElementById('lp1').value + document.getElementById('lp2').value + document.getElementById('lp3').value + document.getElementById('lp4').value;
-            if(p === currentPin) { document.getElementById('login-screen').style.display='none'; } else { showToast("Wrong PIN!", "error"); }
+            if(p === currentPin) { document.getElementById('login-screen').style.display='none'; setScroll(false); } else { showToast("Wrong PIN!", "error"); }
         }
+        // PIN স্ক্রিন থাকাকালীন স্ক্রল বন্ধ রাখা
+        window.onload = () => { if(document.getElementById('login-screen').style.display !== 'none') setScroll(true); }
 
+        // --- UI ---
         window.toggleSidebar = () => { 
-            const sidebar = document.getElementById('sidebar');
-            const overlay = document.getElementById('sidebar-overlay');
-            sidebar.classList.toggle('active'); 
-            overlay.style.display = sidebar.classList.contains('active') ? 'block' : 'none'; 
-            // ব্যাকগ্রাউন্ড স্ক্রল লক করার লজিক
-            document.body.classList.toggle('no-scroll', sidebar.classList.contains('active'));
+            const sb = document.getElementById('sidebar');
+            const ov = document.getElementById('sidebar-overlay');
+            sb.classList.toggle('active');
+            const isOpen = sb.classList.contains('active');
+            ov.style.display = isOpen ? 'block' : 'none';
+            setScroll(isOpen); // Sidebar ওপেন হলে স্ক্রল বন্ধ
         }
-
         window.nav = (id) => { document.querySelectorAll('.page').forEach(p=>p.classList.remove('active')); document.getElementById(id).classList.add('active'); document.querySelectorAll('.nav-link').forEach(l=>l.classList.remove('active')); event.currentTarget.classList.add('active'); toggleSidebar(); }
-        window.closeModal = () => { document.querySelectorAll('.modal-bg').forEach(m=>m.style.display='none'); }
+        
+        window.openModal = (id) => { document.getElementById(id).style.display='flex'; setScroll(true); }
+        window.closeModal = () => { document.querySelectorAll('.modal-bg').forEach(m=>m.style.display='none'); setScroll(false); }
+        
         function showToast(msg) { const t=document.getElementById('toast'); document.getElementById('toast-msg').innerText=msg; t.classList.add('show'); setTimeout(()=>t.classList.remove('show'),2500); }
         function loader(st) { document.getElementById('loader').style.display = st ? 'flex' : 'none'; }
 
+        // --- DATA ---
         onValue(ref(db, 'config'), snap => {
             const c = snap.val() || {}; currentPin = c.adminPin || "1234";
             document.getElementById('shop-toggle').checked = c.restaurantOpen;
             document.getElementById('status-label').innerText = c.restaurantOpen ? "Accepting Orders 🟢" : "Shop Closed 🔴";
+            document.getElementById('open-time').value = c.openTime || '';
+            document.getElementById('close-time').value = c.closeTime || '';
             document.getElementById('wa-number').value = (c.whatsappOrderNumber||'').replace('91','');
             document.getElementById('call-number').value = (c.contactCallNumber||'').replace('91','');
             document.getElementById('marquee-text').value = c.marqueeText || '';
@@ -291,22 +312,33 @@
         onValue(ref(db, 'categories'), snap => { cats = snap.val() || {}; renderCats(); });
         onValue(ref(db, 'menu'), snap => { menu = snap.val() || {}; renderItems(); });
 
-        window.saveConfig = () => { loader(1); update(ref(db, 'config'), { restaurantOpen: document.getElementById('shop-toggle').checked, whatsappOrderNumber: "91"+document.getElementById('wa-number').value, contactCallNumber: "91"+document.getElementById('call-number').value, marqueeText: document.getElementById('marquee-text').value }).then(() => { loader(0); showToast("Dashboard Updated!"); }); }
+        window.saveConfig = () => { 
+            loader(1); 
+            update(ref(db, 'config'), { 
+                restaurantOpen: document.getElementById('shop-toggle').checked, 
+                openTime: document.getElementById('open-time').value,
+                closeTime: document.getElementById('close-time').value,
+                whatsappOrderNumber: "91"+document.getElementById('wa-number').value, 
+                contactCallNumber: "91"+document.getElementById('call-number').value, 
+                marqueeText: document.getElementById('marquee-text').value 
+            }).then(() => { loader(0); showToast("Dashboard Updated!"); }); 
+        }
+
         window.saveBanners = () => { loader(1); update(ref(db, 'config'), { bannerSpeed: parseInt(document.getElementById('banner-speed').value), banners: [document.getElementById('b1').value,document.getElementById('b2').value,document.getElementById('b3').value] }).then(() => { loader(0); showToast("Banners Updated!"); }); }
         window.saveLocation = () => { loader(1); update(ref(db, 'config'), { mapEmbed: document.getElementById('map-src').value, mapLink: document.getElementById('map-link').value }).then(() => { loader(0); showToast("Map Updated!"); }); }
 
         window.addCategory = () => { const n=document.getElementById('new-cat-name').value; if(n) push(ref(db, 'categories'), {name:n}).then(()=>document.getElementById('new-cat-name').value=''); }
         window.delCat = (id) => { for(let k in menu) if(menu[k].category===id) return showToast("Category not empty!"); if(confirm("Delete Category?")) remove(ref(db, `categories/${id}`)); }
-        window.openCatEdit = (id, n) => { document.getElementById('ecat-id').value=id; document.getElementById('ecat-name').value=n; document.getElementById('modal-edit-cat').style.display='flex'; }
+        window.openCatEdit = (id, n) => { document.getElementById('ecat-id').value=id; document.getElementById('ecat-name').value=n; openModal('modal-edit-cat'); }
         window.saveCatEdit = () => { update(ref(db, `categories/${document.getElementById('ecat-id').value}`), {name:document.getElementById('ecat-name').value}).then(closeModal); }
 
         window.addItem = () => { loader(1); push(ref(db, 'menu'), { name:document.getElementById('i-name').value, price:parseInt(document.getElementById('i-price').value), category:document.getElementById('i-cat-select').value, image:document.getElementById('i-image').value, description:document.getElementById('i-desc').value, isAvailable:true }).then(()=>{ loader(0); document.getElementById('i-name').value=''; }); }
         window.toggleItem = (id, st) => update(ref(db, `menu/${id}`), { isAvailable: st });
         window.delItem = (id) => { if(confirm("Delete Item?")) remove(ref(db, `menu/${id}`)); }
-        window.openItemEdit = (id) => { let i=menu[id]; document.getElementById('eitem-id').value=id; document.getElementById('eitem-name').value=i.name; document.getElementById('eitem-price').value=i.price; document.getElementById('eitem-cat-select').value=i.category; document.getElementById('eitem-image').value=i.image||''; document.getElementById('eitem-desc').value=i.description||''; document.getElementById('modal-edit-item').style.display='flex'; }
+        window.openItemEdit = (id) => { let i=menu[id]; document.getElementById('eitem-id').value=id; document.getElementById('eitem-name').value=i.name; document.getElementById('eitem-price').value=i.price; document.getElementById('eitem-cat-select').value=i.category; document.getElementById('eitem-image').value=i.image||''; document.getElementById('eitem-desc').value=i.description||''; openModal('modal-edit-item'); }
         window.saveItemEdit = () => { loader(1); update(ref(db, `menu/${document.getElementById('eitem-id').value}`), { name:document.getElementById('eitem-name').value, price:parseInt(document.getElementById('eitem-price').value), category:document.getElementById('eitem-cat-select').value, image:document.getElementById('eitem-image').value, description:document.getElementById('eitem-desc').value }).then(()=>{ loader(0); closeModal(); }); }
 
-        window.openPinModal = () => { toggleSidebar(); document.getElementById('modal-pin').style.display='flex'; }
+        window.openPinModal = () => { openModal('modal-pin'); }
         window.updatePinLogic = () => { if(document.getElementById('old-pin').value==currentPin && document.getElementById('new-pin').value==document.getElementById('confirm-pin').value){ loader(1); update(ref(db, 'config'), {adminPin:document.getElementById('new-pin').value}).then(()=>{ loader(0); closeModal(); showToast("PIN Changed!"); }); }else{ showToast("Invalid Entry!", "error"); } }
 
         window.renderCats = (q="") => {
