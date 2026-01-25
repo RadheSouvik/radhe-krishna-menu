@@ -8,24 +8,12 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <style>
-        :root {
-            --primary: #27ae60;
-            --bg-body: #f8f9fa;
-            --bg-surface: #ffffff;
-            --text-main: #2c3e50;
-            --text-light: #95a5a6;
-            --shadow: 0 4px 15px rgba(0,0,0,0.05);
-        }
-        body.dark-mode {
-            --bg-body: #121212;
-            --bg-surface: #1e1e1e;
-            --text-main: #ecf0f1;
-            --text-light: #7f8c8d;
-            --shadow: 0 4px 15px rgba(0,0,0,0.3);
-        }
+        :root { --primary: #27ae60; --bg-body: #f8f9fa; --bg-surface: #ffffff; --text-main: #2c3e50; --text-light: #95a5a6; --shadow: 0 4px 15px rgba(0,0,0,0.05); }
+        body.dark-mode { --bg-body: #121212; --bg-surface: #1e1e1e; --text-main: #ecf0f1; --text-light: #7f8c8d; --shadow: 0 4px 15px rgba(0,0,0,0.3); }
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         body.modal-open { overflow: hidden; height: 100vh; }
-        body { margin: 0; font-family: 'Manrope', 'Hind Siliguri', sans-serif; background: var(--bg-body); color: var(--text-main); padding-bottom: 140px; }
+        body { margin: 0; font-family: 'Manrope', 'Hind Siliguri', sans-serif; background: var(--bg-body); color: var(--text-main); padding-bottom: 140px; -webkit-user-select: none; user-select: none; }
+        img { pointer-events: none; } /* Disable Image Save */
 
         /* Toast */
         .custom-toast { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0.9); background: rgba(0, 0, 0, 0.85); color: white; padding: 15px 25px; border-radius: 50px; font-weight: 600; z-index: 9999; opacity: 0; visibility: hidden; transition: all 0.3s ease; pointer-events: none; display: flex; align-items: center; gap: 10px; }
@@ -47,7 +35,7 @@
         .cat-pill { background: var(--bg-surface); padding: 8px 16px; border-radius: 50px; font-weight: 600; font-size: 0.9rem; color: var(--text-light); border: 1px solid transparent; cursor: pointer; white-space: nowrap; }
         .cat-pill.active { background: var(--primary); color: white; }
 
-        .menu-item { background: var(--bg-surface); padding: 12px; border-radius: 16px; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; box-shadow: var(--shadow); }
+        .menu-item { background: var(--bg-surface); padding: 12px; border-radius: 16px; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; box-shadow: var(--shadow); cursor: pointer; }
         .item-left { flex: 1; padding-right: 10px; }
         .item-right { width: 100px; position: relative; display: flex; flex-direction: column; align-items: center; }
         .item-img { width: 100px; height: 90px; border-radius: 12px; object-fit: cover; background: #eee; }
@@ -55,47 +43,35 @@
         .qty-control { position: absolute; bottom: -8px; background: var(--primary); color: white; display: flex; align-items: center; border-radius: 6px; height: 32px; box-shadow: 0 2px 8px rgba(0,0,0,0.2); overflow: hidden; }
         .q-btn { width: 30px; height: 100%; display: flex; align-items: center; justify-content: center; font-weight: bold; cursor: pointer; }
 
-        /* Location Section CSS */
-        .location-section {
-            background: var(--bg-surface);
-            padding: 20px;
-            border-radius: 16px;
-            margin-top: 30px;
-            text-align: center;
-            box-shadow: var(--shadow);
-            display: none; /* Hidden by default until loaded */
-        }
-        .map-wrapper {
-            width: 100%;
-            height: 200px;
-            border-radius: 12px;
-            overflow: hidden;
-            margin-bottom: 15px;
-            background: #f0f0f0;
-        }
-        .map-iframe { width: 100%; height: 100%; border: 0; }
-        .btn-direction {
-            display: inline-flex; align-items: center; gap: 8px;
-            background: #3498db; color: white;
-            padding: 12px 25px; border-radius: 50px;
-            text-decoration: none; font-weight: 700;
-            box-shadow: 0 4px 15px rgba(52, 152, 219, 0.3);
-        }
+        /* Location */
+        .location-box { background: var(--bg-surface); padding: 15px; border-radius: 16px; margin-top: 25px; box-shadow: var(--shadow); text-align: center; }
+        .map-frame { width: 100%; height: 200px; border-radius: 12px; border: 0; margin-bottom: 15px; background: #eee; }
+        .btn-dir { background: #3498db; color: white; padding: 12px 20px; border-radius: 50px; text-decoration: none; font-weight: 700; display: inline-flex; align-items: center; gap: 8px; box-shadow: 0 4px 10px rgba(52, 152, 219, 0.3); }
 
         .float-cart { position: fixed; bottom: 80px; left: 50%; transform: translateX(-50%); width: 90%; max-width: 500px; background: #2c3e50; color: white; padding: 12px 20px; border-radius: 50px; display: none; justify-content: space-between; align-items: center; box-shadow: 0 10px 25px rgba(0,0,0,0.2); z-index: 10; cursor: pointer; }
         .bottom-nav { position: fixed; bottom: 0; left: 0; width: 100%; background: var(--bg-surface); padding: 10px 15px; display: flex; gap: 15px; box-shadow: 0 -5px 20px rgba(0,0,0,0.05); z-index: 90; }
         .nav-btn { flex: 1; padding: 12px; border-radius: 12px; border: none; font-weight: 700; font-size: 1rem; display: flex; align-items: center; justify-content: center; gap: 8px; cursor: pointer; color: white; }
         .btn-call { background: #2980b9; } .btn-wa { background: var(--primary); }
 
+        /* Modals (Cart & Details) */
         .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 1000; display: none; justify-content: center; align-items: flex-end; backdrop-filter: blur(5px); transition: opacity 0.3s; }
         .modal-sheet { background: var(--bg-surface); width: 100%; max-width: 600px; border-radius: 25px 25px 0 0; padding: 0 25px 25px 25px; max-height: 90vh; overflow-y: auto; animation: slideUp 0.3s ease-out; position: relative; }
         @keyframes slideUp { from{transform:translateY(100%)} to{transform:translateY(0)} }
         
+        .handle { width: 100%; padding: 15px 0; display: flex; justify-content: center; }
+        .handle-bar { width: 50px; height: 6px; background: #e0e0e0; border-radius: 10px; }
+
+        /* Item Details Specific */
+        .detail-img { width: 100%; height: 250px; object-fit: cover; border-radius: 16px; margin-bottom: 15px; }
+        .detail-title { font-size: 1.5rem; font-weight: 800; margin-bottom: 5px; color: var(--text-main); }
+        .detail-price { font-size: 1.2rem; font-weight: 700; color: var(--primary); margin-bottom: 15px; }
+        .detail-desc { color: var(--text-light); line-height: 1.6; font-size: 0.95rem; }
+
         input, select, textarea { width: 100%; padding: 14px; margin-bottom: 12px; border: 1px solid #ddd; border-radius: 12px; background: var(--bg-body); color: var(--text-main); font-family: inherit; }
         .btn-confirm { background: #25D366; color: white; width: 100%; padding: 16px; border-radius: 12px; font-size: 1.1rem; font-weight: 800; border: none; cursor: pointer; display: flex; justify-content: center; align-items: center; gap: 10px; }
     </style>
 </head>
-<body>
+<body oncontextmenu="return false;"> <!-- Disable Right Click -->
 
     <div id="toast" class="custom-toast"><span class="toast-icon"></span><span id="toast-msg"></span></div>
 
@@ -112,19 +88,14 @@
         <div class="cat-row" id="cat-list"></div>
         <div id="menu-list"></div>
 
-        <!-- Location Section (Added here) -->
-        <div class="location-section" id="location-view">
-            <h3 style="margin-top:0; margin-bottom:15px;"><i class="fas fa-map-marker-alt" style="color:var(--primary);"></i> Visit Our Restaurant</h3>
-            <div class="map-wrapper">
-                <iframe id="map-iframe" class="map-iframe" allowfullscreen="" loading="lazy"></iframe>
-            </div>
-            <a href="#" id="dir-link" target="_blank" class="btn-direction">
-                <i class="fas fa-directions"></i> Get Directions
-            </a>
+        <div class="location-box" id="loc-section" style="display:none;">
+            <h3 style="margin-top:0; margin-bottom:15px;"><i class="fas fa-map-marker-alt"></i> Visit Us</h3>
+            <iframe id="map-frame" class="map-frame" loading="lazy"></iframe>
+            <a id="dir-btn" href="#" target="_blank" class="btn-dir"><i class="fas fa-directions"></i> Get Directions</a>
         </div>
     </div>
 
-    <div class="float-cart" id="float-cart" onclick="openModal()">
+    <div class="float-cart" id="float-cart" onclick="openModal('cart')">
         <div style="font-weight:700;"><span id="c-count">0</span> Items</div>
         <div style="font-weight:800;">₹<span id="c-total">0</span> <i class="fas fa-chevron-right"></i></div>
     </div>
@@ -134,9 +105,10 @@
         <button class="nav-btn btn-wa" onclick="openWhatsApp()"><i class="fab fa-whatsapp"></i> WhatsApp</button>
     </div>
 
-    <div class="modal-overlay" id="modal">
-        <div class="modal-sheet" id="sheet">
-            <div style="width:100%; padding:15px 0; display:flex; justify-content:center;"><div style="width:50px; height:6px; background:#e0e0e0; border-radius:10px;"></div></div>
+    <!-- Cart Modal -->
+    <div class="modal-overlay" id="modal-cart">
+        <div class="modal-sheet" id="sheet-cart">
+            <div class="handle"><div class="handle-bar"></div></div>
             <h2 style="margin:0 0 20px 0; text-align:center;">Complete Order</h2>
             <div style="background:var(--bg-body); padding:15px; border-radius:12px; margin-bottom:20px;">
                 <div id="cart-items"></div>
@@ -154,6 +126,18 @@
         </div>
     </div>
 
+    <!-- Item Details Modal -->
+    <div class="modal-overlay" id="modal-detail">
+        <div class="modal-sheet" id="sheet-detail">
+            <div class="handle"><div class="handle-bar"></div></div>
+            <img src="" id="d-img" class="detail-img">
+            <div class="detail-title" id="d-name"></div>
+            <div class="detail-price" id="d-price"></div>
+            <div class="detail-desc" id="d-desc"></div>
+            <div style="height:30px;"></div>
+        </div>
+    </div>
+
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js";
         import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-database.js";
@@ -162,6 +146,7 @@
         const db = getDatabase(app);
 
         let menu={}, cats={}, conf={}, cart={}, activeCat='all', slideInterval;
+        let currentModal = null; // Track open modal for back button
         
         function showToast(msg, type='info') {
             const t = document.getElementById('toast');
@@ -185,41 +170,99 @@
             if(slideInterval) clearInterval(slideInterval);
             let sIdx=0; slideInterval = setInterval(()=>{ const s=document.querySelectorAll('.slide'); if(s.length){s[sIdx].classList.remove('active'); sIdx=(sIdx+1)%s.length; s[sIdx].classList.add('active');} }, (conf.bannerSpeed||3)*1000);
             
-            // Handle Location
-            const locDiv = document.getElementById('location-view');
             if(conf.mapEmbed && conf.mapLink) {
-                locDiv.style.display = 'block';
-                document.getElementById('map-iframe').src = conf.mapEmbed;
-                document.getElementById('dir-link').href = conf.mapLink;
-            } else {
-                locDiv.style.display = 'none';
-            }
+                document.getElementById('loc-section').style.display='block';
+                document.getElementById('map-frame').src = conf.mapEmbed;
+                document.getElementById('dir-btn').href = conf.mapLink;
+            } else { document.getElementById('loc-section').style.display='none'; }
         }
 
         function renderCats(){ const d=document.getElementById('cat-list'); let h=`<div class="cat-pill ${activeCat=='all'?'active':''}" onclick="setCat('all')">All</div>`; for(let k in cats) h+=`<div class="cat-pill ${activeCat==k?'active':''}" onclick="setCat('${k}')">${cats[k].name}</div>`; d.innerHTML=h; }
         window.setCat=(c)=>{activeCat=c; renderCats(); renderMenu();}
-        function renderMenu(){ const d=document.getElementById('menu-list'); d.innerHTML=''; for(let id in menu){ let i=menu[id]; if(i.isAvailable===false || (activeCat!=='all' && i.category!==activeCat)) continue; let q=cart[id]||0; let btn = q===0 ? `<div class="btn-add" onclick="mod('${id}',1)">ADD</div>` : `<div class="qty-control"><div class="q-btn" onclick="mod('${id}',-1)">-</div><div style="padding:0 5px; font-weight:600;">${q}</div><div class="q-btn" onclick="mod('${id}',1)">+</div></div>`; d.innerHTML+=`<div class="menu-item"><div class="item-left"><div style="border:1px solid green; width:16px; padding:2px; display:flex; justify-content:center;"><div style="width:8px; height:8px; background:green; border-radius:50%;"></div></div><div style="font-weight:700; margin:4px 0;">${i.name}</div><div style="font-weight:600;">₹${i.price}</div><div style="font-size:0.8rem; color:#888;">${i.description||''}</div></div><div class="item-right"><img src="${i.image||'https://via.placeholder.com/100'}" class="item-img">${btn}</div></div>`; } }
         
-        window.mod=(id,v)=>{ if(!conf.restaurantOpen){showToast("Closed!",'error');return;} if(!cart[id]) cart[id]=0; cart[id]+=v; if(cart[id]<=0) delete cart[id]; renderMenu(); updateCart(); }
+        function renderMenu(){ 
+            const d=document.getElementById('menu-list'); d.innerHTML=''; 
+            for(let id in menu){ 
+                let i=menu[id]; 
+                if(i.isAvailable===false || (activeCat!=='all' && i.category!==activeCat)) continue; 
+                let q=cart[id]||0; 
+                let btn = q===0 ? `<div class="btn-add" onclick="mod(event, '${id}',1)">ADD</div>` : `<div class="qty-control" onclick="event.stopPropagation()"><div class="q-btn" onclick="mod(event, '${id}',-1)">-</div><div style="padding:0 5px; font-weight:600;">${q}</div><div class="q-btn" onclick="mod(event, '${id}',1)">+</div></div>`; 
+                d.innerHTML+=`
+                <div class="menu-item" onclick="openDetail('${id}')">
+                    <div class="item-left">
+                        <div style="border:1px solid green; width:16px; padding:2px; display:flex; justify-content:center;"><div style="width:8px; height:8px; background:green; border-radius:50%;"></div></div>
+                        <div style="font-weight:700; margin:4px 0;">${i.name}</div>
+                        <div style="font-weight:600;">₹${i.price}</div>
+                        <div style="font-size:0.8rem; color:#888;">${i.description||''}</div>
+                    </div>
+                    <div class="item-right">
+                        <img src="${i.image||'https://via.placeholder.com/100'}" class="item-img">
+                        ${btn}
+                    </div>
+                </div>`; 
+            } 
+        }
+        
+        window.mod=(e,id,v)=>{ 
+            e.stopPropagation(); // Stop opening detail modal
+            if(!conf.restaurantOpen){showToast("Closed!",'error');return;} 
+            if(!cart[id]) cart[id]=0; cart[id]+=v; if(cart[id]<=0) delete cart[id]; renderMenu(); updateCart(); 
+        }
+        
         function updateCart(){ let c=0, t=0; for(let id in cart){c+=cart[id]; t+=cart[id]*menu[id].price;} document.getElementById('c-count').innerText=c; document.getElementById('c-total').innerText=t; document.getElementById('float-cart').style.display=c>0?'flex':'none'; }
         
-        let isModal=false;
-        window.openModal=()=>{ document.getElementById('modal').style.display='flex'; document.body.classList.add('modal-open'); window.history.pushState({modal:true},null,""); isModal=true; let d=document.getElementById('cart-items'); d.innerHTML=''; let t=0; for(let id in cart){ let i=menu[id],st=i.price*cart[id]; t+=st; d.innerHTML+=`<div style="display:flex; justify-content:space-between; margin-bottom:8px;"><div>${i.name} x ${cart[id]}</div><div>₹${st}</div></div>`; } document.getElementById('m-total').innerText=t; }
-        
-        // Fix for Back Button closing modal
-        window.addEventListener('popstate',()=>{ if(isModal){ document.getElementById('modal').style.display='none'; document.body.classList.remove('modal-open'); isModal=false; } });
-        // Fix for Swipe Down closing modal
-        const sheet = document.getElementById('sheet');
-        let startY = 0;
-        sheet.addEventListener('touchstart', (e) => startY = e.touches[0].clientY);
-        sheet.addEventListener('touchmove', (e) => {
-            const currentY = e.touches[0].clientY;
-            if(currentY > startY) sheet.style.transform = `translateY(${currentY - startY}px)`;
-        });
-        sheet.addEventListener('touchend', (e) => {
-            const endY = e.changedTouches[0].clientY;
-            if(endY - startY > 100) window.history.back();
-            else sheet.style.transform = `translateY(0)`;
+        // Modal Logic (Generic)
+        window.openModal = (type) => {
+            currentModal = 'modal-' + type;
+            document.getElementById(currentModal).style.display = 'flex';
+            document.body.classList.add('modal-open');
+            window.history.pushState({modal: true}, null, "");
+            
+            if(type === 'cart') renderCartItems();
+        }
+
+        window.openDetail = (id) => {
+            const i = menu[id];
+            document.getElementById('d-img').src = i.image || 'https://via.placeholder.com/400';
+            document.getElementById('d-name').innerText = i.name;
+            document.getElementById('d-price').innerText = '₹' + i.price;
+            document.getElementById('d-desc').innerText = i.description || 'No description available.';
+            openModal('detail');
+        }
+
+        function renderCartItems() {
+            let d=document.getElementById('cart-items'); d.innerHTML=''; let t=0; 
+            for(let id in cart){ let i=menu[id],st=i.price*cart[id]; t+=st; d.innerHTML+=`<div style="display:flex; justify-content:space-between; margin-bottom:8px;"><div>${i.name} x ${cart[id]}</div><div>₹${st}</div></div>`; } 
+            document.getElementById('m-total').innerText=t;
+        }
+
+        function closeModal() {
+            if(currentModal) {
+                document.getElementById(currentModal).style.display = 'none';
+                document.body.classList.remove('modal-open');
+                // Reset transforms for swipe
+                document.getElementById('sheet-cart').style.transform = '';
+                document.getElementById('sheet-detail').style.transform = '';
+                currentModal = null;
+            }
+        }
+
+        window.addEventListener('popstate', () => { if(currentModal) closeModal(); });
+
+        // Swipe Logic for Both Modals
+        ['sheet-cart', 'sheet-detail'].forEach(id => {
+            const sheet = document.getElementById(id);
+            let startY = 0;
+            sheet.addEventListener('touchstart', (e) => startY = e.touches[0].clientY);
+            sheet.addEventListener('touchmove', (e) => {
+                const currentY = e.touches[0].clientY;
+                if(currentY > startY) sheet.style.transform = `translateY(${currentY - startY}px)`;
+            });
+            sheet.addEventListener('touchend', (e) => {
+                const endY = e.changedTouches[0].clientY;
+                if(endY - startY > 100) window.history.back();
+                else sheet.style.transform = `translateY(0)`;
+            });
         });
 
         window.makeCall=()=>{ window.open(`tel:${conf.contactCallNumber}`, '_self'); }
