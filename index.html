@@ -2,7 +2,7 @@
 <html lang="bn">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Radhe Krishna Menu</title>
     <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Hind+Siliguri:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -28,9 +28,16 @@
         }
 
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        
+        /* Prevent background scroll when modal is open */
+        body.modal-open {
+            overflow: hidden;
+            height: 100vh;
+        }
+
         body { margin: 0; font-family: 'Manrope', 'Hind Siliguri', sans-serif; background: var(--bg-body); color: var(--text-main); padding-bottom: 140px; }
 
-        /* --- Header (New Design) --- */
+        /* Header */
         .header {
             background: var(--bg-surface);
             padding: 15px 20px;
@@ -41,7 +48,7 @@
         .brand { font-size: 1.4rem; font-weight: 800; color: var(--primary); letter-spacing: -0.5px; display: flex; align-items: center; gap: 8px; }
         .theme-btn { width: 35px; height: 35px; border-radius: 50%; background: var(--bg-body); display: flex; align-items: center; justify-content: center; cursor: pointer; }
 
-        /* --- Smooth Marquee --- */
+        /* Marquee */
         .marquee-container {
             background: var(--primary); color: white; overflow: hidden; white-space: nowrap; padding: 6px 0; font-size: 0.85rem; font-weight: 500;
         }
@@ -50,21 +57,20 @@
         }
         @keyframes scroll { 0% { transform: translateX(0); } 100% { transform: translateX(-100%); } }
 
-        /* --- Layout --- */
+        /* Container */
         .container { max-width: 600px; margin: 0 auto; padding: 15px; }
 
         .banner-box { height: 180px; border-radius: 16px; overflow: hidden; position: relative; margin-bottom: 20px; background: #e0e0e0; box-shadow: var(--shadow); }
         .slide { width: 100%; height: 100%; object-fit: cover; position: absolute; opacity: 0; transition: opacity 0.8s; }
         .slide.active { opacity: 1; }
 
-        /* Categories */
+        /* Cat & Menu */
         .cat-row { display: flex; gap: 10px; overflow-x: auto; padding-bottom: 5px; scrollbar-width: none; margin-bottom: 20px; }
         .cat-pill {
             background: var(--bg-surface); padding: 8px 16px; border-radius: 50px; font-weight: 600; font-size: 0.9rem; color: var(--text-light); border: 1px solid transparent; cursor: pointer; white-space: nowrap;
         }
         .cat-pill.active { background: var(--primary); color: white; box-shadow: 0 4px 10px rgba(39, 174, 96, 0.3); }
 
-        /* Menu List */
         .menu-item {
             background: var(--bg-surface); padding: 12px; border-radius: 16px; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; box-shadow: var(--shadow);
         }
@@ -78,7 +84,6 @@
         .item-right { width: 100px; position: relative; display: flex; flex-direction: column; align-items: center; }
         .item-img { width: 100px; height: 90px; border-radius: 12px; object-fit: cover; background: #eee; }
         
-        /* Add Button */
         .btn-add {
             position: absolute; bottom: -8px; background: var(--bg-surface); color: var(--primary);
             font-weight: 800; font-size: 0.9rem; padding: 6px 20px; border-radius: 6px;
@@ -91,7 +96,7 @@
         .q-btn { width: 30px; height: 100%; display: flex; align-items: center; justify-content: center; font-weight: bold; cursor: pointer; }
         .q-val { padding: 0 5px; font-weight: 600; }
 
-        /* --- Floating Cart --- */
+        /* Float Cart */
         .float-cart {
             position: fixed; bottom: 80px; left: 50%; transform: translateX(-50%);
             width: 90%; max-width: 500px; background: #2c3e50; color: white;
@@ -99,7 +104,7 @@
             box-shadow: 0 10px 25px rgba(0,0,0,0.2); z-index: 10; cursor: pointer;
         }
 
-        /* --- Bottom Contact Bar --- */
+        /* Bottom Contact Bar */
         .bottom-nav {
             position: fixed; bottom: 0; left: 0; width: 100%;
             background: var(--bg-surface); padding: 10px 15px;
@@ -112,23 +117,32 @@
         .btn-call { background: var(--secondary); box-shadow: 0 4px 10px rgba(41, 128, 185, 0.3); }
         .btn-wa { background: var(--primary); box-shadow: 0 4px 10px rgba(39, 174, 96, 0.3); }
 
-        /* --- Modal (Bottom Sheet Design) --- */
+        /* Modal (Bottom Sheet) */
         .modal-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(0,0,0,0.6); z-index: 1000; display: none; justify-content: center; align-items: flex-end;
             backdrop-filter: blur(5px);
+            transition: opacity 0.3s;
         }
+        
         .modal-sheet {
             background: var(--bg-surface); width: 100%; max-width: 600px;
-            border-radius: 25px 25px 0 0; padding: 25px;
-            max-height: 85vh; overflow-y: auto;
-            animation: slideUp 0.3s ease-out;
+            border-radius: 25px 25px 0 0; padding: 0 25px 25px 25px;
+            max-height: 90vh; overflow-y: auto;
+            animation: slideUp 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
             position: relative;
+            transform: translateY(0);
+            transition: transform 0.2s ease-out;
         }
         @keyframes slideUp { from{transform:translateY(100%)} to{transform:translateY(0)} }
 
-        .sheet-header { text-align: center; margin-bottom: 20px; position: relative; }
-        .sheet-line { width: 40px; height: 5px; background: #ddd; border-radius: 10px; margin: 0 auto 15px; }
+        /* Swipe Handle */
+        .sheet-handle-area {
+            width: 100%; padding: 15px 0; cursor: grab;
+            display: flex; justify-content: center;
+            position: sticky; top: 0; background: var(--bg-surface); z-index: 10;
+        }
+        .sheet-line { width: 50px; height: 6px; background: #e0e0e0; border-radius: 10px; }
         
         .order-summary { background: var(--bg-body); padding: 15px; border-radius: 12px; margin-bottom: 20px; }
         .summary-row { display: flex; justify-content: space-between; margin-bottom: 8px; font-size: 0.95rem; }
@@ -149,38 +163,27 @@
 </head>
 <body>
 
-    <!-- Header -->
     <div class="header">
         <div class="brand"><i class="fas fa-leaf"></i> Radhe Krishna</div>
         <div class="theme-btn" onclick="document.body.classList.toggle('dark-mode')"><i class="fas fa-moon"></i></div>
     </div>
 
-    <!-- Marquee -->
     <div class="marquee-container">
         <div class="marquee-content" id="scroller">Loading updates...</div>
     </div>
 
     <div class="container">
-        <!-- Banner -->
         <div class="banner-box" id="banner-slider"></div>
-
-        <!-- Status -->
         <div id="shop-status" style="text-align:center; margin-bottom:20px; font-weight:700; padding:10px; border-radius:8px;"></div>
-
-        <!-- Categories -->
         <div class="cat-row" id="cat-list"></div>
-
-        <!-- Menu -->
         <div id="menu-list"></div>
     </div>
 
-    <!-- Float Cart Button -->
     <div class="float-cart" id="float-cart" onclick="openModal()">
         <div style="font-weight:700;"><span id="c-count">0</span> Items</div>
         <div style="font-weight:800;">₹<span id="c-total">0</span> <i class="fas fa-chevron-right"></i></div>
     </div>
 
-    <!-- Bottom Contact Bar -->
     <div class="bottom-nav">
         <button class="nav-btn btn-call" onclick="makeCall()">
             <i class="fas fa-phone-alt"></i> Call
@@ -190,14 +193,15 @@
         </button>
     </div>
 
-    <!-- Order Modal -->
+    <!-- Modal with Swipe Down & Back Button Support -->
     <div class="modal-overlay" id="modal">
-        <div class="modal-sheet">
-            <div class="sheet-header">
+        <div class="modal-sheet" id="sheet">
+            <div class="sheet-handle-area" id="sheet-handle">
                 <div class="sheet-line"></div>
-                <h2 style="margin:0;">Complete Order</h2>
             </div>
             
+            <h2 style="margin:0 0 20px 0; text-align:center;">Complete Order</h2>
+
             <div class="order-summary">
                 <div id="cart-items"></div>
                 <div class="total-row">
@@ -226,7 +230,7 @@
             <button class="btn-confirm" onclick="placeOrder()">
                 <i class="fab fa-whatsapp"></i> Send Order
             </button>
-            <div style="text-align:center; margin-top:10px; color:#888; font-size:0.9rem;" onclick="document.getElementById('modal').style.display='none'">Close</div>
+            <div style="height:30px;"></div>
         </div>
     </div>
 
@@ -255,15 +259,10 @@
         onValue(ref(db, 'menu'), snap => { menu=snap.val()||{}; renderMenu(); });
 
         function updateUI() {
-            // Status
             const st = document.getElementById('shop-status');
             if(conf.restaurantOpen){ st.style.background="#d4edda"; st.style.color="#155724"; st.innerText="Restaurant Open 🟢"; }
             else{ st.style.background="#f8d7da"; st.style.color="#721c24"; st.innerText="Restaurant Closed 🔴"; }
-            
-            // Marquee
             document.getElementById('scroller').innerText = conf.marqueeText || "Welcome to Radhe Krishna";
-            
-            // Banners
             const sl = document.getElementById('banner-slider');
             sl.innerHTML = '';
             if(conf.banners) conf.banners.forEach((s,i) => sl.innerHTML += `<img src="${s}" class="slide ${i==0?'active':''}">`);
@@ -290,12 +289,10 @@
                 let i=menu[id];
                 if(i.isAvailable===false) continue;
                 if(activeCat!=='all' && i.category!==activeCat) continue;
-
                 let q=cart[id]||0;
                 let btn = q===0 
                 ? `<div class="btn-add" onclick="mod('${id}',1)">ADD</div>`
                 : `<div class="qty-control"><div class="q-btn" onclick="mod('${id}',-1)">-</div><div class="q-val">${q}</div><div class="q-btn" onclick="mod('${id}',1)">+</div></div>`;
-
                 d.innerHTML+=`
                 <div class="menu-item">
                     <div class="item-left">
@@ -328,16 +325,78 @@
             document.getElementById('float-cart').style.display=c>0?'flex':'none';
         }
 
-        window.openModal=()=>{
-            document.getElementById('modal').style.display='flex';
-            const d=document.getElementById('cart-items'); d.innerHTML='';
-            let t=0;
+        // ==========================================
+        //  MODAL LOGIC (BACK BUTTON + SWIPE DOWN)
+        // ==========================================
+        
+        let isModalOpen = false;
+
+        window.openModal = () => {
+            const modal = document.getElementById('modal');
+            const d = document.getElementById('cart-items');
+            d.innerHTML = '';
+            let t = 0;
             for(let id in cart){
-                let i=menu[id], st=i.price*cart[id]; t+=st;
-                d.innerHTML+=`<div class="summary-row"><div>${i.name} x ${cart[id]}</div><div>₹${st}</div></div>`;
+                let i = menu[id], st = i.price*cart[id]; t += st;
+                d.innerHTML += `<div class="summary-row"><div>${i.name} x ${cart[id]}</div><div>₹${st}</div></div>`;
             }
-            document.getElementById('m-total').innerText=t;
+            document.getElementById('m-total').innerText = t;
+
+            // Show Modal & Lock Scroll
+            modal.style.display = 'flex';
+            document.body.classList.add('modal-open');
+            
+            // Push State for Back Button
+            window.history.pushState({modal: true}, null, "");
+            isModalOpen = true;
         }
+
+        function closeModalLogic() {
+            const modal = document.getElementById('modal');
+            modal.style.display = 'none';
+            document.body.classList.remove('modal-open');
+            document.getElementById('sheet').style.transform = `translateY(0)`; // Reset position
+            isModalOpen = false;
+        }
+
+        // Listen for Back Button
+        window.addEventListener('popstate', (e) => {
+            if (isModalOpen) {
+                closeModalLogic();
+            }
+        });
+
+        // Swipe Down Logic
+        const sheet = document.getElementById('sheet');
+        const handle = document.getElementById('sheet-handle');
+        let startY = 0;
+        let currentY = 0;
+
+        handle.addEventListener('touchstart', (e) => {
+            startY = e.touches[0].clientY;
+        });
+
+        handle.addEventListener('touchmove', (e) => {
+            currentY = e.touches[0].clientY;
+            let diff = currentY - startY;
+            if (diff > 0) { // Dragging down
+                sheet.style.transform = `translateY(${diff}px)`;
+            }
+        });
+
+        handle.addEventListener('touchend', (e) => {
+            let diff = currentY - startY;
+            if (diff > 100) { // Threshold to close
+                window.history.back(); // Trigger popstate to close
+            } else {
+                sheet.style.transform = `translateY(0)`; // Snap back
+            }
+        });
+
+
+        // ==========================================
+        //  CONTACT & ORDER
+        // ==========================================
 
         window.makeCall = () => {
             const num = conf.contactCallNumber || "910000000000";
@@ -364,7 +423,6 @@
                 total += i.price*cart[id];
             }
 
-            // NEW CLEAN FORMAT
             let msg = `🛒 *NEW ORDER - RADHE KRISHNA*\n`;
             msg += `----------------------------\n`;
             msg += `👤 *Customer:* ${n}\n`;
