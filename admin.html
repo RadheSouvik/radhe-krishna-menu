@@ -9,15 +9,15 @@
     <style>
         body { font-family: 'Inter', sans-serif; margin: 0; background: #f3f4f6; }
         
-        /* Toast */
+        /* Disable scroll when menu open */
+        body.no-scroll { overflow: hidden; }
+
         .custom-toast { position: fixed; top: 20px; left: 50%; transform: translateX(-50%); background: #333; color: white; padding: 12px 25px; border-radius: 50px; z-index: 10000; opacity: 0; transition: 0.3s; pointer-events: none; }
         .custom-toast.show { opacity: 1; top: 30px; }
 
-        /* Mobile Navbar */
         .top-nav { background: #1e293b; color: white; padding: 15px; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 1000; }
         .burger { font-size: 1.5rem; cursor: pointer; }
         
-        /* Sidebar (Mobile Friendly) */
         .sidebar { position: fixed; top: 0; left: -250px; width: 250px; height: 100%; background: #1e293b; padding-top: 60px; transition: 0.3s; z-index: 999; box-shadow: 2px 0 10px rgba(0,0,0,0.2); }
         .sidebar.active { left: 0; }
         .overlay { position: fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); z-index:900; display:none; }
@@ -45,16 +45,14 @@
 </head>
 <body>
 
-    <div id="toast" class="custom-toast">Action Successful</div>
+    <div id="toast" class="custom-toast">Success</div>
 
-    <!-- Mobile Header -->
     <div class="top-nav">
         <div class="burger" onclick="toggleMenu()"><i class="fas fa-bars"></i></div>
         <div style="font-weight:700; font-size:1.2rem;">Admin Panel</div>
         <div style="width:24px;"></div>
     </div>
 
-    <!-- Sidebar & Overlay -->
     <div class="overlay" onclick="toggleMenu()"></div>
     <div class="sidebar" id="sidebar">
         <div class="nav-btn active" onclick="nav('dash')"><i class="fas fa-home"></i> Dashboard</div>
@@ -65,7 +63,6 @@
     </div>
 
     <div class="main">
-        <!-- Dashboard -->
         <div id="dash" class="page active">
             <h2>Dashboard</h2>
             <div class="card" style="display:flex; justify-content:space-between; align-items:center;">
@@ -73,7 +70,7 @@
                 <label class="switch"><input type="checkbox" id="shop-open"><span class="slider"></span></label>
             </div>
             <div class="card">
-                <h3>Contact Numbers (10 Digits)</h3>
+                <h3>Contact Numbers</h3>
                 <label>Order WhatsApp:</label><input type="number" id="wa-ord" placeholder="Ex: 9876543210">
                 <label>Call Button:</label><input type="number" id="wa-call" placeholder="Ex: 9876543210">
             </div>
@@ -84,7 +81,6 @@
             </div>
         </div>
 
-        <!-- Categories -->
         <div id="cats" class="page">
             <h2>Categories</h2>
             <div class="card">
@@ -94,7 +90,6 @@
             <div id="cat-list"></div>
         </div>
 
-        <!-- Items -->
         <div id="items" class="page">
             <h2>Menu Items</h2>
             <div class="card" style="border-top:4px solid #10b981;">
@@ -109,7 +104,6 @@
             <div id="item-list"></div>
         </div>
 
-        <!-- Design -->
         <div id="design" class="page">
             <h2>Banners</h2>
             <div class="card">
@@ -122,17 +116,13 @@
             </div>
         </div>
 
-        <!-- Location -->
         <div id="loc" class="page">
             <h2>Location Settings</h2>
             <div class="card">
                 <label>Google Map Embed URL (src):</label>
                 <input type="text" id="map-embed" placeholder="https://www.google.com/maps/embed?pb=...">
-                <small style="color:#666;">Copy the 'src' link from Google Maps > Share > Embed a map.</small>
-                
                 <label style="margin-top:15px; display:block;">Direction Link:</label>
                 <input type="text" id="map-link" placeholder="https://maps.app.goo.gl/...">
-                
                 <button class="btn bg-blue" onclick="saveLocation()">Save Location</button>
             </div>
         </div>
@@ -147,8 +137,12 @@
         
         let cats={}, menu={};
         
-        // Mobile Menu
-        window.toggleMenu = () => { document.getElementById('sidebar').classList.toggle('active'); document.querySelector('.overlay').classList.toggle('active'); }
+        // Scroll Lock Logic added here
+        window.toggleMenu = () => { 
+            document.getElementById('sidebar').classList.toggle('active'); 
+            document.querySelector('.overlay').classList.toggle('active');
+            document.body.classList.toggle('no-scroll');
+        }
         window.nav = (id) => { document.querySelectorAll('.page').forEach(p=>p.classList.remove('active')); document.getElementById(id).classList.add('active'); document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active')); event.currentTarget.classList.add('active'); toggleMenu(); }
         function showToast(msg) { const t=document.getElementById('toast'); t.innerText=msg; t.classList.add('show'); setTimeout(()=>t.classList.remove('show'),2000); }
 
