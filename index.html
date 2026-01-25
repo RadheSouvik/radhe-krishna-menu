@@ -19,9 +19,14 @@
         .custom-toast { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0.9); background: rgba(0, 0, 0, 0.85); color: white; padding: 15px 25px; border-radius: 50px; font-weight: 600; z-index: 9999; opacity: 0; visibility: hidden; transition: all 0.3s ease; pointer-events: none; display: flex; align-items: center; gap: 10px; }
         .custom-toast.show { opacity: 1; visibility: visible; transform: translate(-50%, -50%) scale(1); }
 
-        /* Header */
-        .header { background: var(--bg-surface); padding: 15px 20px; position: sticky; top: 0; z-index: 100; border-bottom: 1px solid rgba(0,0,0,0.05); display: flex; align-items: center; justify-content: space-between; }
-        .brand { font-size: 1.4rem; font-weight: 800; color: var(--primary); display: flex; align-items: center; gap: 8px; }
+        /* --- Updated Header --- */
+        .header { background: var(--bg-surface); padding: 12px 20px; position: sticky; top: 0; z-index: 100; border-bottom: 1px solid rgba(0,0,0,0.05); display: flex; align-items: center; justify-content: space-between; }
+        .brand-box { display: flex; flex-direction: column; }
+        .brand { font-size: 1.3rem; font-weight: 800; color: var(--primary); display: flex; align-items: center; gap: 8px; line-height: 1.2; }
+        .night-menu-tag { font-size: 0.8rem; font-weight: 700; color: var(--text-light); margin-left: 28px; margin-top: -2px; letter-spacing: 0.5px; text-transform: uppercase; }
+        .theme-btn { cursor: pointer; width: 35px; height: 35px; background: var(--bg-body); display: flex; align-items: center; justify-content: center; border-radius: 50%; }
+
+        /* Marquee */
         .marquee-container { background: var(--primary); color: white; overflow: hidden; white-space: nowrap; padding: 6px 0; font-size: 0.85rem; font-weight: 500; }
         .marquee-content { display: inline-block; padding-left: 100%; animation: scroll 20s linear infinite; }
         @keyframes scroll { 0% { transform: translateX(0); } 100% { transform: translateX(-100%); } }
@@ -77,9 +82,15 @@
 
     <div id="toast" class="custom-toast"><span class="toast-icon"></span><span id="toast-msg"></span></div>
 
+    <!-- Updated Header Section -->
     <div class="header">
-        <div class="brand"><i class="fas fa-leaf"></i> Radhe Krishna</div>
-        <div onclick="document.body.classList.toggle('dark-mode')" style="cursor:pointer; width:35px; height:35px; background:var(--bg-body); display:flex; align-items:center; justify-content:center; border-radius:50%;"><i class="fas fa-moon"></i></div>
+        <div class="brand-box">
+            <div class="brand"><i class="fas fa-leaf"></i> Radhe Krishna</div>
+            <div class="night-menu-tag">Night Menu</div>
+        </div>
+        <div class="theme-btn" onclick="document.body.classList.toggle('dark-mode')">
+            <i class="fas fa-moon"></i>
+        </div>
     </div>
 
     <div class="marquee-container"><div class="marquee-content" id="scroller">Loading updates...</div></div>
@@ -241,7 +252,6 @@
             let itemsTxt = ""; let total = 0;
             for(let id in cart){ let i = menu[id]; itemsTxt += `▫️ *${i.name}* (x${cart[id]}) ... ₹${i.price*cart[id]}\n`; total += i.price*cart[id]; }
 
-            // New Professional Format
             let msg = `*RADHE KRISHNA – NIGHT MENU*\n`;
             msg += `🌿 Pure Veg | No Onion | No Garlic\n`;
             msg += `───────────────\n\n`;
