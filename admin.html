@@ -9,15 +9,16 @@
     <style>
         body { font-family: 'Inter', sans-serif; margin: 0; background: #f3f4f6; }
         
-        /* Disable scroll when menu open */
-        body.no-scroll { overflow: hidden; }
-
+        /* Toast & Loader */
         .custom-toast { position: fixed; top: 20px; left: 50%; transform: translateX(-50%); background: #333; color: white; padding: 12px 25px; border-radius: 50px; z-index: 10000; opacity: 0; transition: 0.3s; pointer-events: none; }
         .custom-toast.show { opacity: 1; top: 30px; }
+        .loader-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255,255,255,0.8); z-index: 9999; display: none; justify-content: center; align-items: center; flex-direction: column; }
+        .spinner { border: 4px solid #f3f3f3; border-top: 4px solid #3498db; border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 
+        /* Navigation */
         .top-nav { background: #1e293b; color: white; padding: 15px; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 1000; }
         .burger { font-size: 1.5rem; cursor: pointer; }
-        
         .sidebar { position: fixed; top: 0; left: -250px; width: 250px; height: 100%; background: #1e293b; padding-top: 60px; transition: 0.3s; z-index: 999; box-shadow: 2px 0 10px rgba(0,0,0,0.2); }
         .sidebar.active { left: 0; }
         .overlay { position: fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); z-index:900; display:none; }
@@ -26,26 +27,36 @@
         .nav-btn { color: #94a3b8; padding: 15px 20px; display: block; text-decoration: none; font-weight: 500; border-left: 4px solid transparent; cursor: pointer; }
         .nav-btn.active, .nav-btn:hover { background: #334155; color: white; border-left: 4px solid #3b82f6; }
         
-        .main { padding: 20px; max-width: 800px; margin: 0 auto; }
+        /* Layout */
+        .main { padding: 20px; max-width: 800px; margin: 0 auto; padding-bottom: 80px; }
         .page { display: none; animation: fadeIn 0.3s; } .page.active { display: block; }
         @keyframes fadeIn { from{opacity:0}to{opacity:1} }
         
         .card { background: white; padding: 20px; border-radius: 12px; margin-bottom: 15px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
         input, select { width: 100%; padding: 12px; margin: 8px 0; border: 1px solid #ccc; border-radius: 8px; box-sizing: border-box; }
+        
+        /* Buttons */
         .btn { padding: 12px; width: 100%; border: none; border-radius: 8px; color: white; font-weight: 600; cursor: pointer; margin-top: 10px; }
+        .btn-icon { padding: 8px 12px; border: none; border-radius: 6px; color: white; cursor: pointer; margin-left: 5px; font-size: 0.9rem; }
         .bg-blue { background: #3b82f6; } .bg-green { background: #10b981; } .bg-red { background: #ef4444; }
         
+        /* Switch */
         .switch { position: relative; display: inline-block; width: 44px; height: 24px; }
         .switch input { opacity: 0; width: 0; height: 0; }
         .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #ccc; transition: .4s; border-radius: 34px; }
         .slider:before { position: absolute; content: ""; height: 18px; width: 18px; left: 3px; bottom: 3px; background-color: white; transition: .4s; border-radius: 50%; }
         input:checked + .slider { background-color: #10b981; }
         input:checked + .slider:before { transform: translateX(20px); }
+
+        /* Modal */
+        .modal-wrap { position: fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); z-index: 2000; display: none; justify-content: center; align-items: center; backdrop-filter: blur(3px); }
+        .modal-box { background: white; padding: 25px; border-radius: 12px; width: 90%; max-width: 400px; max-height: 90vh; overflow-y: auto; }
     </style>
 </head>
 <body>
 
     <div id="toast" class="custom-toast">Success</div>
+    <div class="loader-overlay" id="loader"><div class="spinner"></div><p style="margin-top:10px; font-weight:600;">Updating...</p></div>
 
     <div class="top-nav">
         <div class="burger" onclick="toggleMenu()"><i class="fas fa-bars"></i></div>
@@ -63,6 +74,7 @@
     </div>
 
     <div class="main">
+        <!-- Dashboard -->
         <div id="dash" class="page active">
             <h2>Dashboard</h2>
             <div class="card" style="display:flex; justify-content:space-between; align-items:center;">
@@ -81,6 +93,7 @@
             </div>
         </div>
 
+        <!-- Categories -->
         <div id="cats" class="page">
             <h2>Categories</h2>
             <div class="card">
@@ -90,6 +103,7 @@
             <div id="cat-list"></div>
         </div>
 
+        <!-- Items -->
         <div id="items" class="page">
             <h2>Menu Items</h2>
             <div class="card" style="border-top:4px solid #10b981;">
@@ -104,6 +118,7 @@
             <div id="item-list"></div>
         </div>
 
+        <!-- Design -->
         <div id="design" class="page">
             <h2>Banners</h2>
             <div class="card">
@@ -116,6 +131,7 @@
             </div>
         </div>
 
+        <!-- Location -->
         <div id="loc" class="page">
             <h2>Location Settings</h2>
             <div class="card">
@@ -128,6 +144,36 @@
         </div>
     </div>
 
+    <!-- Category Edit Modal -->
+    <div class="modal-wrap" id="modal-cat">
+        <div class="modal-box">
+            <h3>Edit Category</h3>
+            <input type="hidden" id="edit-cat-id">
+            <input type="text" id="edit-cat-name" placeholder="Category Name">
+            <div style="display:flex; gap:10px; margin-top:10px;">
+                <button class="btn bg-blue" onclick="saveCatEdit()">Save</button>
+                <button class="btn bg-red" onclick="closeModals()">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Item Edit Modal -->
+    <div class="modal-wrap" id="modal-item">
+        <div class="modal-box">
+            <h3>Edit Item</h3>
+            <input type="hidden" id="edit-item-id">
+            <label>Name:</label><input type="text" id="edit-item-name">
+            <label>Price:</label><input type="number" id="edit-item-price">
+            <label>Category:</label><select id="edit-item-cat"></select>
+            <label>Image URL:</label><input type="text" id="edit-item-img">
+            <label>Description:</label><input type="text" id="edit-item-desc">
+            <div style="display:flex; gap:10px; margin-top:10px;">
+                <button class="btn bg-blue" onclick="saveItemEdit()">Update</button>
+                <button class="btn bg-red" onclick="closeModals()">Cancel</button>
+            </div>
+        </div>
+    </div>
+
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js";
         import { getDatabase, ref, onValue, update, push, remove } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-database.js";
@@ -136,16 +182,20 @@
         const db = getDatabase(app);
         
         let cats={}, menu={};
+        const loader = document.getElementById('loader');
         
-        // Scroll Lock Logic added here
+        // Helpers
         window.toggleMenu = () => { 
             document.getElementById('sidebar').classList.toggle('active'); 
             document.querySelector('.overlay').classList.toggle('active');
-            document.body.classList.toggle('no-scroll');
+            document.body.style.overflow = document.body.style.overflow === 'hidden' ? '' : 'hidden';
         }
         window.nav = (id) => { document.querySelectorAll('.page').forEach(p=>p.classList.remove('active')); document.getElementById(id).classList.add('active'); document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active')); event.currentTarget.classList.add('active'); toggleMenu(); }
         function showToast(msg) { const t=document.getElementById('toast'); t.innerText=msg; t.classList.add('show'); setTimeout(()=>t.classList.remove('show'),2000); }
+        function showLoad(){loader.style.display='flex';} function hideLoad(){loader.style.display='none';}
+        window.closeModals = () => { document.getElementById('modal-cat').style.display='none'; document.getElementById('modal-item').style.display='none'; }
 
+        // Data Sync
         onValue(ref(db, 'config'), snap => {
             const c = snap.val() || {};
             document.getElementById('shop-open').checked = c.restaurantOpen;
@@ -161,6 +211,7 @@
         onValue(ref(db, 'categories'), snap => { cats = snap.val() || {}; renderCats(); });
         onValue(ref(db, 'menu'), snap => { menu = snap.val() || {}; renderMenu(); });
 
+        // Savings
         window.saveSettings = () => {
             let w=document.getElementById('wa-ord').value; w=w?"91"+w:"";
             let c=document.getElementById('wa-call').value; c=c?"91"+c:"";
@@ -169,25 +220,84 @@
         window.saveBanners = () => { update(ref(db, 'config'), { bannerSpeed: parseInt(document.getElementById('ban-speed').value), banners: [document.getElementById('b1').value, document.getElementById('b2').value, document.getElementById('b3').value] }).then(() => showToast("Banners Saved!")); }
         window.saveLocation = () => { update(ref(db, 'config'), { mapEmbed: document.getElementById('map-embed').value, mapLink: document.getElementById('map-link').value }).then(() => showToast("Location Saved!")); }
 
+        // --- Category Logic ---
         window.addCat = () => { const n=document.getElementById('cat-name').value; if(n) push(ref(db, 'categories'), {name:n}).then(()=>{document.getElementById('cat-name').value=''; showToast("Category Added");}); }
         window.delCat = (id) => { for(let k in menu) if(menu[k].category===id){showToast("Cat not empty!"); return;} if(confirm("Delete?")) remove(ref(db, `categories/${id}`)); }
         
-        function renderCats() {
-            const l=document.getElementById('cat-list'), s=document.getElementById('i-cat'); l.innerHTML=''; s.innerHTML='';
-            for(let k in cats) { l.innerHTML+=`<div class="card" style="padding:15px; display:flex; justify-content:space-between;"><b>${cats[k].name}</b> <i class="fas fa-trash" style="color:red; cursor:pointer;" onclick="delCat('${k}')"></i></div>`; s.innerHTML+=`<option value="${k}">${cats[k].name}</option>`; }
+        window.openCatEdit = (id, name) => {
+            document.getElementById('edit-cat-id').value = id;
+            document.getElementById('edit-cat-name').value = name;
+            document.getElementById('modal-cat').style.display = 'flex';
+        }
+        window.saveCatEdit = () => {
+            const id = document.getElementById('edit-cat-id').value;
+            const name = document.getElementById('edit-cat-name').value;
+            if(name) update(ref(db, `categories/${id}`), { name: name }).then(() => { closeModals(); showToast("Category Updated"); });
         }
 
+        function renderCats() {
+            const l=document.getElementById('cat-list'), s=document.getElementById('i-cat'), es=document.getElementById('edit-item-cat');
+            l.innerHTML=''; s.innerHTML=''; es.innerHTML='';
+            for(let k in cats) { 
+                l.innerHTML+=`
+                <div class="card" style="padding:15px; display:flex; justify-content:space-between; align-items:center;">
+                    <b>${cats[k].name}</b> 
+                    <div>
+                        <button class="btn-icon bg-blue" onclick="openCatEdit('${k}', '${cats[k].name}')"><i class="fas fa-edit"></i></button>
+                        <button class="btn-icon bg-red" onclick="delCat('${k}')"><i class="fas fa-trash"></i></button>
+                    </div>
+                </div>`;
+                let opt = `<option value="${k}">${cats[k].name}</option>`;
+                s.innerHTML+=opt; es.innerHTML+=opt;
+            }
+        }
+
+        // --- Item Logic ---
         window.addItem = () => {
-            const n=document.getElementById('i-name').value; if(!n)return;
-            push(ref(db, 'menu'), { name:n, price:parseInt(document.getElementById('i-price').value), category:document.getElementById('i-cat').value, image:document.getElementById('i-img').value, description:document.getElementById('i-desc').value, isAvailable:true }).then(()=>{ showToast("Item Added"); document.getElementById('i-name').value=''; });
+            const n=document.getElementById('i-name').value; if(!n)return; showLoad();
+            push(ref(db, 'menu'), { name:n, price:parseInt(document.getElementById('i-price').value), category:document.getElementById('i-cat').value, image:document.getElementById('i-img').value, description:document.getElementById('i-desc').value, isAvailable:true }).then(()=>{ showToast("Item Added"); hideLoad(); document.getElementById('i-name').value=''; });
         }
         
         window.toggleItem = (id, st) => update(ref(db, `menu/${id}`), { isAvailable: st });
         window.delItem = (id) => { if(confirm("Delete?")) remove(ref(db, `menu/${id}`)); }
+        
+        window.openItemEdit = (id) => {
+            const i = menu[id];
+            document.getElementById('edit-item-id').value = id;
+            document.getElementById('edit-item-name').value = i.name;
+            document.getElementById('edit-item-price').value = i.price;
+            document.getElementById('edit-item-cat').value = i.category;
+            document.getElementById('edit-item-img').value = i.image || '';
+            document.getElementById('edit-item-desc').value = i.description || '';
+            document.getElementById('modal-item').style.display = 'flex';
+        }
+
+        window.saveItemEdit = () => {
+            const id = document.getElementById('edit-item-id').value;
+            showLoad();
+            update(ref(db, `menu/${id}`), {
+                name: document.getElementById('edit-item-name').value,
+                price: parseInt(document.getElementById('edit-item-price').value),
+                category: document.getElementById('edit-item-cat').value,
+                image: document.getElementById('edit-item-img').value,
+                description: document.getElementById('edit-item-desc').value
+            }).then(() => { hideLoad(); closeModals(); showToast("Item Updated"); });
+        }
 
         function renderMenu() {
             const l=document.getElementById('item-list'); l.innerHTML='';
-            for(let id in menu) { let i=menu[id], c=i.isAvailable!==false?'checked':''; l.innerHTML+=`<div class="card" style="display:flex; justify-content:space-between; align-items:center;"><div><b>${i.name}</b> (${i.price})<br><small>${cats[i.category]?.name||''}</small></div><div style="display:flex; align-items:center; gap:10px;"><label class="switch"><input type="checkbox" ${c} onchange="toggleItem('${id}',this.checked)"><span class="slider"></span></label><i class="fas fa-trash" style="color:red; cursor:pointer;" onclick="delItem('${id}')"></i></div></div>`; }
+            for(let id in menu) { 
+                let i=menu[id], c=i.isAvailable!==false?'checked':''; 
+                l.innerHTML+=`
+                <div class="card" style="display:flex; justify-content:space-between; align-items:center;">
+                    <div><b>${i.name}</b> (${i.price})<br><small>${cats[i.category]?.name||''}</small></div>
+                    <div style="display:flex; align-items:center; gap:5px;">
+                        <label class="switch"><input type="checkbox" ${c} onchange="toggleItem('${id}',this.checked)"><span class="slider"></span></label>
+                        <button class="btn-icon bg-blue" onclick="openItemEdit('${id}')"><i class="fas fa-edit"></i></button>
+                        <button class="btn-icon bg-red" onclick="delItem('${id}')"><i class="fas fa-trash"></i></button>
+                    </div>
+                </div>`; 
+            }
         }
     </script>
 </body>
