@@ -61,12 +61,12 @@
         .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--veg-green); }
         .closed .dot { background: var(--zomato-red); }
 
-        /* Categories (Zomato Circle style) */
+        /* Categories */
         .cats { display: flex; gap: 12px; overflow-x: auto; padding: 20px; scrollbar-width: none; position: sticky; top: 120px; background: var(--bg-gray); z-index: 900; }
         .cat-item { padding: 8px 18px; background: var(--white); border-radius: 12px; font-weight: 700; font-size: 0.85rem; color: var(--text-gray); white-space: nowrap; cursor: pointer; border: 1px solid transparent; box-shadow: var(--shadow); transition: 0.2s; }
         .cat-item.active { border-color: var(--zomato-red); color: var(--zomato-red); background: #fff5f6; }
 
-        /* Zomato Style Food Cards */
+        /* Food Cards */
         .menu-grid { padding: 0 20px; max-width: 600px; margin: 0 auto; display: grid; gap: 18px; }
         .food-card { background: var(--white); border-radius: 20px; padding: 15px; display: flex; justify-content: space-between; gap: 15px; box-shadow: var(--shadow); cursor: pointer; position: relative; }
         
@@ -81,7 +81,7 @@
         .food-img-container { width: 120px; height: 120px; position: relative; flex-shrink: 0; }
         .food-img { width: 100%; height: 100%; border-radius: 15px; object-fit: cover; background: #f0f0f0; }
         
-        /* Zomato Style ADD Button */
+        /* ADD Button */
         .add-btn-box { position: absolute; bottom: -10px; left: 50%; transform: translateX(-50%); width: 85px; }
         .btn-zomato-add { background: var(--white); color: var(--zomato-red); font-weight: 800; font-size: 0.9rem; padding: 6px 0; border-radius: 8px; border: 1px solid #e8e8e8; box-shadow: 0 3px 10px rgba(0,0,0,0.1); text-align: center; cursor: pointer; text-transform: uppercase; }
         .qty-zomato { background: var(--zomato-red); color: white; display: flex; align-items: center; justify-content: space-between; border-radius: 8px; height: 32px; padding: 0 5px; box-shadow: 0 4px 10px rgba(226, 55, 68, 0.2); }
@@ -93,26 +93,23 @@
         .contact-bar { background: var(--white); border-radius: 16px; padding: 8px; display: flex; gap: 10px; box-shadow: 0 8px 25px rgba(0,0,0,0.1); border: 1px solid rgba(0,0,0,0.05); }
         .c-btn { flex: 1; height: 48px; border-radius: 12px; border: none; display: flex; align-items: center; justify-content: center; gap: 8px; font-weight: 800; color: white; cursor: pointer; }
 
-        /* Modals */
+        /* Sheets */
         .modal-bg { position: fixed; inset: 0; background: rgba(0,0,0,0.7); backdrop-filter: blur(5px); z-index: 2000; display: none; align-items: flex-end; justify-content: center; }
         .sheet { background: var(--white); width: 100%; max-width: 550px; border-radius: 25px 25px 0 0; padding: 0 25px 35px; max-height: 95vh; overflow-y: auto; animation: sheetUp 0.4s ease; position: relative; }
         @keyframes sheetUp { from{transform:translateY(100%)} to{transform:translateY(0)} }
         .handle { width: 45px; height: 5px; background: #e0e0e0; border-radius: 10px; margin: 15px auto 20px; }
 
-        /* Detail Modal Specific */
-        .detail-img { width: 100%; height: 250px; border-radius: 20px; object-fit: cover; margin-bottom: 18px; box-shadow: 0 5px 15px rgba(0,0,0,0.08); border: 1px solid rgba(0,0,0,0.05); }
+        .detail-img { width: 100%; height: 250px; border-radius: 20px; object-fit: cover; margin-bottom: 18px; }
         .detail-name { font-size: 1.6rem; font-weight: 800; color: var(--text-black); line-height: 1.2; }
         .detail-price { font-size: 1.3rem; font-weight: 700; color: var(--zomato-red); margin: 5px 0 15px; }
 
-        /* Cart Receipt Design */
-        .receipt-box { background: var(--bg-gray); border-radius: 18px; padding: 18px; margin-bottom: 20px; border: 1px solid rgba(0,0,0,0.03); }
+        .receipt-box { background: var(--bg-gray); border-radius: 18px; padding: 18px; margin-bottom: 20px; }
         .cart-row { display: flex; justify-content: space-between; margin-bottom: 10px; font-weight: 600; font-size: 0.95rem; }
         .cart-total-row { display: flex; justify-content: space-between; padding-top: 12px; border-top: 1.5px dashed #ccc; margin-top: 12px; font-weight: 800; font-size: 1.4rem; color: var(--zomato-red); }
 
         input, select, textarea { width: 100%; padding: 15px; margin-bottom: 12px; border-radius: 12px; border: 1px solid #ddd; background: var(--white); color: var(--text-black); font-family: inherit; font-size: 1rem; outline: none; }
-        .checkout-btn { background: var(--zomato-red); color: white; width: 100%; padding: 18px; border: none; border-radius: 15px; font-size: 1.1rem; font-weight: 800; cursor: pointer; box-shadow: 0 8px 20px rgba(226, 55, 68, 0.3); }
+        .checkout-btn { background: var(--zomato-red); color: white; width: 100%; padding: 18px; border: none; border-radius: 15px; font-size: 1.1rem; font-weight: 800; cursor: pointer; }
 
-        /* Map Section */
         .map-section { padding: 30px 20px; display: none; max-width: 600px; margin: 0 auto; }
         .map-card { background: var(--white); border-radius: 20px; overflow: hidden; box-shadow: var(--shadow); text-align: center; }
         .map-iframe { width: 100%; height: 200px; border: none; }
@@ -122,7 +119,7 @@
 
     <div id="toast" class="toast"><i class="fas fa-check-circle"></i> <span id="toast-msg">Success</span></div>
 
-    <!-- Fixed Header -->
+    <!-- Header -->
     <div class="header-fixed">
         <div class="header-content">
             <div class="brand">
@@ -131,12 +128,11 @@
             </div>
             <div class="theme-toggle" onclick="document.body.classList.toggle('dark-mode')"><i class="fas fa-moon"></i></div>
         </div>
-        <!-- Premium Marquee -->
         <div class="marquee-container">
             <div class="marquee-pill">
                 <i class="fas fa-bullhorn"></i>
                 <div class="marquee-track">
-                    <div class="marquee-content" id="scroll-text">Welcome to Radhe Krishna Night Menu! Order pure vegetarian food till midnight.</div>
+                    <div class="marquee-content" id="scroll-text">Welcome to Radhe Krishna Night Menu! Order pure veg food till midnight.</div>
                 </div>
             </div>
         </div>
@@ -161,7 +157,7 @@
         </div>
     </div>
 
-    <!-- Floating Dock Hub -->
+    <!-- Floating Dock -->
     <div class="dock">
         <div class="cart-bar" id="cart-pill" onclick="openModal('cart')">
             <span id="c-items-count">0 ITEM</span>
@@ -184,13 +180,13 @@
                     <span>Grand Total</span><span id="m-total">₹0</span>
                 </div>
             </div>
-            <input type="text" id="o-name" placeholder="আপনার নাম (Full Name)">
-            <input type="tel" id="o-phone" placeholder="মোবাইল নাম্বার (Mobile Number)">
-            <textarea id="o-addr" rows="2" placeholder="সম্পূর্ণ ঠিকানা (Delivery Address)"></textarea>
-            <input type="text" id="o-land" placeholder="ল্যান্ডমার্ক (Landmark)">
+            <input type="text" id="o-name" placeholder="Name (আপনার নাম)">
+            <input type="tel" id="o-phone" placeholder="Mobile (মোবাইল নাম্বার)">
+            <textarea id="o-addr" rows="2" placeholder="Address (সম্পূর্ণ ঠিকানা)"></textarea>
+            <input type="text" id="o-land" placeholder="Landmark (ল্যান্ডমার্ক)">
             <select id="o-pay"><option>Cash on Delivery</option><option>Online / UPI Payment</option></select>
             <select id="o-time"><option>9:00 PM – 10:00 PM</option><option>10:00 PM – 11:00 PM</option><option>11:00 PM – 12:00 AM</option></select>
-            <button class="checkout-btn" onclick="confirmOrder()"><i class="fab fa-whatsapp"></i> Confirm & Send via WhatsApp</button>
+            <button class="checkout-btn" onclick="confirmOrder()"><i class="fab fa-whatsapp"></i> Confirm & Send WhatsApp</button>
         </div>
     </div>
 
@@ -208,7 +204,6 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js";
         import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-database.js";
-        
         const firebaseConfig = { apiKey: "AIzaSyDifkwUmP5MehfgXdhFTs6DQzX-pNR2snE", authDomain: "radhe-krishna-1bc79.firebaseapp.com", databaseURL: "https://radhe-krishna-1bc79-default-rtdb.asia-southeast1.firebasedatabase.app", projectId: "radhe-krishna-1bc79", storageBucket: "radhe-krishna-1bc79.firebasestorage.app", messagingSenderId: "755534416421", appId: "1:755534416421:web:6b97cac0c954d223094dcc" };
         const app = initializeApp(firebaseConfig);
         const db = getDatabase(app);
@@ -236,7 +231,6 @@
                 const s=document.querySelectorAll('.slide');
                 if(s.length){s[sIdx].classList.remove('active'); sIdx=(sIdx+1)%s.length; s[sIdx].classList.add('active');}
             }, (conf.bannerSpeed||3)*1000);
-            
             if(conf.mapEmbed && conf.mapLink) {
                 document.getElementById('loc-area').style.display='block';
                 document.getElementById('map-iframe').src = conf.mapEmbed;
@@ -258,25 +252,11 @@
                 let i=menu[id];
                 if(i.isAvailable===false || (activeCat!=='all' && i.category!==activeCat)) continue;
                 let q=cart[id]||0;
-                
-                // Zomato Red ADD Button Logic
                 let action = q===0 
                     ? `<div class="btn-zomato-add" onclick="upd(event,'${id}',1)">ADD</div>`
-                    : `<div class="qty-zomato" onclick="event.stopPropagation()"><div class="qty-action" onclick="upd(event,'${id}',-1)">-</div><div style="font-weight:900; font-size:0.95rem;">${q}</div><div class="qty-action" onclick="upd(event,'${id}',1)">+</div></div>`;
+                    : `<div class="qty-zomato" onclick="event.stopPropagation()"><div class="qty-action" onclick="upd(event,'${id}',-1)">-</div><div style="font-weight:900;">${q}</div><div class="qty-action" onclick="upd(event,'${id}',1)">+</div></div>`;
 
-                d.innerHTML += `
-                <div class="food-card" onclick="openDet('${id}')">
-                    <div class="food-details">
-                        <div class="veg-icon"></div>
-                        <div class="food-name">${i.name}</div>
-                        <div class="food-price">₹${i.price}</div>
-                        ${i.description ? `<div class="food-desc">${i.description}</div>` : ''}
-                    </div>
-                    <div class="food-img-container">
-                        <img src="${i.image||'https://via.placeholder.com/150'}" class="food-img">
-                        <div class="add-btn-box">${action}</div>
-                    </div>
-                </div>`;
+                d.innerHTML += `<div class="food-card" onclick="openDet('${id}')"><div class="food-details"><div class="veg-icon"></div><div class="food-name">${i.name}</div><div class="food-price">₹${i.price}</div>${i.description ? `<div class="food-desc">${i.description}</div>` : ''}</div><div class="food-img-container"><img src="${i.image||'https://via.placeholder.com/150'}" class="food-img"><div class="add-btn-box">${action}</div></div></div>`;
             }
         }
 
@@ -304,12 +284,7 @@
                 let d=document.getElementById('cart-items-list'); d.innerHTML=''; let t=0;
                 for(let id in cart){
                     let i=menu[id], sub=i.price*cart[id]; t+=sub;
-                    d.innerHTML+=`
-                    <div class="cart-row">
-                        <div style="flex:1;">${i.name}</div>
-                        <div style="margin:0 15px; color:var(--text-gray);">x ${cart[id]}</div>
-                        <div>₹${sub}</div>
-                    </div>`;
+                    d.innerHTML+=`<div class="cart-row"><div style="flex:1;">${i.name}</div><div style="margin:0 15px; color:var(--text-gray);">x ${cart[id]}</div><div>₹${sub}</div></div>`;
                 }
                 document.getElementById('m-total').innerText = `₹${t}`;
             }
@@ -354,25 +329,42 @@
 
         window.confirmOrder = () => {
             const n=document.getElementById('o-name').value.trim(), p=document.getElementById('o-phone').value.trim(), a=document.getElementById('o-addr').value.trim(), l=document.getElementById('o-land').value.trim();
-            if(!n || !p || !a) { showToast("Missing Information!"); return; }
-            let total = 0, itemsStr = "";
-            for(let id in cart){ let i = menu[id]; itemsStr += `▪️ *${i.name}* (x${cart[id]}) ... ₹${i.price*cart[id]}\n`; total += i.price*cart[id]; }
+            if(!n || !p || !a) { showToast("Missing Info!"); return; }
+            
+            let itemsTxt = ""; let total = 0; let count = 1;
+            for(let id in cart){ 
+                let i = menu[id]; 
+                let sub = i.price*cart[id];
+                itemsTxt += `${count}. ${i.name} (x${cart[id]})            ₹${sub}\n`; 
+                total += sub;
+                count++;
+            }
 
-            let msg = `✨ *RADHE KRISHNA — MIDNIGHT ORDER* ✨\n`;
-            msg += `🌿 _Pure Vegetarian Night Menu_\n`;
-            msg += `──────────────────\n\n`;
+            // EXACT Format Requested
+            let msg = `🔔🔔 NEW ORDER ALERT 🔔🔔\n\n`;
+            msg += `🌸 *RADHE KRISHNA* 🌸\n`;
+            msg += `🌿 Pure Vegetarian | Midnight Service\n`;
+            msg += `━━━━━━━━━━━━━━━━━━━━━━\n\n`;
+            msg += `🧾 *ORDER BILL / INVOICE*\n\n`;
             msg += `👤 *Customer Details:*\n`;
-            msg += `▫️ *Name:* ${n}\n`;
-            msg += `▫️ *Mobile:* ${p}\n`;
-            msg += `▫️ *Address:* ${a}\n`;
-            if(l) msg += `🗺️ *Landmark:* ${l}\n`;
-            msg += `\n🛒 *Order Summary:*\n${itemsStr}`;
-            msg += `──────────────────\n`;
-            msg += `💰 *Grand Total: ₹${total}*\n`;
-            msg += `──────────────────\n\n`;
-            msg += `💳 *Payment:* ${document.getElementById('o-pay').value}\n`;
-            msg += `⏰ *Delivery:* ${document.getElementById('o-time').value}\n\n`;
-            msg += `_Sent via Radhe Krishna Digital_`;
+            msg += `Name    : ${n}\n`;
+            msg += `Mobile  : ${p}\n`;
+            msg += `Address : ${a}\n`;
+            msg += `Landmark: ${l || 'Not Provided'}\n\n`;
+            msg += `━━━━━━━━━━━━━━━━━━━━━━\n\n`;
+            msg += `🛒 *Order Summary:*\n`;
+            msg += `--------------------------------\n`;
+            msg += itemsTxt;
+            msg += `--------------------------------\n\n`;
+            msg += `💰 *GRAND TOTAL : ₹${total}*\n\n`;
+            msg += `━━━━━━━━━━━━━━━━━━━━━━\n\n`;
+            msg += `💳 *Payment Mode* : ${document.getElementById('o-pay').value}\n`;
+            msg += `⏰ *Delivery Time*: ${document.getElementById('o-time').value}\n\n`;
+            msg += `━━━━━━━━━━━━━━━━━━━━━━\n`;
+            msg += `🙏 Thank you for choosing\n`;
+            msg += `🌸 *RADHE KRISHNA* 🌸\n`;
+            msg += `📲 Digital Order Receipt`;
+
             window.open(`https://wa.me/${conf.whatsappOrderNumber}?text=${encodeURIComponent(msg)}`,'_blank');
         }
     </script>
