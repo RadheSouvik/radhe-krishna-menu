@@ -9,12 +9,7 @@
     <style>
         body { font-family: 'Inter', sans-serif; margin: 0; background: #f3f4f6; display: flex; height: 100vh; overflow: hidden; }
         
-        /* Loading Overlay */
-        .loader-overlay {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(255,255,255,0.8); z-index: 9999; display: none;
-            justify-content: center; align-items: center; flex-direction: column;
-        }
+        .loader-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255,255,255,0.8); z-index: 9999; display: none; justify-content: center; align-items: center; flex-direction: column; }
         .spinner { border: 4px solid #f3f3f3; border-top: 4px solid #3498db; border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 
@@ -40,7 +35,6 @@
 </head>
 <body>
 
-    <!-- Loader -->
     <div class="loader-overlay" id="loader">
         <div class="spinner"></div>
         <p style="margin-top:10px; font-weight:600;">Updating...</p>
@@ -55,8 +49,6 @@
     </div>
 
     <div class="main">
-        
-        <!-- Dashboard -->
         <div id="dash" class="page active">
             <h2>Dashboard</h2>
             <div class="card">
@@ -66,11 +58,11 @@
                 </div>
             </div>
             <div class="card">
-                <h3>Contact Numbers</h3>
-                <label>Order WhatsApp Number (Country Code like 91):</label>
-                <input type="text" id="wa-ord" placeholder="Ex: 919876543210">
+                <h3>Contact Numbers (10 Digits Only)</h3>
+                <label>Order WhatsApp Number:</label>
+                <input type="number" id="wa-ord" placeholder="Ex: 9876543210">
                 <label>Call Button Number:</label>
-                <input type="text" id="wa-call" placeholder="Ex: 919876543210">
+                <input type="number" id="wa-call" placeholder="Ex: 9876543210">
             </div>
             <div class="card">
                 <h3>Marquee Text</h3>
@@ -79,7 +71,6 @@
             </div>
         </div>
 
-        <!-- Categories -->
         <div id="cats" class="page">
             <h2>Categories</h2>
             <div class="card">
@@ -89,7 +80,6 @@
             </div>
         </div>
 
-        <!-- Items -->
         <div id="items" class="page">
             <h2>Menu Items</h2>
             <div class="card" style="border-left: 4px solid #10b981;">
@@ -107,7 +97,6 @@
             </div>
         </div>
 
-        <!-- Design -->
         <div id="design" class="page">
             <h2>Banners</h2>
             <div class="card">
@@ -117,7 +106,6 @@
                 <button class="btn bg-blue" onclick="saveBanners()">Update Banners</button>
             </div>
         </div>
-
     </div>
 
     <script type="module">
@@ -138,8 +126,6 @@
         const db = getDatabase(app);
 
         let cats={}, menu={};
-
-        // UI Helpers
         const loader = document.getElementById('loader');
         const showLoad = () => loader.style.display = 'flex';
         const hideLoad = () => loader.style.display = 'none';
@@ -151,12 +137,19 @@
             event.currentTarget.classList.add('active');
         }
 
-        // Data Loaders
         onValue(ref(db, 'config'), snap => {
             const c = snap.val() || {};
             document.getElementById('shop-open').checked = c.restaurantOpen;
-            document.getElementById('wa-ord').value = c.whatsappOrderNumber || '';
-            document.getElementById('wa-call').value = c.contactCallNumber || '';
+            
+            // Auto Strip 91 for display
+            let wa = c.whatsappOrderNumber || "";
+            if(wa.startsWith("91")) wa = wa.substring(2);
+            document.getElementById('wa-ord').value = wa;
+
+            let call = c.contactCallNumber || "";
+            if(call.startsWith("91")) call = call.substring(2);
+            document.getElementById('wa-call').value = call;
+
             document.getElementById('marquee-txt').value = c.marqueeText || '';
             if(c.banners){
                 document.getElementById('b1').value=c.banners[0]||'';
@@ -165,23 +158,23 @@
             }
         });
 
-        onValue(ref(db, 'categories'), snap => {
-            cats = snap.val() || {};
-            renderCats();
-        });
+        onValue(ref(db, 'categories'), snap => { cats = snap.val() || {}; renderCats(); });
+        onValue(ref(db, 'menu'), snap => { menu = snap.val() || {}; renderMenu(); });
 
-        onValue(ref(db, 'menu'), snap => {
-            menu = snap.val() || {};
-            renderMenu();
-        });
-
-        // Functions
         window.saveSettings = () => {
             showLoad();
+            
+            // Auto Add 91 prefix
+            let rawWa = document.getElementById('wa-ord').value;
+            let finalWa = rawWa ? "91" + rawWa : "";
+
+            let rawCall = document.getElementById('wa-call').value;
+            let finalCall = rawCall ? "91" + rawCall : "";
+
             update(ref(db, 'config'), {
                 restaurantOpen: document.getElementById('shop-open').checked,
-                whatsappOrderNumber: document.getElementById('wa-ord').value,
-                contactCallNumber: document.getElementById('wa-call').value,
+                whatsappOrderNumber: finalWa,
+                contactCallNumber: finalCall,
                 marqueeText: document.getElementById('marquee-txt').value
             }).then(() => { hideLoad(); alert('Settings Saved!'); });
         }
@@ -207,10 +200,9 @@
         }
 
         window.delCat = (id) => {
-            // LOGIC: CHECK IF ITEMS EXIST IN CAT
             for(let key in menu) {
                 if(menu[key].category === id) {
-                    alert("Cannot delete category! Please delete items under this category first.");
+                    alert("Cannot delete! Remove items from this category first.");
                     return;
                 }
             }
@@ -251,7 +243,6 @@
         }
 
         window.toggleItem = (id, status) => {
-            // Not showing loader for toggle to keep it snappy, but can be added
             update(ref(db, `menu/${id}`), { isAvailable: status });
         }
 
