@@ -1,3 +1,4 @@
+<!-- START OF FILE radhe-krishna-souvik-radhe-menuadmin.html -->
 <!DOCTYPE html>
 <html lang="bn">
 <head>
@@ -133,6 +134,7 @@
         <div class="nav-link active" onclick="nav('dash')"><i class="fas fa-house"></i> Dashboard</div>
         <div class="nav-link" onclick="nav('cats-page')"><i class="fas fa-list"></i> Categories</div>
         <div class="nav-link" onclick="nav('items-page')"><i class="fas fa-burger"></i> Menu Items</div>
+        <div class="nav-link" onclick="nav('offer-page')"><i class="fas fa-tags"></i> Offers & Discounts</div>
         <div class="nav-link" onclick="nav('banners-page')"><i class="fas fa-image"></i> Banners</div>
         <div class="nav-link" onclick="nav('loc-page')"><i class="fas fa-map-location"></i> Map Settings</div>
         
@@ -193,6 +195,34 @@
             </div>
             <div class="search-container"><i class="fas fa-search"></i><input type="text" placeholder="Search items..." oninput="searchItems(this.value)"></div>
             <div id="menu-items-render"></div>
+        </section>
+
+        <!-- OFFERS & DISCOUNT SECTION -->
+        <section id="offer-page" class="page">
+            <h2>Offers & Discounts</h2>
+            <div class="card" style="border-top:4px solid #F59E0B;">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
+                    <h3><i class="fas fa-tag"></i> Active Discount</h3>
+                    <label class="switch"><input type="checkbox" id="disc-active"><span class="slider"></span></label>
+                </div>
+                
+                <label>Discount Type</label>
+                <select id="disc-type">
+                    <option value="percent">Percentage (%)</option>
+                    <option value="flat">Flat Amount (₹)</option>
+                </select>
+
+                <label>Discount Value (Amount or %)</label>
+                <input type="number" id="disc-val" placeholder="Ex: 10">
+
+                <label>Minimum Order Value to Apply</label>
+                <input type="number" id="disc-min" placeholder="Ex: 200">
+
+                <button class="btn bg-blue" onclick="saveDiscount()">Save Offer Settings</button>
+
+                <!-- NEW: Live Preview Box -->
+                <div id="live-offer-preview" style="margin-top:25px;"></div>
+            </div>
         </section>
 
         <!-- BANNERS -->
@@ -283,6 +313,37 @@
             document.getElementById('ban-speed').value = c.bannerSpeed || 3;
             document.getElementById('map-src').value = c.mapEmbed || '';
             document.getElementById('map-link').value = c.mapLink || '';
+            
+            // Populate Discount Fields
+            document.getElementById('disc-active').checked = c.discountActive || false;
+            document.getElementById('disc-type').value = c.discountType || 'percent';
+            document.getElementById('disc-val').value = c.discountValue || '';
+            document.getElementById('disc-min').value = c.minOrderValue || '';
+
+            // Update Live Preview Box
+            const previewBox = document.getElementById('live-offer-preview');
+            if(c.discountActive) {
+                let dType = c.discountType === 'percent' ? '%' : '₹';
+                let dText = c.discountType === 'percent' 
+                    ? `<span style="font-size:1.5rem; font-weight:800;">${c.discountValue}% OFF</span>` 
+                    : `<span style="font-size:1.5rem; font-weight:800;">Flat ₹${c.discountValue} OFF</span>`;
+                
+                previewBox.innerHTML = `
+                    <div style="background:#ecfdf5; border:1px solid #10b981; padding:20px; border-radius:15px; text-align:center; color:#065f46;">
+                        <div style="margin-bottom:5px; font-weight:600; text-transform:uppercase; font-size:0.8rem; letter-spacing:1px;">Current Active Offer</div>
+                        ${dText}
+                        <div style="margin-top:8px; font-size:0.9rem;">On Orders Above ₹${c.minOrderValue}</div>
+                    </div>
+                `;
+            } else {
+                previewBox.innerHTML = `
+                    <div style="background:#f1f5f9; border:1px dashed #94a3b8; padding:20px; border-radius:15px; text-align:center; color:#64748b;">
+                        <i class="fas fa-ban" style="font-size:1.5rem; margin-bottom:10px;"></i>
+                        <div style="font-weight:600;">No Active Discount</div>
+                        <div style="font-size:0.85rem;">Turn on the switch to start an offer.</div>
+                    </div>
+                `;
+            }
         });
 
         onValue(ref(db, 'categories'), snap => { cats = snap.val() || {}; renderCats(); });
@@ -291,6 +352,18 @@
         window.saveConfig=()=>{loader(1); update(ref(db,'config'),{restaurantOpen:document.getElementById('shop-toggle').checked,openTime:document.getElementById('open-time').value,closeTime:document.getElementById('close-time').value,whatsappOrderNumber:"91"+document.getElementById('wa-num').value,contactCallNumber:"91"+document.getElementById('call-num').value,marqueeText:document.getElementById('marquee-txt').value}).then(()=>{loader(0);showToast("Saved!");});}
         window.saveBanners=()=>{loader(1); update(ref(db,'config'),{bannerSpeed:parseInt(document.getElementById('ban-speed').value),banners:[document.getElementById('b1').value,document.getElementById('b2').value,document.getElementById('b3').value]}).then(()=>{loader(0);showToast("Updated!");});}
         window.saveLocation=()=>{loader(1); update(ref(db,'config'),{mapEmbed:document.getElementById('map-src').value,mapLink:document.getElementById('map-link').value}).then(()=>{loader(0);showToast("Map Saved!");});}
+        
+        // Save Discount Function
+        window.saveDiscount=()=>{
+            loader(1);
+            update(ref(db,'config'),{
+                discountActive: document.getElementById('disc-active').checked,
+                discountType: document.getElementById('disc-type').value,
+                discountValue: Number(document.getElementById('disc-val').value),
+                minOrderValue: Number(document.getElementById('disc-min').value)
+            }).then(()=>{loader(0);showToast("Discount Updated!");});
+        }
+
         window.addCategory=()=>{const n=document.getElementById('new-cat-name').value; if(n){loader(1);push(ref(db,'categories'),{name:n}).then(()=>{loader(0);document.getElementById('new-cat-name').value='';});}}
         window.delCat=(id)=>{for(let k in menu) if(menu[k].category===id) return showToast("Category not empty!"); if(confirm("Delete?")){loader(1);remove(ref(db,`categories/${id}`)).then(()=>{loader(0);});}}
         window.openCatEdit=(id,n)=>{document.getElementById('ecat-id').value=id; document.getElementById('ecat-name').value=n; openModal('modal-edit-cat');}
