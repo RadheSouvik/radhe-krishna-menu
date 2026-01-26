@@ -56,10 +56,26 @@
         .marquee-content { display: inline-block; animation: scroll 15s linear infinite; font-weight: 700; font-size: 0.8rem; color: var(--text-main); padding-left: 100%; }
         @keyframes scroll { 0% { transform: translateX(0); } 100% { transform: translateX(-100%); } }
 
-        /* Banner */
+        /* --- Banner (Fixed Height) --- */
         .banner-container { padding: 0 15px 15px; }
-        .banner-slider { width: 100%; height: 160px; border-radius: 16px; overflow: hidden; position: relative; background: #ddd; }
-        .slide { width: 100%; height: 100%; object-fit: cover; position: absolute; opacity: 0; transition: 0.5s; }
+        .banner-slider { 
+            width: 100%; 
+            height: 170px; /* Fixed height ensures it doesn't grow too big */
+            border-radius: 16px; 
+            overflow: hidden; 
+            position: relative; 
+            background: #e0e0e0;
+            box-shadow: var(--shadow);
+        }
+        .slide { 
+            width: 100%; 
+            height: 100%; 
+            object-fit: cover; /* Ensures image covers the area without stretching */
+            position: absolute; 
+            top: 0; left: 0;
+            opacity: 0; 
+            transition: 0.5s; 
+        }
         .slide.active { opacity: 1; }
 
         /* Categories */
@@ -109,20 +125,15 @@
         .cart-float.active { transform: translateX(-50%) translateY(0); visibility: visible; }
         .c-info { font-size: 0.9rem; font-weight: 700; text-transform: uppercase; }
 
-        /* FAB (Updated Position) */
-        .fab-wrap { 
-            position: fixed; 
-            bottom: 70px; /* Moved down as requested */
-            right: 20px; 
-            display: flex; 
-            flex-direction: column; 
-            gap: 12px; 
-            z-index: 900; 
-        }
-        .fab-btn { width: 50px; height: 50px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; box-shadow: 0 4px 10px rgba(0,0,0,0.2); cursor: pointer; font-size: 1.2rem; transition: 0.2s; }
+        /* FAB */
+        .fab-wrap { position: fixed; bottom: 90px; right: 20px; display: flex; flex-direction: column; gap: 12px; z-index: 900; }
+        .fab-btn { width: 50px; height: 50px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; box-shadow: 0 4px 10px rgba(0,0,0,0.2); cursor: pointer; font-size: 1.2rem; transition: 0.2s; transform: scale(0); opacity: 0; }
+        .fab-main { width: 55px; height: 55px; background: var(--text-main); color: var(--card-bg); font-size: 1.4rem; z-index: 991; transform: scale(1); opacity: 1; border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 15px rgba(0,0,0,0.3); cursor: pointer; transition: 0.3s; }
+        
+        .fab-wrap.active .fab-btn { transform: scale(1); opacity: 1; }
+        .fab-wrap.active .fab-main { transform: rotate(45deg); background: var(--primary); color: white; }
+        
         .fab-wa { background: #25D366; } .fab-call { background: #2980b9; }
-        /* Main FAB Icon Headset */
-        .fab-main { background: var(--text-main); z-index: 901; font-size: 1.3rem; }
 
         /* --- Modals --- */
         .overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 2000; display: none; align-items: flex-end; justify-content: center; backdrop-filter: blur(3px); }
@@ -134,7 +145,7 @@
 
         .sheet-header { background: var(--bg-body); padding: 20px 20px 10px; display: flex; justify-content: space-between; align-items: center; }
         .sheet-title { font-size: 1.5rem; font-weight: 800; color: var(--text-main); margin: 0; }
-        .sheet-title span { color: var(--green-btn); }
+        .sheet-title span { color: var(--green); }
         
         /* Cart Item Card */
         .cart-item-card {
@@ -145,18 +156,18 @@
         .ci-img { width: 60px; height: 60px; border-radius: 12px; object-fit: cover; margin-right: 15px; }
         .ci-details { flex: 1; }
         .ci-name { font-weight: 700; font-size: 1rem; color: var(--text-main); margin-bottom: 2px; }
-        .ci-price { font-weight: 700; color: var(--green-btn); font-size: 0.95rem; }
+        .ci-price { font-weight: 700; color: var(--green); font-size: 0.95rem; }
         
-        .ci-actions { display: flex; align-items: center; background: #F3F4F6; border-radius: 50px; padding: 5px; }
+        .ci-actions { display: flex; align-items: center; background: var(--bg-body); border-radius: 50px; padding: 5px; }
         .ci-btn { width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; }
         .ci-btn-del { color: #E23744; background: #FEE2E2; }
         .ci-btn-add { color: white; background: #10B981; }
-        .ci-qty { font-weight: 700; padding: 0 10px; font-size: 0.9rem; }
+        .ci-qty { font-weight: 700; padding: 0 10px; font-size: 0.9rem; color: var(--text-main); }
 
         /* Bill Section */
         .bill-section { background: var(--card-bg); padding: 20px; border-radius: 16px; margin: 0 20px 20px; box-shadow: var(--shadow); }
         .bill-row { display: flex; justify-content: space-between; margin-bottom: 10px; font-size: 0.95rem; color: var(--text-sub); font-weight: 500; }
-        .bill-total { display: flex; justify-content: space-between; border-top: 1px dashed #ddd; padding-top: 15px; margin-top: 5px; font-weight: 800; font-size: 1.3rem; color: var(--green-btn); }
+        .bill-total { display: flex; justify-content: space-between; border-top: 1px dashed #ddd; padding-top: 15px; margin-top: 5px; font-weight: 800; font-size: 1.3rem; color: var(--primary); }
 
         /* Form */
         .form-section { padding: 0 20px 20px; }
@@ -165,7 +176,7 @@
         .form-input { width: 100%; padding: 15px; background: var(--card-bg); border: 1px solid var(--border); border-radius: 10px; font-size: 1rem; color: var(--text-main); outline: none; }
         
         .place-order-btn {
-            background: var(--green-btn); color: white; width: calc(100% - 40px); margin: 0 20px 20px;
+            background: var(--green); color: white; width: calc(100% - 40px); margin: 0 20px 20px;
             padding: 16px; border: none; border-radius: 50px; font-weight: 700; font-size: 1.1rem;
             cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px;
             box-shadow: 0 5px 15px rgba(16, 185, 129, 0.3);
@@ -221,12 +232,12 @@
         <div class="fab-btn fab-main" onclick="toggleFab()"><i class="fas fa-headset"></i></div>
     </div>
 
-    <!-- Cart Modal -->
+    <!-- Cart Modal (Screenshot Style) -->
     <div class="overlay" id="modal-cart">
         <div class="sheet">
             <div class="sheet-header">
                 <h2 class="sheet-title">Your <span>Selection</span></h2>
-                <i class="fas fa-times" style="font-size:1.5rem; cursor:pointer;" onclick="closeModal()"></i>
+                <i class="fas fa-times" style="font-size:1.5rem; cursor:pointer; color:var(--text-sub);" onclick="closeModal()"></i>
             </div>
             
             <div id="cart-items-wrapper" style="margin-top: 15px;"></div>
@@ -249,28 +260,27 @@
                     <input type="tel" id="c-phone" class="form-input" placeholder="Ex. 9876543210">
                 </div>
                 <div class="form-group">
+                    <label class="form-label">Order Type</label>
+                    <select id="c-type" class="form-input">
+                        <option value="Home Delivery">Home Delivery</option>
+                        <option value="Takeaway / Pickup">Takeaway / Pickup</option>
+                    </select>
+                </div>
+                <div class="form-group">
                     <label class="form-label">Delivery Address</label>
                     <textarea id="c-addr" class="form-input" rows="2" placeholder="Street name, House no, Landmark"></textarea>
                 </div>
+                
                 <div class="form-group">
                     <label class="form-label">Landmark</label>
                     <input type="text" id="c-land" class="form-input" placeholder="Near Temple / School etc.">
                 </div>
-                
+
                 <div class="form-group">
                     <label class="form-label">Payment Method</label>
                     <select id="o-pay" class="form-input">
                         <option value="UPI / Online">Online / UPI</option>
                         <option value="Cash">Cash</option>
-                    </select>
-                </div>
-
-                <div class="form-group">
-                    <label class="form-label">Preferred Delivery Time</label>
-                    <select id="o-time" class="form-input">
-                        <option value="9:00 PM – 10:00 PM">9:00 PM – 10:00 PM</option>
-                        <option value="10:00 PM – 11:00 PM">10:00 PM – 11:00 PM</option>
-                        <option value="11:00 PM – 12:00 AM">11:00 PM – 12:00 AM</option>
                     </select>
                 </div>
 
@@ -281,7 +291,10 @@
             </div>
 
             <p style="text-align:center; font-size:0.75rem; color:var(--text-light); margin-bottom:10px;">By clicking below, you'll be redirected to WhatsApp.</p>
-            <button class="place-order-btn" onclick="placeOrder()">Place Order <i class="fas fa-paper-plane"></i></button>
+            
+            <button class="place-order-btn" onclick="placeOrder()">
+                Place Order <i class="fas fa-paper-plane"></i>
+            </button>
         </div>
     </div>
 
@@ -304,7 +317,7 @@
         const app = initializeApp(firebaseConfig);
         const db = getDatabase(app);
 
-        let menu={}, cats={}, conf={}, cart={}, activeCat='all', slideInt;
+        let menu={}, cats={}, conf={}, cart={}, activeCat='all', slideInt, curModal=null;
 
         function showToast(msg) {
             const t = document.getElementById('toast'); t.innerText=msg; t.classList.add('show'); setTimeout(()=>t.classList.remove('show'),2500);
@@ -337,8 +350,8 @@
 
         function renderCats(){
             const d=document.getElementById('cat-list');
-            let h=`<div class="cat-item ${activeCat=='all'?'active':''}" onclick="setCat('all')"><img src="https://cdn-icons-png.flaticon.com/512/706/706997.png" class="cat-img"><span class="cat-name">All</span></div>`;
-            for(let k in cats) h+=`<div class="cat-item ${activeCat==k?'active':''}" onclick="setCat('${k}')"><img src="https://cdn-icons-png.flaticon.com/512/3480/3480823.png" class="cat-img"><span class="cat-name">${cats[k].name}</span></div>`;
+            let h=`<div class="cat-item ${activeCat=='all'?'active':''}" onclick="setCat('all')">All Menu</div>`;
+            for(let k in cats) h+=`<div class="cat-item ${activeCat==k?'active':''}" onclick="setCat('${k}')">${cats[k].name}</div>`;
             d.innerHTML=h;
         }
         window.setCat=(c)=>{activeCat=c; renderCats(); renderMenu();}
@@ -385,7 +398,7 @@
             if(c>0){b.classList.add('active'); fab.style.display='none';}
             else{b.classList.remove('active'); fab.style.display='flex'; closeModal();}
             
-            if(document.getElementById('modal-cart').style.display==='flex') renderCartModal();
+            if(document.getElementById('modal-cart').style.display==='block') renderCartModal();
         }
 
         function renderCartModal(){
@@ -396,7 +409,6 @@
                  document.getElementById('bill-grand').innerText = '₹0';
                  return;
             }
-            d.innerHTML = '<div class="cart-card">'; // Wrapper style if needed in CSS or just direct items
             for(let id in cart){
                 if(menu[id]){
                     let i=menu[id], p=Number(i.price)*cart[id]; t+=p;
@@ -417,13 +429,13 @@
                     </div>`;
                 }
             }
-            // d.innerHTML += '</div>';
             document.getElementById('bill-sub').innerText = `₹${t}`;
             document.getElementById('bill-grand').innerText = `₹${t}`;
         }
 
         window.openModal=(t)=>{
-            document.getElementById('modal-'+t).style.display='flex';
+            curModal='modal-'+t;
+            document.getElementById(curModal).style.display='flex';
             document.body.classList.add('modal-open');
             if(t==='cart') renderCartModal();
         }
@@ -431,6 +443,7 @@
         window.closeModal=()=>{
             document.querySelectorAll('.overlay').forEach(e=>e.style.display='none');
             document.body.classList.remove('modal-open');
+            curModal=null;
         }
         
         window.openDetail=(id)=>{
@@ -449,29 +462,29 @@
         window.placeOrder=()=>{
             const n=document.getElementById('c-name').value.trim();
             const p=document.getElementById('c-phone').value.trim();
+            const type=document.getElementById('c-type').value;
             const addr=document.getElementById('c-addr').value.trim();
             const land=document.getElementById('c-land').value.trim();
             const pay=document.getElementById('o-pay').value;
-            const time=document.getElementById('o-time').value;
             const note=document.getElementById('c-note').value.trim();
             
-            if(!n || !p || !addr){ alert("Please fill Name, Mobile & Address!"); return; }
+            if(!n || !p || !addr){ alert("Please fill Name, Phone & Address!"); return; }
 
             let itemsPart = "";
             let total = 0;
+            let count = 1;
             
             for(let id in cart) {
                 if(menu[id]) {
                     let i = menu[id];
                     let sub = i.price * cart[id];
-                    itemsPart += `🍽️ ${i.name}\n`;
-                    itemsPart += `🔢 Quantity: ${cart[id]}\n`;
-                    // itemsPart += `💰 Price: ₹${sub}\n\n`; // Optional
+                    itemsPart += `${count}. ${i.name} (x${cart[id]})     ₹${sub}\n`;
                     total += sub;
+                    count++;
                 }
             }
 
-            // --- REQUESTED FORMAT ---
+            // REQUESTED FORMAT
             let msg = `🛒 *Radhe Krishna – Food Order Format*\n\n`;
             
             msg += `👤 Name: ${n}\n`;
@@ -481,16 +494,15 @@
             msg += `🗺️ Landmark: ${land || 'N/A'}\n\n`;
             
             msg += `🍽️ Item(s) Name:\n`;
-            // To fit "Item Name" and "Quantity" logic from prompt, we list them:
             msg += itemsPart;
             
-            msg += `💰 *Total Bill: ₹${total}*\n\n`; // Added Total for clarity
+            msg += `\n💰 *Total Bill: ₹${total}*\n\n`;
 
-            msg += `💰 Payment Method: (${pay})\n\n`;
+            msg += `💰 Payment Method: (${pay})\n`;
             
-            msg += `⏰ Preferred Delivery Time: ${time}\n\n`;
+            msg += `📦 Order Type: ${type}\n\n`;
             
-            msg += `📝 Special Instruction: ${note || 'None'}`;
+            if(note) msg += `📝 Special Instruction: ${note}`;
 
             window.open(`https://wa.me/${conf.whatsappOrderNumber}?text=${encodeURIComponent(msg)}`, '_blank');
         }
