@@ -370,14 +370,18 @@
             const n=document.getElementById('o-name').value.trim(), p=document.getElementById('o-phone').value.trim(), a=document.getElementById('o-addr').value.trim(), l=document.getElementById('o-land').value.trim();
             if(!n || !p || !a) { showToast("Missing Details!"); return; }
             let itemsTxt = ""; let total = 0; let count = 1;
-            for(let id in cart){ 
+                        for(let id in cart){ 
                 if(menu[id]) {
                     let i = menu[id]; 
                     let sub = Number(i.price)*cart[id];
-                    itemsTxt += `${count}. ${i.name} (x${cart[id]}) -> ₹${sub}\n`; 
+                    
+                    // এই নিচের লাইনটিই পরিবর্তন করা হয়েছে
+                    itemsTxt += `*${count}. ${i.name}*\n   x ${cart[id]}  =  ₹${sub}\n`; 
+                    
                     total += sub; count++; 
                 }
             }
+
             let msg = `🔔🔔 NEW ORDER ALERT 🔔🔔\n\n🌸 *RADHE KRISHNA* 🌸\n🌿 Pure Vegetarian | Midnight Service\n━━━━━━━━━━━━━━━━━━━━━━\n\n🧾 *ORDER BILL / INVOICE*\n\n👤 *Customer Details:*\nName    : ${n}\nMobile  : ${p}\nAddress : ${a}\nLandmark: ${l || 'Not Provided'}\n\n━━━━━━━━━━━━━━━━━━━━━━\n\n🛒 *Order Summary:*\n--------------------------------\n${itemsTxt}--------------------------------\n\n💰 *GRAND TOTAL : ₹${total}*\n\n━━━━━━━━━━━━━━━━━━━━━━\n\n💳 *Payment Mode* : ${document.getElementById('o-pay').value}\n⏰ *Delivery Time*: ${document.getElementById('o-time').value}\n\n━━━━━━━━━━━━━━━━━━━━━━\n🙏 Thank you for choosing\n🌸 *RADHE KRISHNA* 🌸\n📲 Digital Order Receipt`;
             window.open(`https://wa.me/${conf.whatsappOrderNumber}?text=${encodeURIComponent(msg)}`,'_blank');
         }
