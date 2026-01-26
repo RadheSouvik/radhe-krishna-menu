@@ -503,7 +503,7 @@
                     discount = parseInt(conf.discountValue || 0);
                 }
                 grandTotal = Math.max(0, subTotal - discount);
-                discountMsg = `\nSubtotal: ₹${subTotal}\n🎉 Discount: - ₹${discount}\n`;
+                discountMsg = `\n📜 Subtotal: ₹${subTotal}\n🎉 Discount: - ₹${discount}\n`;
             }
             
             let msg = `🧾 *ORDER RECEIPT*\n*RADHE KRISHNA - Night Menu*\n................................................\n\n👤 *CUSTOMER DETAILS*\nName: ${n}\nMobile: ${p}\nAddress: ${a}\nLandmark: ${l || '--'}\n\n🛒 *YOUR ORDER*\n................................................\n${itemsTxt}................................................${discountMsg}\n💵 *TOTAL PAYABLE: ₹${grandTotal}*\n\n................................................\nPayment: ${document.getElementById('o-pay').value}\nDelivery: ${document.getElementById('o-time').value}\n\n🙏 *Thank you for ordering!*`;
