@@ -5,212 +5,273 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Radhe Krishna | Order Food</title>
     <!-- Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Metropolis:wght@400;500;600;700;800&family=Hind+Siliguri:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Mulish:wght@400;500;600;700;800&family=Hind+Siliguri:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <style>
         :root {
             --primary: #E23744; /* Zomato Red */
             --bg-body: #F4F5F8;
-            --card-bg: #FFFFFF;
+            --white: #ffffff;
             --text-main: #1C1C1C;
-            --text-sub: #363636;
-            --text-light: #828282;
-            --border: #E8E8E8;
+            --text-sub: #4F4F4F;
+            --text-light: #9C9C9C;
             --green: #24963F;
-            --shadow: 0 4px 12px rgba(0,0,0,0.06);
+            --border: #E8E8E8;
+            --shadow: 0 2px 8px rgba(0,0,0,0.08);
         }
 
         body.dark-mode {
             --bg-body: #121212;
-            --card-bg: #1C1C1C;
+            --white: #1C1C1C;
             --text-main: #F4F4F4;
             --text-sub: #D1D1D1;
-            --text-light: #999999;
+            --text-light: #888888;
             --border: #2D2D2D;
+            --shadow: 0 2px 8px rgba(0,0,0,0.4);
         }
 
-        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; font-family: 'Metropolis', 'Hind Siliguri', sans-serif; }
-        body { margin: 0; background: var(--bg-body); color: var(--text-main); padding-bottom: 140px; }
-        body.modal-open { overflow: hidden; }
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        body { margin: 0; font-family: 'Mulish', 'Hind Siliguri', sans-serif; background: var(--bg-body); color: var(--text-main); padding-bottom: 120px; transition: 0.3s; }
+        body.modal-open { overflow: hidden; height: 100vh; }
+        img { pointer-events: none; }
 
         /* --- Header --- */
         .header {
-            background: var(--card-bg); padding: 12px 15px; position: sticky; top: 0; z-index: 100;
+            background: var(--white); padding: 15px; position: sticky; top: 0; z-index: 100;
             display: flex; justify-content: space-between; align-items: center;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            box-shadow: 0 1px 5px rgba(0,0,0,0.05); border-bottom: 1px solid var(--border);
         }
-        .brand-name { font-size: 1.2rem; font-weight: 800; color: var(--primary); }
-        .status-text { font-size: 0.75rem; color: var(--green); font-weight: 700; display: flex; align-items: center; gap: 5px; }
-        .closed-text { color: var(--primary); }
-        .theme-btn { width: 35px; height: 35px; border-radius: 50%; background: var(--bg-body); display: flex; align-items: center; justify-content: center; cursor: pointer; color: var(--text-main); }
+        .brand-box { display: flex; flex-direction: column; }
+        .brand-name { font-size: 1.3rem; font-weight: 800; color: var(--primary); line-height: 1; }
+        .brand-tag { font-size: 0.7rem; font-weight: 700; color: var(--text-light); text-transform: uppercase; letter-spacing: 1px; margin-top: 2px; }
+        .theme-toggle { width: 35px; height: 35px; border-radius: 50%; background: var(--bg-body); display: flex; align-items: center; justify-content: center; cursor: pointer; color: var(--text-main); }
+
+        /* --- Marquee --- */
+        .marquee-box { background: var(--white); padding: 8px 15px; border-bottom: 1px solid var(--border); }
+        .marquee-inner { display: flex; align-items: center; gap: 8px; background: #FFF5F6; padding: 6px 12px; border-radius: 8px; border: 1px solid #FFCDD2; }
+        .marquee-icon { color: var(--primary); font-size: 0.9rem; }
+        .marquee-text { flex: 1; overflow: hidden; white-space: nowrap; font-size: 0.8rem; font-weight: 600; color: var(--text-sub); }
+        .marquee-scroll { display: inline-block; animation: scroll 15s linear infinite; padding-left: 100%; }
+        @keyframes scroll { 0% { transform: translateX(0); } 100% { transform: translateX(-100%); } }
 
         /* --- Banner --- */
-        .banner-container { padding: 15px; }
-        .banner-slider { width: 100%; height: 170px; border-radius: 16px; overflow: hidden; position: relative; background: #ddd; }
-        .slide { width: 100%; height: 100%; object-fit: cover; position: absolute; opacity: 0; transition: 0.5s; }
+        .banner-section { padding: 15px; }
+        .banner-wrap { position: relative; border-radius: 16px; overflow: hidden; box-shadow: var(--shadow); height: 170px; background: #ddd; }
+        .slide { width: 100%; height: 100%; object-fit: cover; position: absolute; opacity: 0; transition: 0.8s; }
         .slide.active { opacity: 1; }
+        
+        .status-badge { 
+            position: absolute; bottom: 12px; left: 12px; 
+            background: var(--white); padding: 5px 12px; border-radius: 50px; 
+            font-weight: 800; font-size: 0.65rem; color: var(--text-main);
+            display: flex; align-items: center; gap: 6px; box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+        .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--green); }
+        .closed .dot { background: var(--primary); }
 
         /* --- Categories --- */
-        .cat-scroll { display: flex; gap: 12px; overflow-x: auto; padding: 5px 15px 15px; scrollbar-width: none; }
-        .cat-item {
-            display: flex; flex-direction: column; align-items: center; gap: 5px; min-width: 70px; cursor: pointer;
+        .cat-scroll { display: flex; gap: 10px; overflow-x: auto; padding: 0 15px 15px; scrollbar-width: none; position: sticky; top: 65px; background: var(--bg-body); z-index: 90; }
+        .cat-btn { 
+            padding: 8px 18px; background: var(--white); border-radius: 50px; 
+            font-weight: 700; font-size: 0.85rem; color: var(--text-sub); 
+            white-space: nowrap; cursor: pointer; border: 1px solid var(--border); 
+            box-shadow: var(--shadow); transition: 0.2s; display: flex; align-items: center; gap: 6px;
         }
-        .cat-img { width: 60px; height: 60px; border-radius: 50%; background: var(--card-bg); object-fit: cover; border: 2px solid transparent; box-shadow: var(--shadow); }
-        .cat-item.active .cat-img { border-color: var(--primary); }
-        .cat-name { font-size: 0.8rem; font-weight: 600; color: var(--text-sub); text-align: center; }
+        .cat-btn.active { background: #FFF5F6; color: var(--primary); border-color: var(--primary); }
 
-        /* --- Menu List (Zomato Style) --- */
+        /* --- Menu Cards (Screenshot Style) --- */
         .menu-list { padding: 0 15px; display: flex; flex-direction: column; gap: 15px; }
-        .food-card {
-            background: var(--card-bg); border-radius: 16px; padding: 15px;
-            display: flex; justify-content: space-between; align-items: flex-start;
-            box-shadow: var(--shadow); position: relative;
+        .food-card { 
+            background: var(--white); border-radius: 16px; padding: 15px; 
+            display: flex; justify-content: space-between; position: relative; 
+            box-shadow: var(--shadow); border: 1px solid var(--border);
         }
         
-        .food-info { flex: 1; padding-right: 10px; }
-        .veg-icon { width: 15px; height: 15px; border: 1px solid var(--green); display: flex; align-items: center; justify-content: center; margin-bottom: 5px; }
-        .veg-dot { width: 7px; height: 7px; background: var(--green); border-radius: 50%; }
+        .food-info { flex: 1; padding-right: 12px; }
+        .veg-box { width: 14px; height: 14px; border: 1px solid var(--green); display: flex; align-items: center; justify-content: center; margin-bottom: 6px; }
+        .veg-inner { width: 6px; height: 6px; background: var(--green); border-radius: 50%; }
         
-        .f-name { font-size: 1.1rem; font-weight: 700; color: var(--text-main); margin-bottom: 4px; line-height: 1.3; }
-        .f-price { font-size: 1rem; font-weight: 600; color: var(--text-main); margin-bottom: 8px; }
+        .f-name { font-size: 1.05rem; font-weight: 700; color: var(--text-main); margin-bottom: 4px; line-height: 1.3; }
+        .f-price { font-size: 1rem; font-weight: 700; color: var(--text-main); margin-bottom: 6px; }
         .f-desc { font-size: 0.8rem; color: var(--text-light); line-height: 1.4; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
 
-        .food-img-box {
-            width: 120px; height: 110px; position: relative; flex-shrink: 0;
-            border-radius: 12px;
+        .food-img-wrapper { 
+            width: 115px; height: 110px; position: relative; flex-shrink: 0;
+            margin-bottom: 8px; /* Space for button */
         }
-        .f-img { width: 100%; height: 100%; object-fit: cover; border-radius: 12px; background: #eee; }
+        .f-img { width: 100%; height: 100%; border-radius: 12px; object-fit: cover; background: #eee; }
         
-        /* ADD Button */
-        .add-btn-container {
+        /* ADD Button (Screenshot Style) */
+        .add-btn-box {
             position: absolute; bottom: -10px; left: 50%; transform: translateX(-50%);
-            width: 90px; height: 34px; background: var(--card-bg);
+            width: 90px; height: 32px; background: var(--white);
             border-radius: 8px; box-shadow: 0 3px 8px rgba(0,0,0,0.15);
             display: flex; align-items: center; justify-content: center;
-            overflow: hidden; border: 0.5px solid var(--border);
+            border: 0.5px solid #d4d5d9; z-index: 5;
         }
-        .btn-add-text { color: var(--primary); font-weight: 800; font-size: 0.9rem; width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; text-transform: uppercase; cursor: pointer; }
+        .btn-text { color: var(--green); font-weight: 800; font-size: 0.9rem; cursor: pointer; width: 100%; text-align: center; }
         
-        .qty-control { width: 100%; height: 100%; display: flex; align-items: center; justify-content: space-between; background: var(--primary); }
-        .q-btn { width: 30px; height: 100%; color: white; display: flex; align-items: center; justify-content: center; font-weight: 900; cursor: pointer; }
-        .q-val { color: white; font-weight: 700; font-size: 1rem; }
+        /* Qty Control */
+        .qty-box { width: 100%; height: 100%; display: flex; align-items: center; justify-content: space-between; background: var(--primary); border-radius: 8px; overflow: hidden; }
+        .q-act { width: 30px; height: 100%; display: flex; align-items: center; justify-content: center; font-weight: 900; color: white; cursor: pointer; }
+        .q-val { color: white; font-weight: 700; font-size: 0.95rem; }
 
         /* --- Floating Cart --- */
         .cart-float {
             position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%) translateY(100px);
             width: 92%; max-width: 500px; background: var(--primary); color: white;
             padding: 12px 20px; border-radius: 12px; display: flex; justify-content: space-between; align-items: center;
-            box-shadow: 0 10px 25px rgba(226, 55, 68, 0.4); z-index: 1000;
-            transition: 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); cursor: pointer; visibility: hidden;
+            box-shadow: 0 10px 25px rgba(226, 55, 68, 0.4); z-index: 999;
+            transition: 0.3s; cursor: pointer; visibility: hidden;
         }
-        .cart-float.active { transform: translateX(-50%) translateY(0); visibility: visible; }
-        .c-info { font-size: 0.8rem; font-weight: 600; text-transform: uppercase; opacity: 0.9; }
-        .c-total { font-size: 1.1rem; font-weight: 800; }
-        .c-view { font-weight: 700; font-size: 0.9rem; display: flex; align-items: center; gap: 5px; }
+        .cart-float.show { transform: translateX(-50%) translateY(0); visibility: visible; }
+        .c-det { font-weight: 700; font-size: 0.9rem; text-transform: uppercase; }
+        .c-view { font-weight: 800; font-size: 0.9rem; display: flex; align-items: center; gap: 5px; }
 
-        /* --- Modals (Bottom Sheet) --- */
-        .overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 2000; display: none; align-items: flex-end; justify-content: center; backdrop-filter: blur(3px); }
-        .sheet {
-            background: var(--bg-body); width: 100%; max-width: 600px; border-radius: 20px 20px 0 0;
-            max-height: 90vh; overflow-y: auto; animation: slideUp 0.3s ease-out; position: relative;
-        }
-        @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
+        /* --- FAB --- */
+        .fab-wrap { position: fixed; bottom: 90px; right: 20px; z-index: 990; display: flex; flex-direction: column; align-items: flex-end; gap: 10px; }
+        .fab-btn { width: 50px; height: 50px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 1.2rem; cursor: pointer; box-shadow: 0 4px 10px rgba(0,0,0,0.2); transition: 0.2s; transform: scale(0); opacity: 0; }
+        .fab-main { width: 55px; height: 55px; background: var(--text-main); color: var(--white); font-size: 1.4rem; z-index: 991; transform: scale(1); opacity: 1; }
+        
+        .fab-wrap.active .fab-btn { transform: scale(1); opacity: 1; }
+        .fab-wrap.active .fab-main { transform: rotate(45deg); background: var(--primary); }
+        .fab-wa { background: #25D366; } .fab-call { background: #2980b9; }
 
-        .sheet-header { background: var(--card-bg); padding: 15px 20px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 10; }
-        .sheet-title { font-size: 1.2rem; font-weight: 800; margin: 0; }
-        
-        .sheet-body { padding: 20px; }
-        
-        /* Cart Summary UI */
-        .cart-card { background: var(--card-bg); border-radius: 12px; margin-bottom: 15px; border: 1px solid var(--border); overflow: hidden; }
-        .cart-head { background: #f9f9f9; padding: 10px 15px; font-weight: 700; font-size: 0.85rem; color: var(--text-light); display: flex; justify-content: space-between; }
-        .cart-item-row { display: flex; justify-content: space-between; align-items: center; padding: 12px 15px; border-bottom: 1px solid var(--border); }
-        .cart-item-row:last-child { border-bottom: none; }
-        
-        .ci-name { font-weight: 600; font-size: 0.95rem; flex: 1; }
-        .ci-qty { background: #f0f0f0; padding: 2px 8px; border-radius: 4px; font-size: 0.85rem; font-weight: 700; margin: 0 10px; }
-        .ci-price { font-weight: 700; color: var(--text-main); }
-        
-        .bill-total-row { display: flex; justify-content: space-between; padding: 15px; background: var(--card-bg); font-weight: 800; font-size: 1.2rem; border-top: 2px dashed #ddd; margin-top: 10px; color: var(--primary); }
+        /* --- Modals --- */
+        .overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 2000; display: none; align-items: flex-end; justify-content: center; backdrop-filter: blur(2px); }
+        .sheet { background: var(--bg-body); width: 100%; max-width: 600px; border-radius: 20px 20px 0 0; max-height: 95vh; overflow-y: auto; animation: slideUp 0.3s ease; }
+        @keyframes slideUp { from{transform:translateY(100%)} to{transform:translateY(0)} }
 
-        /* Form */
-        .form-label { font-weight: 700; font-size: 0.85rem; margin-bottom: 5px; display: block; color: var(--text-sub); }
-        .form-input { width: 100%; padding: 14px; background: var(--card-bg); border: 1px solid var(--border); border-radius: 8px; margin-bottom: 15px; font-size: 1rem; color: var(--text-main); outline: none; }
-        .form-input:focus { border-color: var(--primary); }
+        .sheet-head { background: var(--white); padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 10; }
+        .sheet-title { font-size: 1.1rem; font-weight: 800; margin: 0; }
+        
+        .sheet-content { padding: 20px; }
+        .section-title { font-size: 0.9rem; font-weight: 800; color: var(--text-sub); margin-bottom: 10px; text-transform: uppercase; letter-spacing: 0.5px; }
 
-        .place-order-btn { background: var(--primary); color: white; width: 100%; padding: 15px; border: none; border-radius: 12px; font-weight: 700; font-size: 1.1rem; cursor: pointer; margin-top: 10px; display: flex; align-items: center; justify-content: center; gap: 8px; }
+        .cart-item { background: var(--white); padding: 12px; border-radius: 10px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; border: 1px solid var(--border); }
+        .cart-name { font-weight: 600; font-size: 0.95rem; color: var(--text-main); }
+        .cart-price { font-weight: 700; color: var(--text-main); margin-top: 2px; }
+
+        .bill-box { background: var(--white); padding: 15px; border-radius: 10px; margin-bottom: 20px; border: 1px solid var(--border); }
+        .bill-row { display: flex; justify-content: space-between; margin-bottom: 8px; font-size: 0.9rem; color: var(--text-sub); }
+        .bill-total { display: flex; justify-content: space-between; border-top: 1px dashed #ccc; padding-top: 10px; margin-top: 5px; font-weight: 800; font-size: 1.1rem; color: var(--primary); }
+
+        .input-group { margin-bottom: 15px; }
+        .input-label { display: block; font-weight: 700; font-size: 0.85rem; margin-bottom: 5px; color: var(--text-sub); }
+        .input-field { width: 100%; padding: 14px; background: var(--white); border: 1px solid var(--border); border-radius: 8px; font-size: 1rem; color: var(--text-main); outline: none; }
+        .input-field:focus { border-color: var(--primary); }
+
+        .confirm-btn { background: var(--green); color: white; width: 100%; padding: 15px; border: none; border-radius: 8px; font-weight: 700; font-size: 1.1rem; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; box-shadow: 0 4px 10px rgba(36, 150, 63, 0.3); }
+
+        .detail-img { width: 100%; height: 250px; object-fit: cover; border-radius: 12px; margin-bottom: 15px; }
     </style>
 </head>
 <body oncontextmenu="return false;">
 
-    <!-- Header -->
     <div class="header">
-        <div class="location-box">
+        <div class="brand-box">
             <div class="brand-name">Radhe Krishna</div>
-            <div class="status-text" id="status-text">Checking...</div>
+            <div class="brand-tag">NIGHT MENU</div>
         </div>
         <div class="theme-btn" onclick="document.body.classList.toggle('dark-mode')"><i class="fas fa-moon"></i></div>
     </div>
 
-    <!-- Banner -->
-    <div class="banner-container"><div class="banner-slider" id="banner-slider"></div></div>
+    <div class="marquee-box">
+        <div class="marquee-inner">
+            <i class="fas fa-bullhorn marquee-icon"></i>
+            <div class="marquee-text"><span class="marquee-scroll" id="scroll-text">Loading...</span></div>
+        </div>
+    </div>
 
-    <!-- Categories -->
+    <div class="banner-section">
+        <div class="banner-wrap">
+            <div class="status-badge" id="status-badge">
+                <div class="dot"></div> <span id="status-text">Checking...</span>
+            </div>
+            <div id="banner-slider" style="width:100%; height:100%;"></div>
+        </div>
+    </div>
+
     <div class="cat-scroll" id="cat-list"></div>
 
-    <!-- Menu -->
     <div class="menu-list" id="menu-container"></div>
+
+    <div style="height: 20px;"></div>
 
     <!-- Floating Cart -->
     <div class="cart-float" id="cart-float" onclick="openModal('cart')">
-        <div>
-            <div class="c-info" id="c-info">0 ITEMS</div>
-            <div class="c-total" id="c-total">₹0</div>
-        </div>
+        <div class="c-det" id="c-info">0 ITEMS | ₹0</div>
         <div class="c-view">View Cart <i class="fas fa-caret-right"></i></div>
+    </div>
+
+    <!-- FAB -->
+    <div class="fab-wrap" id="fab-wrap">
+        <div class="fab-btn fab-wa" onclick="openWA()"><i class="fab fa-whatsapp"></i></div>
+        <div class="fab-btn fab-call" onclick="makeCall()"><i class="fas fa-phone-alt"></i></div>
+        <div class="fab-btn fab-main" onclick="toggleFab()"><i class="fas fa-headset"></i></div>
     </div>
 
     <!-- Cart Modal -->
     <div class="overlay" id="modal-cart">
         <div class="sheet">
-            <div class="sheet-header">
+            <div class="sheet-head">
                 <h2 class="sheet-title">Order Summary</h2>
-                <i class="fas fa-times" style="font-size:1.5rem; cursor:pointer;" onclick="closeModal()"></i>
+                <i class="fas fa-times" onclick="closeModal()" style="font-size:1.5rem; cursor:pointer;"></i>
             </div>
-            <div class="sheet-body">
+            <div class="sheet-content">
                 
-                <!-- Items Table -->
-                <div class="cart-card">
-                    <div class="cart-head"><span>ITEM</span><span>PRICE</span></div>
-                    <div id="cart-items-wrapper"></div>
+                <div class="section-title">Items Added</div>
+                <div id="cart-items-wrapper"></div>
+
+                <div class="section-title">Bill Details</div>
+                <div class="bill-box">
+                    <div class="bill-row"><span>Item Total</span><span id="bill-sub">₹0</span></div>
+                    <div class="bill-row"><span>Taxes & Charges</span><span>₹0</span></div>
+                    <div class="bill-total"><span>To Pay</span><span id="bill-grand">₹0</span></div>
                 </div>
 
-                <div class="bill-total-row">
-                    <span>Grand Total</span>
-                    <span id="bill-grand">₹0</span>
+                <div class="section-title">Your Details</div>
+                <div class="input-group">
+                    <label class="input-label">Full Name *</label>
+                    <input type="text" id="c-name" class="input-field" placeholder="Ex. Rahul Kumar">
+                </div>
+                <div class="input-group">
+                    <label class="input-label">Mobile Number *</label>
+                    <input type="tel" id="c-phone" class="input-field" placeholder="Ex. 9876543210">
+                </div>
+                <div class="input-group">
+                    <label class="input-label">Order Type</label>
+                    <select id="c-type" class="input-field">
+                        <option value="Home Delivery">Home Delivery</option>
+                        <option value="Takeaway / Pickup">Takeaway / Pickup</option>
+                    </select>
+                </div>
+                <div class="input-group">
+                    <label class="input-label">Delivery Address</label>
+                    <textarea id="c-addr" class="input-field" rows="2" placeholder="Street, House No, Landmark"></textarea>
                 </div>
 
-                <div style="height: 20px;"></div>
-
-                <!-- Form -->
-                <div class="form-label">Full Name</div>
-                <input type="text" id="c-name" class="form-input" placeholder="Ex. Rahul Kumar">
-                
-                <div class="form-label">Mobile Number</div>
-                <input type="tel" id="c-phone" class="form-input" placeholder="Ex. 9876543210">
-
-                <div class="form-label">Delivery Address</div>
-                <textarea id="c-addr" class="form-input" rows="2" placeholder="Street name, House no, Landmark"></textarea>
-
-                <p style="font-size:0.75rem; text-align:center; color:var(--text-light); margin-bottom:10px;">By clicking below, you'll be redirected to WhatsApp to send the order details.</p>
-                
-                <button class="place-order-btn" onclick="placeOrder()">
-                    <i class="fab fa-whatsapp"></i> Confirm WhatsApp Order
+                <button class="confirm-btn" onclick="placeOrder()">
+                    Place Order <i class="fas fa-arrow-right"></i>
                 </button>
             </div>
         </div>
     </div>
+
+    <!-- Details Modal -->
+    <div class="overlay" id="modal-detail">
+        <div class="sheet" style="padding:20px; max-height:auto;">
+            <div style="display:flex; justify-content:flex-end;"><i class="fas fa-times" onclick="closeModal()" style="font-size:1.5rem; cursor:pointer;"></i></div>
+            <img src="" id="d-img" class="detail-img">
+            <h2 id="d-name" style="margin:0 0 5px;"></h2>
+            <h3 id="d-price" style="color:var(--primary); margin:0 0 15px;"></h3>
+            <p id="d-desc" style="color:var(--text-sub); line-height:1.5;"></p>
+        </div>
+    </div>
+
+    <!-- Toasts -->
+    <div style="position:fixed; top:80px; left:50%; transform:translateX(-50%); background:#333; color:white; padding:10px 20px; border-radius:10px; opacity:0; pointer-events:none; transition:0.3s; z-index:9999;" id="toast">Msg</div>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js";
@@ -222,6 +283,7 @@
 
         let menu={}, cats={}, conf={}, cart={}, activeCat='all', slideInt;
 
+        function toast(m){const t=document.getElementById('toast');t.innerText=m;t.style.opacity=1;setTimeout(()=>t.style.opacity=0,2500);}
         function formatTime(t){if(!t)return"";let[h,m]=t.split(':');let ap=h>=12?'PM':'AM';h=h%12||12;return`${h}:${m} ${ap}`;}
 
         onValue(ref(db, 'config'), snap => { conf=snap.val()||{}; updateUI(); });
@@ -229,21 +291,23 @@
         onValue(ref(db, 'menu'), snap => { menu=snap.val()||{}; renderMenu(); });
 
         function updateUI(){
-            const st=document.getElementById('status-text');
-            if(conf.restaurantOpen){st.innerHTML=`Open Now 🟢`; st.className='status-text';}
-            else{st.innerHTML=`Closed Now 🔴`; st.className='status-text closed-text';}
-            
+            document.getElementById('scroll-text').innerText = conf.marqueeText || "Welcome";
+            let st = conf.restaurantOpen ? "OPEN NOW" : "CLOSED";
+            if(conf.openTime && conf.closeTime) st += ` (${formatTime(conf.openTime)}-${formatTime(conf.closeTime)})`;
+            document.getElementById('status-text').innerText = st;
+            document.getElementById('status-badge').className = conf.restaurantOpen ? 'status-badge' : 'status-badge closed';
+
             const sl=document.getElementById('banner-slider'); sl.innerHTML='';
-            if(conf.banners) conf.banners.forEach((s,i) => sl.innerHTML+=`<img src="${s}" class="slide ${i==0?'active':''}">`);
+            if(conf.banners) conf.banners.forEach((s,i)=> sl.innerHTML+=`<img src="${s}" class="slide ${i==0?'active':''}">`);
             
             if(slideInt) clearInterval(slideInt);
-            let i=0; slideInt=setInterval(()=>{const s=document.querySelectorAll('.slide');if(s.length){s[i].classList.remove('active');i=(i+1)%s.length;s[i].classList.add('active');}}, (conf.bannerSpeed||3)*1000);
+            let i=0; slideInt=setInterval(()=>{const s=document.querySelectorAll('.slide');if(s.length){s[i].classList.remove('active');i=(i+1)%s.length;s[i].classList.add('active');}},(conf.bannerSpeed||3)*1000);
         }
 
         function renderCats(){
             const d=document.getElementById('cat-list');
-            let h=`<div class="cat-item ${activeCat=='all'?'active':''}" onclick="setCat('all')"><img src="https://cdn-icons-png.flaticon.com/512/706/706997.png" class="cat-img"><span class="cat-name">All</span></div>`;
-            for(let k in cats) h+=`<div class="cat-item ${activeCat==k?'active':''}" onclick="setCat('${k}')"><img src="https://cdn-icons-png.flaticon.com/512/3480/3480823.png" class="cat-img"><span class="cat-name">${cats[k].name}</span></div>`;
+            let h=`<div class="cat-btn ${activeCat=='all'?'active':''}" onclick="setCat('all')"><i class="fas fa-th"></i> All Menu</div>`;
+            for(let k in cats) h+=`<div class="cat-btn ${activeCat==k?'active':''}" onclick="setCat('${k}')"><i class="fas fa-utensils"></i> ${cats[k].name}</div>`;
             d.innerHTML=h;
         }
         window.setCat=(c)=>{activeCat=c; renderCats(); renderMenu();}
@@ -254,20 +318,20 @@
                 let i=menu[id]; if(i.isAvailable===false || (activeCat!=='all' && i.category!==activeCat)) continue;
                 let q=cart[id]||0;
                 let btn = q===0 
-                    ? `<div class="btn-add-text" onclick="mod(event,'${id}',1)">ADD</div>`
-                    : `<div class="qty-control"><div class="q-btn" onclick="mod(event,'${id}',-1)">-</div><div class="q-val">${q}</div><div class="q-btn" onclick="mod(event,'${id}',1)">+</div></div>`;
+                    ? `<div class="btn-text" onclick="mod(event,'${id}',1)">ADD</div>`
+                    : `<div class="qty-box" onclick="event.stopPropagation()"><div class="q-act" onclick="mod(event,'${id}',-1)">-</div><div class="q-val">${q}</div><div class="q-act" onclick="mod(event,'${id}',1)">+</div></div>`;
                 
                 d.innerHTML+=`
-                <div class="food-card">
+                <div class="food-card" onclick="openDetail('${id}')">
                     <div class="food-info">
-                        <div class="veg-icon"><div class="veg-dot"></div></div>
+                        <div class="veg-box"><div class="veg-inner"></div></div>
                         <div class="f-name">${i.name}</div>
                         <div class="f-price">₹${i.price}</div>
-                        ${i.description ? `<div class="f-desc">${i.description}</div>`:''}
+                        ${i.description?`<div class="f-desc">${i.description}</div>`:''}
                     </div>
-                    <div class="food-img-box">
+                    <div class="food-img-wrapper">
                         <img src="${i.image||'https://via.placeholder.com/150'}" class="f-img">
-                        <div class="add-btn-container">${btn}</div>
+                        <div class="add-btn-box">${btn}</div>
                     </div>
                 </div>`;
             }
@@ -275,7 +339,7 @@
 
         window.mod=(e,id,v)=>{
             e.stopPropagation();
-            if(!conf.restaurantOpen){alert("Restaurant is Closed!");return;}
+            if(!conf.restaurantOpen){toast("Restaurant is Closed!");return;}
             if(!cart[id]) cart[id]=0;
             cart[id]+=v; if(cart[id]<=0) delete cart[id];
             renderMenu(); updateCart();
@@ -283,11 +347,12 @@
 
         function updateCart(){
             let c=0,t=0; for(let id in cart){if(menu[id]){c+=cart[id]; t+=Number(menu[id].price)*cart[id];}}
-            document.getElementById('c-info').innerText = `${c} ITEMS | ₹${t}`;
-            document.getElementById('c-total').innerText = `View Cart`;
+            document.getElementById('c-info').innerText=`${c} ITEMS | ₹${t}`;
             
-            const bar = document.getElementById('cart-float');
-            if(c>0) bar.classList.add('active'); else bar.classList.remove('active');
+            const b=document.getElementById('cart-float');
+            const fab=document.getElementById('fab-wrap');
+            if(c>0){b.classList.add('show'); fab.style.display='none';}
+            else{b.classList.remove('show'); fab.style.display='flex'; closeModal();}
             
             if(document.getElementById('modal-cart').style.display==='flex') renderCartModal();
         }
@@ -295,23 +360,27 @@
         function renderCartModal(){
             const d=document.getElementById('cart-items-wrapper'); d.innerHTML='';
             let t=0;
-            if(Object.keys(cart).length === 0) {
-                 d.innerHTML = '<p style="text-align:center; padding:20px;">Cart is empty!</p>';
-                 document.getElementById('bill-grand').innerText = '₹0';
-                 return;
-            }
+            if(Object.keys(cart).length===0){ d.innerHTML='<div style="text-align:center; padding:20px; color:#888;">Cart is empty</div>'; return; }
+            
             for(let id in cart){
                 if(menu[id]){
-                    let i=menu[id], p=Number(i.price)*cart[id]; t+=p;
+                    let i=menu[id], p=Number(i.price); t+=p*cart[id];
                     d.innerHTML+=`
-                    <div class="cart-item-row">
-                        <div class="ci-name">${i.name}</div>
-                        <div class="ci-qty">x${cart[id]}</div>
-                        <div class="ci-price">₹${p}</div>
+                    <div class="cart-item">
+                        <div style="flex:1">
+                            <div class="cart-name"><div style="display:inline-block; width:10px; height:10px; border:1px solid var(--green); border-radius:2px; margin-right:5px;"><div style="width:4px; height:4px; background:var(--green); border-radius:50%; margin:2px;"></div></div> ${i.name}</div>
+                            <div class="cart-price">₹${p*cart[id]}</div>
+                        </div>
+                        <div class="qty-box" style="width:80px; height:30px;">
+                            <div class="q-act" onclick="mod(event,'${id}',-1)">-</div>
+                            <div class="q-val">${cart[id]}</div>
+                            <div class="q-act" onclick="mod(event,'${id}',1)">+</div>
+                        </div>
                     </div>`;
                 }
             }
-            document.getElementById('bill-grand').innerText = `₹${t}`;
+            document.getElementById('bill-sub').innerText=`₹${t}`;
+            document.getElementById('bill-grand').innerText=`₹${t}`;
         }
 
         window.openModal=(t)=>{
@@ -319,60 +388,54 @@
             document.body.classList.add('modal-open');
             if(t==='cart') renderCartModal();
         }
-
-        window.closeModal=()=>{
-            document.querySelectorAll('.overlay').forEach(e=>e.style.display='none');
-            document.body.classList.remove('modal-open');
+        
+        window.openDetail=(id)=>{
+            let i=menu[id];
+            document.getElementById('d-img').src=i.image;
+            document.getElementById('d-name').innerText=i.name;
+            document.getElementById('d-price').innerText='₹'+i.price;
+            document.getElementById('d-desc').innerText=i.description||'';
+            openModal('detail');
         }
+
+        window.closeModal=()=>{document.querySelectorAll('.overlay').forEach(e=>e.style.display='none');document.body.classList.remove('modal-open');}
+        
+        window.toggleFab=()=>{document.getElementById('fab-wrap').classList.toggle('active');}
+        window.openWA=()=>window.open(`https://wa.me/${conf.whatsappOrderNumber}`,'_blank');
+        window.makeCall=()=>window.open(`tel:${conf.contactCallNumber}`,'_self');
 
         window.placeOrder=()=>{
             const n=document.getElementById('c-name').value.trim();
             const p=document.getElementById('c-phone').value.trim();
-            const addr=document.getElementById('c-addr').value.trim();
+            const t=document.getElementById('c-type').value;
+            const a=document.getElementById('c-addr').value.trim();
             
-            if(!n || !p || !addr){ alert("Please fill all details!"); return; }
+            if(!n || !p || !a){ toast("Please fill details!"); return; }
 
-            let itemsList = "";
-            let total = 0;
-            let count = 1;
+            let list = ""; let total = 0; let sl = 1;
             
             // WHATSAPP TABLE FORMAT
-            // We use monospace characters or simple alignment
-            
             for(let id in cart){
                 if(menu[id]){
-                    let i = menu[id];
-                    let sub = Number(i.price)*cart[id];
-                    itemsList += `${count}. ${i.name} (x${cart[id]}) - ₹${sub}\n`;
+                    let i=menu[id], sub=i.price*cart[id];
+                    list += `${sl}. ${i.name} (x${cart[id]}) - ₹${sub}\n`;
                     total += sub;
-                    count++;
+                    sl++;
                 }
             }
 
-            let msg = `🔔🔔 *NEW ORDER ALERT* 🔔🔔\n\n`;
-            msg += `🌸 *RADHE KRISHNA* 🌸\n`;
-            msg += `🌿 Pure Vegetarian | Midnight Service\n`;
-            msg += `━━━━━━━━━━━━━━━━━━━━━━\n\n`;
-            msg += `🧾 *ORDER BILL / INVOICE*\n\n`;
-            msg += `👤 *Customer Details:*\n`;
-            msg += `Name    : ${n}\n`;
-            msg += `Mobile  : ${p}\n`;
-            msg += `Address : ${addr}\n\n`;
-            msg += `━━━━━━━━━━━━━━━━━━━━━━\n\n`;
-            msg += `🛒 *Order Summary:*\n`;
-            msg += `--------------------------------\n`;
-            msg += itemsList;
-            msg += `--------------------------------\n\n`;
-            msg += `💰 *GRAND TOTAL : ₹${total}*\n\n`;
-            msg += `━━━━━━━━━━━━━━━━━━━━━━\n\n`;
-            msg += `💳 *Payment Mode* : Online / Cash\n`;
-            msg += `⏰ *Delivery Time*: ASAP\n\n`;
-            msg += `━━━━━━━━━━━━━━━━━━━━━━\n`;
-            msg += `🙏 Thank you for choosing\n`;
-            msg += `🌸 *RADHE KRISHNA* 🌸\n`;
-            msg += `📲 Digital Order Receipt`;
+            let msg = `*NEW ORDER ALERT* 🔔\n\n`;
+            msg += `*Customer Details:*\n`;
+            msg += `Name: ${n}\nPhone: ${p}\nType: ${t}\nAddress: ${a}\n\n`;
+            msg += `*Order Summary:*\n`;
+            msg += `---------------------------\n`;
+            msg += list;
+            msg += `---------------------------\n`;
+            msg += `*TOTAL AMOUNT: ₹${total}*\n`;
+            msg += `---------------------------\n`;
+            msg += `Please confirm order!`;
 
-            window.open(`https://wa.me/${conf.whatsappOrderNumber}?text=${encodeURIComponent(msg)}`, '_blank');
+            window.open(`https://wa.me/${conf.whatsappOrderNumber}?text=${encodeURIComponent(msg)}`,'_blank');
         }
     </script>
 </body>
