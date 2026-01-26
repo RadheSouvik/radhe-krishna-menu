@@ -374,7 +374,7 @@
                 if(menu[id]) {
                     let i = menu[id]; 
                     let sub = Number(i.price)*cart[id];
-                    itemsTxt += `${count}. ${i.name} (x${cart[id]})            ₹${sub}\n`; 
+                    itemsTxt += `${count}. ${i.name} (x${cart[id]}) -> ₹${sub}\n`; 
                     total += sub; count++; 
                 }
             }
