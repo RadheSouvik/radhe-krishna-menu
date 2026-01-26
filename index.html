@@ -1,4 +1,3 @@
-<!-- START OF FILE index (3).html -->
 <!DOCTYPE html>
 <html lang="bn">
 <head>
@@ -19,6 +18,8 @@
             --veg-green: #24963F;
             --shadow: 0 4px 15px rgba(28, 28, 28, 0.08);
             --glass: rgba(255, 255, 255, 0.9);
+            --offer-bg: #fff5f5;
+            --offer-border: #fecaca;
         }
 
         body.dark-mode {
@@ -28,6 +29,8 @@
             --text-sub: #9C9C9C;
             --shadow: 0 4px 20px rgba(0,0,0,0.5);
             --glass: rgba(28, 28, 28, 0.95);
+            --offer-bg: #2a1010;
+            --offer-border: #501b1b;
         }
 
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
@@ -61,6 +64,28 @@
         .status-badge { position: absolute; bottom: 10px; left: 10px; background: var(--white); padding: 4px 12px; border-radius: 50px; font-weight: 800; font-size: 0.65rem; display: flex; align-items: center; gap: 6px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
         .st-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--veg-green); }
         .closed .st-dot { background: var(--zomato-red); }
+
+        /* PROMO / OFFER BANNER STYLES (NEW) */
+        .promo-area { max-width: 600px; margin: 15px auto 5px; padding: 0 15px; display: none; }
+        .promo-card {
+            background: var(--offer-bg);
+            border: 1px dashed var(--zomato-red);
+            border-radius: 15px;
+            padding: 12px 15px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            position: relative;
+            overflow: hidden;
+        }
+        .promo-icon {
+            width: 40px; height: 40px; background: var(--zomato-red); color: white;
+            border-radius: 50%; display: flex; align-items: center; justify-content: center;
+            font-size: 1.2rem; flex-shrink: 0; box-shadow: 0 4px 10px rgba(226, 55, 68, 0.3);
+        }
+        .promo-text { display: flex; flex-direction: column; }
+        .promo-title { font-weight: 900; font-size: 1.1rem; color: var(--zomato-red); line-height: 1.1; margin-bottom: 2px; }
+        .promo-sub { font-size: 0.8rem; font-weight: 600; color: var(--text-sub); }
 
         /* Categories */
         .cats-bar { display: flex; gap: 10px; overflow-x: auto; padding: 15px 20px; scrollbar-width: none; position: sticky; top: 55px; background: var(--bg-gray); z-index: 900; }
@@ -149,6 +174,18 @@
     </div>
 
     <div class="banner-area"><div class="slider-box" id="banner-slider"></div></div>
+    
+    <!-- NEW: ACTIVE OFFER BANNER -->
+    <div class="promo-area" id="active-promo-area">
+        <div class="promo-card">
+            <div class="promo-icon"><i class="fas fa-percentage"></i></div>
+            <div class="promo-text">
+                <div class="promo-title" id="promo-title-txt"></div>
+                <div class="promo-sub" id="promo-sub-txt"></div>
+            </div>
+        </div>
+    </div>
+
     <div class="cats-bar" id="cat-list"></div>
     <div class="menu-grid" id="menu-container"></div>
 
@@ -250,6 +287,17 @@
                 document.getElementById('loc-area').style.display='block';
                 document.getElementById('map-iframe').src = conf.mapEmbed;
                 document.getElementById('map-link').href = conf.mapLink;
+            }
+
+            // SHOW/HIDE ACTIVE PROMO BANNER
+            const promoArea = document.getElementById('active-promo-area');
+            if(conf.discountActive) {
+                let title = conf.discountType === 'percent' ? `FLAT ${conf.discountValue}% OFF` : `FLAT ₹${conf.discountValue} OFF`;
+                document.getElementById('promo-title-txt').innerText = title;
+                document.getElementById('promo-sub-txt').innerText = `On orders above ₹${conf.minOrderValue}`;
+                promoArea.style.display = 'block';
+            } else {
+                promoArea.style.display = 'none';
             }
         }
 
