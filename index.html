@@ -85,12 +85,21 @@
         .q-btn { width: 30px; height: 100%; display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 1.1rem; cursor: pointer; }
         .q-num { font-weight: 700; font-size: 1rem; }
 
-        /* Floating Cart Bar */
-        .cart-bar-float { position: fixed; bottom: 25px; left: 50%; transform: translateX(-50%) translateY(150px); width: 92%; max-width: 500px; background: var(--zomato-red); color: white; padding: 14px 20px; border-radius: 15px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 10px 30px rgba(226, 55, 68, 0.4); z-index: 1200; transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); cursor: pointer; visibility: hidden; }
+        /* Floating Cart (Zomato Style) */
+        .cart-bar-float { 
+            position: fixed; bottom: 25px; left: 50%; transform: translateX(-50%) translateY(150px); 
+            width: 92%; max-width: 500px; background: var(--zomato-red); color: white; 
+            padding: 14px 20px; border-radius: 15px; display: flex; justify-content: space-between; 
+            align-items: center; box-shadow: 0 10px 30px rgba(226, 55, 68, 0.4); z-index: 1200; 
+            transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); cursor: pointer; visibility: hidden;
+        }
         .cart-bar-float.show { transform: translateX(-50%) translateY(0); visibility: visible; }
-        .cart-count-txt { font-weight: 800; font-size: 0.9rem; text-transform: uppercase; }
-        .cart-price-txt { font-weight: 900; font-size: 1.1rem; margin-left: 5px; }
-        .cart-view-txt { font-weight: 800; display: flex; align-items: center; gap: 5px; text-transform: uppercase; font-size: 0.85rem; }
+        
+        .cart-info-left { display: flex; flex-direction: column; line-height: 1.2; }
+        .cart-count-txt { font-weight: 800; font-size: 0.85rem; text-transform: uppercase; opacity: 0.9; }
+        .cart-price-txt { font-weight: 900; font-size: 1.1rem; }
+        
+        .cart-view-txt { font-weight: 800; display: flex; align-items: center; gap: 5px; text-transform: uppercase; font-size: 0.9rem; }
 
         /* FAB */
         .fab-container { position: fixed; bottom: 25px; right: 20px; z-index: 1100; display: flex; flex-direction: column; align-items: center; transition: 0.3s; }
@@ -133,7 +142,7 @@
     <div class="marquee-container">
         <div class="marquee-pill">
             <i class="fas fa-bullhorn" style="color:var(--zomato-red); font-size:0.75rem;"></i>
-            <div class="marquee-track"><div class="marquee-content" id="scroll-text">Loading updates...</div></div>
+            <div class="marquee-track"><div class="marquee-content" id="scroll-text">Loading...</div></div>
         </div>
     </div>
 
@@ -148,16 +157,15 @@
         </div>
     </div>
 
-    <!-- Floating Cart Bar -->
+    <!-- Fixed Floating Cart Bar (Updated Design) -->
     <div class="cart-bar-float" id="z-cart-bar" onclick="openModal('cart')">
         <div class="cart-info-left">
-            <span class="cart-count-txt" id="z-count-label">0 ITEMS</span>
-            <span class="cart-price-txt" id="z-price-label">₹0</span>
+            <div class="cart-count-txt" id="z-count-label">0 ITEMS</div>
+            <div class="cart-price-txt" id="z-price-label">₹0</div>
         </div>
         <div class="cart-view-txt">View Cart <i class="fas fa-caret-right"></i></div>
     </div>
 
-    <!-- FAB -->
     <div class="fab-container" id="fab-menu">
         <div class="fab-sub fab-call" onclick="triggerCall()"><i class="fas fa-phone-alt"></i></div>
         <div class="fab-sub fab-wa" onclick="triggerWA()"><i class="fab fa-whatsapp"></i></div>
@@ -317,22 +325,10 @@
             window.history.pushState({modal: true}, null, "");
             if(type==='cart') {
                 let d=document.getElementById('cart-items-list'); d.innerHTML=''; let t=0;
-                // HEADER FOR RECEIPT
-                d.innerHTML += `<div style="display:flex; justify-content:space-between; border-bottom:1px solid #ddd; padding-bottom:5px; margin-bottom:10px; font-weight:700; color:#555; font-size:0.8rem;">
-                    <div style="flex:1">ITEM</div>
-                    <div style="width:40px; text-align:center;">QTY</div>
-                    <div style="width:60px; text-align:right;">PRICE</div>
-                </div>`;
-
                 for(let id in cart){
                     if(menu[id]) {
                         let i=menu[id], sub=Number(i.price)*cart[id]; t+=sub;
-                        d.innerHTML+=`
-                        <div class="cart-row" style="align-items:center;">
-                            <div style="flex:1; line-height:1.2;">${i.name}</div>
-                            <div style="width:40px; text-align:center; color:var(--text-sub); background:#f0f0f0; border-radius:5px; padding:2px 0;">x${cart[id]}</div>
-                            <div style="width:60px; text-align:right;">₹${sub}</div>
-                        </div>`;
+                        d.innerHTML+=`<div class="cart-row"><div style="flex:1;">${i.name}</div><div style="margin:0 15px; color:var(--text-sub);">x ${cart[id]}</div><div>₹${sub}</div></div>`;
                     }
                 }
                 document.getElementById('m-total').innerText = `₹${t}`;
@@ -374,27 +370,15 @@
             const n=document.getElementById('o-name').value.trim(), p=document.getElementById('o-phone').value.trim(), a=document.getElementById('o-addr').value.trim(), l=document.getElementById('o-land').value.trim();
             if(!n || !p || !a) { showToast("Missing Details!"); return; }
             let itemsTxt = ""; let total = 0; let count = 1;
-            
-            // HEADER FOR WHATSAPP
-            itemsTxt += "ITEM             QTY    AMT\n";
-            itemsTxt += "───────────────────────────\n";
-
             for(let id in cart){ 
                 if(menu[id]) {
                     let i = menu[id]; 
                     let sub = Number(i.price)*cart[id];
-                    // Formatting for Monospace
-                    let name = i.name.substring(0, 15).padEnd(16, ' ');
-                    let qty = `x${cart[id]}`.padEnd(6, ' ');
-                    let price = `₹${sub}`.padStart(5, ' ');
-
-                    itemsTxt += `${name}${qty}${price}\n`; 
+                    itemsTxt += `${count}. ${i.name} (x${cart[id]})            ₹${sub}\n`; 
                     total += sub; count++; 
                 }
             }
-
-            let msg = `🔔🔔 *NEW ORDER ALERT* 🔔🔔\n\n🌸 *RADHE KRISHNA* 🌸\n🌿 Pure Vegetarian | Midnight Service\n━━━━━━━━━━━━━━━━━━━━━━\n\n🧾 *ORDER BILL / INVOICE*\n\n👤 *Customer Details:*\nName    : ${n}\nMobile  : ${p}\nAddress : ${a}\nLandmark: ${l || 'Not Provided'}\n\n━━━━━━━━━━━━━━━━━━━━━━\n\n🛒 *Order Summary:*\n\`\`\`\n${itemsTxt}\n\`\`\`\n💰 *GRAND TOTAL : ₹${total}*\n\n━━━━━━━━━━━━━━━━━━━━━━\n\n💳 *Payment Mode* : ${document.getElementById('o-pay').value}\n⏰ *Delivery Time*: ${document.getElementById('o-time').value}\n\n━━━━━━━━━━━━━━━━━━━━━━\n🙏 Thank you for choosing\n🌸 *RADHE KRISHNA* 🌸\n📲 Digital Order Receipt`;
-            
+            let msg = `🔔🔔 NEW ORDER ALERT 🔔🔔\n\n🌸 *RADHE KRISHNA* 🌸\n🌿 Pure Vegetarian | Midnight Service\n━━━━━━━━━━━━━━━━━━━━━━\n\n🧾 *ORDER BILL / INVOICE*\n\n👤 *Customer Details:*\nName    : ${n}\nMobile  : ${p}\nAddress : ${a}\nLandmark: ${l || 'Not Provided'}\n\n━━━━━━━━━━━━━━━━━━━━━━\n\n🛒 *Order Summary:*\n--------------------------------\n${itemsTxt}--------------------------------\n\n💰 *GRAND TOTAL : ₹${total}*\n\n━━━━━━━━━━━━━━━━━━━━━━\n\n💳 *Payment Mode* : ${document.getElementById('o-pay').value}\n⏰ *Delivery Time*: ${document.getElementById('o-time').value}\n\n━━━━━━━━━━━━━━━━━━━━━━\n🙏 Thank you for choosing\n🌸 *RADHE KRISHNA* 🌸\n📲 Digital Order Receipt`;
             window.open(`https://wa.me/${conf.whatsappOrderNumber}?text=${encodeURIComponent(msg)}`,'_blank');
         }
     </script>
