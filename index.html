@@ -1,3 +1,4 @@
+<!-- START OF FILE index (3).html -->
 <!DOCTYPE html>
 <html lang="bn">
 <head>
@@ -119,7 +120,8 @@
         .receipt-box { background: var(--bg-gray); border-radius: 15px; padding: 18px; margin-bottom: 20px; border: 1px dashed #cbd5e1; }
         .cart-row { display: flex; justify-content: space-between; margin-bottom: 10px; font-weight: 600; font-size: 0.9rem; }
         .cart-total-row { display: flex; justify-content: space-between; padding-top: 12px; border-top: 2px solid var(--zomato-red); font-weight: 800; font-size: 1.3rem; color: var(--text-main); }
-
+        .discount-row { color: var(--veg-green); font-size: 0.9rem; margin-bottom: 10px; display: flex; justify-content: space-between; font-weight: 700; }
+        
         input, select, textarea { width: 100%; padding: 14px; margin-bottom: 12px; border: 1px solid #ddd; border-radius: 12px; background: var(--bg-gray); color: var(--text-main); font-family: inherit; font-size: 0.95rem; outline: none; }
         .checkout-btn { background: var(--zomato-red); color: white; width: 100%; padding: 18px; border: none; border-radius: 15px; font-size: 1.05rem; font-weight: 800; cursor: pointer; }
 
@@ -179,6 +181,7 @@
             <h2 style="font-weight:800; margin-bottom:20px; text-align:center;">Order Summary</h2>
             <div class="receipt-box">
                 <div id="cart-items-list"></div>
+                <div id="cart-summary-area"></div>
                 <div class="cart-total-row"><span>Grand Total</span><span id="m-total">₹0</span></div>
             </div>
             <input type="text" id="o-name" placeholder="Full Name (আপনার নাম)">
@@ -273,12 +276,24 @@
                          <div class="q-btn" onclick="upd(event,'${id}',1)">+</div>
                        </div>`;
 
+                // Calculate Price Display (With Discount Logic)
+                let priceDisplay = `₹${i.price}`;
+                
+                // Only show visual discount if Percentage is active
+                if(conf.discountActive && conf.discountType === 'percent' && conf.discountValue > 0) {
+                    let original = Number(i.price);
+                    let discAmt = (original * conf.discountValue) / 100;
+                    let final = Math.round(original - discAmt);
+                    // Shows: <crossed-out>Old</crossed-out> New
+                    priceDisplay = `<span style="text-decoration: line-through; color: #999; font-size: 0.9rem; margin-right: 6px;">₹${original}</span> ₹${final}`;
+                }
+
                 d.innerHTML += `
                 <div class="food-card" onclick="openDet('${id}')">
                     <div class="food-details">
                         <div class="veg-icon"></div>
                         <div class="food-name">${i.name}</div>
-                        <div class="food-price">₹${i.price}</div>
+                        <div class="food-price">${priceDisplay}</div>
                         ${i.description ? `<div class="food-desc">${i.description}</div>` : ''}
                     </div>
                     <div class="food-img-container">
@@ -305,12 +320,24 @@
                     t += (Number(menu[id].price) * cart[id]);
                 }
             }
+            // Discount Logic for Dock View
+            let finalPrice = t;
+            if(conf.discountActive && t >= (conf.minOrderValue || 0)) {
+                let discountAmt = 0;
+                if(conf.discountType === 'percent') {
+                    discountAmt = (t * (conf.discountValue || 0)) / 100;
+                } else {
+                    discountAmt = (conf.discountValue || 0);
+                }
+                finalPrice = Math.max(0, t - discountAmt);
+            }
+
             const bar = document.getElementById('z-cart-bar');
             const fab = document.getElementById('fab-menu');
             if(c > 0) {
                 bar.classList.add('show'); fab.style.display = 'none';
                 document.getElementById('z-count-label').innerText = `${c} ITEM${c>1?'S':''}`;
-                document.getElementById('z-price-label').innerText = `₹${t}`;
+                document.getElementById('z-price-label').innerText = `₹${Math.round(finalPrice)}`;
             } else {
                 bar.classList.remove('show'); fab.style.display = 'flex';
             }
@@ -323,15 +350,42 @@
             document.getElementById(curModal).style.display = 'flex';
             document.body.classList.add('modal-open');
             window.history.pushState({modal: true}, null, "");
+            
             if(type==='cart') {
-                let d=document.getElementById('cart-items-list'); d.innerHTML=''; let t=0;
+                let d=document.getElementById('cart-items-list'); 
+                let s=document.getElementById('cart-summary-area');
+                d.innerHTML=''; s.innerHTML='';
+                
+                let subTotal=0;
                 for(let id in cart){
                     if(menu[id]) {
-                        let i=menu[id], sub=Number(i.price)*cart[id]; t+=sub;
+                        let i=menu[id], sub=Number(i.price)*cart[id]; subTotal+=sub;
                         d.innerHTML+=`<div class="cart-row"><div style="flex:1;">${i.name}</div><div style="margin:0 15px; color:var(--text-sub);">x ${cart[id]}</div><div>₹${sub}</div></div>`;
                     }
                 }
-                document.getElementById('m-total').innerText = `₹${t}`;
+
+                let discount = 0;
+                let grandTotal = subTotal;
+                
+                // Discount Calculation
+                if(conf.discountActive && subTotal >= (conf.minOrderValue || 0)) {
+                     if(conf.discountType === 'percent') {
+                         discount = Math.round((subTotal * (conf.discountValue || 0)) / 100);
+                     } else {
+                         discount = parseInt(conf.discountValue || 0);
+                     }
+                     grandTotal = Math.max(0, subTotal - discount);
+
+                     // Display Discount in Modal
+                     s.innerHTML = `
+                        <div style="border-top:1px solid #ddd; margin-top:10px; padding-top:10px;">
+                            <div class="cart-row" style="color:#666;"><span>Subtotal</span><span>₹${subTotal}</span></div>
+                            <div class="discount-row"><span>Discount Applied</span><span>- ₹${discount}</span></div>
+                        </div>
+                     `;
+                }
+
+                document.getElementById('m-total').innerText = `₹${grandTotal}`;
             }
         }
 
@@ -339,7 +393,16 @@
             const i = menu[id];
             document.getElementById('d-img').src = i.image || 'https://via.placeholder.com/400';
             document.getElementById('d-name').innerText = i.name;
-            document.getElementById('d-price').innerText = '₹' + i.price;
+            // Also update detail modal price
+            let priceTxt = `₹${i.price}`;
+            if(conf.discountActive && conf.discountType === 'percent' && conf.discountValue > 0) {
+                 let original = Number(i.price);
+                 let discAmt = (original * conf.discountValue) / 100;
+                 let final = Math.round(original - discAmt);
+                 priceTxt = `<span style="text-decoration:line-through; color:#999; margin-right:10px;">₹${original}</span> ₹${final}`;
+            }
+            document.getElementById('d-price').innerHTML = priceTxt;
+
             const descBox = document.getElementById('d-desc');
             if(i.description) { descBox.innerText = i.description; descBox.style.display = 'block'; } else { descBox.style.display = 'none'; }
             openModal('detail');
@@ -366,29 +429,37 @@
         window.triggerCall = () => { window.open(`tel:${conf.contactCallNumber}`, '_self'); }
         window.triggerWA = () => { window.open(`https://wa.me/${conf.whatsappOrderNumber}`, '_blank'); }
 
-                window.confirmOrder = () => {
+        window.confirmOrder = () => {
             const n=document.getElementById('o-name').value.trim(), p=document.getElementById('o-phone').value.trim(), a=document.getElementById('o-addr').value.trim(), l=document.getElementById('o-land').value.trim();
             if(!n || !p || !a) { showToast("Missing Details!"); return; }
             
-            let itemsTxt = ""; let total = 0; let count = 1;
+            let itemsTxt = ""; let subTotal = 0; let count = 1;
             
-            // ১. এখানে খাবারের লিস্ট তৈরি হচ্ছে (MRP সহ)
             for(let id in cart){ 
                 if(menu[id]) {
                     let i = menu[id]; 
                     let sub = Number(i.price)*cart[id];
-                    
-                    // খাবারের নাম বোল্ড, পাশে আসল দাম, নিচে পরিমাণ ও মোট দাম
                     itemsTxt += `*${count}. ${i.name}* (₹${i.price})\n   x ${cart[id]}  =  ₹${sub}\n`; 
-                    
-                    total += sub; count++; 
+                    subTotal += sub; count++; 
                 }
             }
+
+            let discount = 0;
+            let grandTotal = subTotal;
+            let discountMsg = "";
+
+            if(conf.discountActive && subTotal >= (conf.minOrderValue || 0)) {
+                if(conf.discountType === 'percent') {
+                    discount = Math.round((subTotal * (conf.discountValue || 0)) / 100);
+                } else {
+                    discount = parseInt(conf.discountValue || 0);
+                }
+                grandTotal = Math.max(0, subTotal - discount);
+                discountMsg = `\nSubtotal: ₹${subTotal}\n🎉 Discount: - ₹${discount}\n`;
+            }
             
-            // ২. এখানে পুরো বিলের ডিজাইন তৈরি হচ্ছে (স্মার্ট রিসিট স্টাইল)
-            let msg = `🧾 *ORDER RECEIPT*\n*RADHE KRISHNA - Night Menu*\n................................................\n\n👤 *CUSTOMER DETAILS*\nName: ${n}\nMobile: ${p}\nAddress: ${a}\nLandmark: ${l || '--'}\n\n🛒 *YOUR ORDER*\n................................................\n${itemsTxt}................................................\n\n💵 *TOTAL PAYABLE: ₹${total}*\n\n................................................\nPayment: ${document.getElementById('o-pay').value}\nDelivery: ${document.getElementById('o-time').value}\n\n🙏 *Thank you for ordering!*`;
+            let msg = `🧾 *ORDER RECEIPT*\n*RADHE KRISHNA - Night Menu*\n................................................\n\n👤 *CUSTOMER DETAILS*\nName: ${n}\nMobile: ${p}\nAddress: ${a}\nLandmark: ${l || '--'}\n\n🛒 *YOUR ORDER*\n................................................\n${itemsTxt}................................................${discountMsg}\n💵 *TOTAL PAYABLE: ₹${grandTotal}*\n\n................................................\nPayment: ${document.getElementById('o-pay').value}\nDelivery: ${document.getElementById('o-time').value}\n\n🙏 *Thank you for ordering!*`;
             
-            // ৩. হোয়াটসঅ্যাপে পাঠানো হচ্ছে
             window.open(`https://wa.me/${conf.whatsappOrderNumber}?text=${encodeURIComponent(msg)}`,'_blank');
         }
 
