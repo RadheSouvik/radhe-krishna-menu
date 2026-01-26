@@ -366,26 +366,32 @@
         window.triggerCall = () => { window.open(`tel:${conf.contactCallNumber}`, '_self'); }
         window.triggerWA = () => { window.open(`https://wa.me/${conf.whatsappOrderNumber}`, '_blank'); }
 
-        window.confirmOrder = () => {
+                window.confirmOrder = () => {
             const n=document.getElementById('o-name').value.trim(), p=document.getElementById('o-phone').value.trim(), a=document.getElementById('o-addr').value.trim(), l=document.getElementById('o-land').value.trim();
             if(!n || !p || !a) { showToast("Missing Details!"); return; }
+            
             let itemsTxt = ""; let total = 0; let count = 1;
-                                    for(let id in cart){ 
+            
+            // ১. এখানে খাবারের লিস্ট তৈরি হচ্ছে (MRP সহ)
+            for(let id in cart){ 
                 if(menu[id]) {
                     let i = menu[id]; 
                     let sub = Number(i.price)*cart[id];
                     
-                    // ১ নম্বর অপশন (MRP সহ সুন্দর স্টাইল)
+                    // খাবারের নাম বোল্ড, পাশে আসল দাম, নিচে পরিমাণ ও মোট দাম
                     itemsTxt += `*${count}. ${i.name}* (₹${i.price})\n   x ${cart[id]}  =  ₹${sub}\n`; 
                     
                     total += sub; count++; 
                 }
             }
-
-
-            let msg = `🔔🔔 NEW ORDER ALERT 🔔🔔\n\n🌸 *RADHE KRISHNA* 🌸\n🌿 Pure Vegetarian | Midnight Service\n━━━━━━━━━━━━━━━━━━━━━━\n\n🧾 *ORDER BILL / INVOICE*\n\n👤 *Customer Details:*\nName    : ${n}\nMobile  : ${p}\nAddress : ${a}\nLandmark: ${l || 'Not Provided'}\n\n━━━━━━━━━━━━━━━━━━━━━━\n\n🛒 *Order Summary:*\n--------------------------------\n${itemsTxt}--------------------------------\n\n💰 *GRAND TOTAL : ₹${total}*\n\n━━━━━━━━━━━━━━━━━━━━━━\n\n💳 *Payment Mode* : ${document.getElementById('o-pay').value}\n⏰ *Delivery Time*: ${document.getElementById('o-time').value}\n\n━━━━━━━━━━━━━━━━━━━━━━\n🙏 Thank you for choosing\n🌸 *RADHE KRISHNA* 🌸\n📲 Digital Order Receipt`;
+            
+            // ২. এখানে পুরো বিলের ডিজাইন তৈরি হচ্ছে (স্মার্ট রিসিট স্টাইল)
+            let msg = `🧾 *ORDER RECEIPT*\n*RADHE KRISHNA - Night Menu*\n................................................\n\n👤 *CUSTOMER DETAILS*\nName: ${n}\nMobile: ${p}\nAddress: ${a}\nLandmark: ${l || '--'}\n\n🛒 *YOUR ORDER*\n................................................\n${itemsTxt}................................................\n\n💵 *TOTAL PAYABLE: ₹${total}*\n\n................................................\nPayment: ${document.getElementById('o-pay').value}\nDelivery: ${document.getElementById('o-time').value}\n\n🙏 *Thank you for ordering!*`;
+            
+            // ৩. হোয়াটসঅ্যাপে পাঠানো হচ্ছে
             window.open(`https://wa.me/${conf.whatsappOrderNumber}?text=${encodeURIComponent(msg)}`,'_blank');
         }
+
     </script>
 </body>
 </html>
