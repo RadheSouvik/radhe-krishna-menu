@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Radhe Krishna | Order Food</title>
+    <!-- Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Hind+Siliguri:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
@@ -15,7 +16,7 @@
             --text-main: #1C1C1C;
             --text-sub: #696969;
             --veg-green: #24963F;
-            --shadow: 0 2px 10px rgba(0,0,0,0.06);
+            --shadow: 0 4px 15px rgba(28, 28, 28, 0.08);
             --glass: rgba(255, 255, 255, 0.9);
         }
 
@@ -24,74 +25,86 @@
             --white: #1C1C1C;
             --text-main: #F5F5F5;
             --text-sub: #9C9C9C;
-            --shadow: 0 4px 15px rgba(0,0,0,0.4);
+            --shadow: 0 4px 20px rgba(0,0,0,0.5);
             --glass: rgba(28, 28, 28, 0.95);
         }
 
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         body.modal-open { overflow: hidden; height: 100vh; }
-        body { margin: 0; font-family: 'Outfit', 'Hind Siliguri', sans-serif; background: var(--bg-gray); color: var(--text-main); padding-bottom: 140px; transition: 0.3s; }
+        body { margin: 0; font-family: 'Outfit', 'Hind Siliguri', sans-serif; background: var(--bg-gray); color: var(--text-main); padding-bottom: 160px; transition: 0.3s; }
         img { pointer-events: none; -webkit-touch-callout: none; }
 
+        /* Custom Toast */
         .toast { position: fixed; top: 80px; left: 50%; transform: translateX(-50%) translateY(-20px); background: #333; color: white; padding: 12px 24px; border-radius: 12px; font-weight: 600; z-index: 9999; opacity: 0; visibility: hidden; transition: 0.3s; display: flex; align-items: center; gap: 10px; box-shadow: 0 10px 20px rgba(0,0,0,0.2); font-size: 0.9rem; }
         .toast.show { opacity: 1; visibility: visible; transform: translateX(-50%) translateY(0); }
 
+        /* Header */
         .header-fixed { position: sticky; top: 0; z-index: 1000; background: var(--white); border-bottom: 1px solid rgba(0,0,0,0.05); box-shadow: var(--shadow); }
-        .header-content { padding: 5px 20px; display: flex; justify-content: space-between; align-items: center; max-width: 600px; margin: 0 auto; height: 50px; }
-        .brand-logo h1 { margin: 0; font-size: 1.15rem; font-weight: 900; color: var(--zomato-red); letter-spacing: -0.5px; }
-        .brand-logo span { font-size: 0.6rem; font-weight: 700; color: var(--text-sub); text-transform: uppercase; letter-spacing: 1px; display: block; margin-top: -3px; }
-        .mode-btn { width: 32px; height: 32px; border-radius: 8px; background: var(--bg-gray); display: flex; align-items: center; justify-content: center; cursor: pointer; color: var(--text-main); font-size: 0.9rem; }
+        .header-content { padding: 5px 20px; display: flex; justify-content: space-between; align-items: center; max-width: 600px; margin: 0 auto; height: 55px; }
+        .brand-logo h1 { margin: 0; font-size: 1.2rem; font-weight: 900; color: var(--zomato-red); letter-spacing: -0.5px; }
+        .brand-logo span { font-size: 0.65rem; font-weight: 700; color: var(--text-sub); text-transform: uppercase; letter-spacing: 1.5px; display: block; margin-top: -3px; }
+        .mode-btn { width: 34px; height: 34px; border-radius: 50%; background: var(--bg-gray); display: flex; align-items: center; justify-content: center; cursor: pointer; color: var(--text-main); font-size: 0.9rem; }
 
+        /* Marquee */
         .marquee-container { padding: 10px 20px; max-width: 600px; margin: 0 auto; }
-        .marquee-pill { background: var(--white); border-radius: 50px; padding: 6px 15px; display: flex; align-items: center; gap: 10px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.04); border: 1px solid rgba(226, 55, 68, 0.2); }
+        .marquee-pill { background: var(--white); border-radius: 50px; padding: 6px 15px; display: flex; align-items: center; gap: 10px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.04); border: 1px solid rgba(226, 55, 68, 0.15); }
         .marquee-track { flex: 1; overflow: hidden; white-space: nowrap; }
         .marquee-content { display: inline-block; animation: scroll 15s linear infinite; font-weight: 700; font-size: 0.75rem; color: var(--text-main); padding-left: 100%; }
         @keyframes scroll { 0% { transform: translateX(0); } 100% { transform: translateX(-100%); } }
 
+        /* Banner */
         .banner-area { padding: 5px 15px; max-width: 600px; margin: 0 auto; }
-        .slider-box { width: 100%; height: 140px; border-radius: 15px; overflow: hidden; position: relative; background: #eee; box-shadow: var(--shadow); }
+        .slider-box { width: 100%; height: 140px; border-radius: 18px; overflow: hidden; position: relative; background: #eee; box-shadow: var(--shadow); }
         .slide { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0; transition: 0.8s; }
         .slide.active { opacity: 1; }
-        .status-badge { position: absolute; bottom: 10px; left: 10px; background: var(--white); padding: 4px 10px; border-radius: 50px; font-weight: 800; font-size: 0.6rem; display: flex; align-items: center; gap: 5px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
-        .st-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--veg-green); }
+        .status-badge { position: absolute; bottom: 10px; left: 10px; background: var(--white); padding: 4px 12px; border-radius: 50px; font-weight: 800; font-size: 0.65rem; display: flex; align-items: center; gap: 6px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        .st-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--veg-green); }
         .closed .st-dot { background: var(--zomato-red); }
 
-        .cats-bar { display: flex; gap: 10px; overflow-x: auto; padding: 15px 20px; scrollbar-width: none; position: sticky; top: 50px; background: var(--bg-gray); z-index: 900; }
-        .cat-btn { padding: 8px 16px; background: var(--white); border-radius: 10px; font-weight: 700; font-size: 0.8rem; color: var(--text-sub); white-space: nowrap; cursor: pointer; border: 1px solid transparent; box-shadow: var(--shadow); transition: 0.2s; }
+        /* Categories */
+        .cats-bar { display: flex; gap: 10px; overflow-x: auto; padding: 15px 20px; scrollbar-width: none; position: sticky; top: 55px; background: var(--bg-gray); z-index: 900; }
+        .cat-btn { padding: 8px 18px; background: var(--white); border-radius: 12px; font-weight: 700; font-size: 0.85rem; color: var(--text-gray); white-space: nowrap; cursor: pointer; border: 1px solid transparent; box-shadow: var(--shadow); transition: 0.2s; }
         .cat-btn.active { border-color: var(--zomato-red); color: var(--zomato-red); background: #fff5f6; }
 
+        /* Menu Grid */
         .menu-grid { padding: 5px 15px; max-width: 600px; margin: 0 auto; display: grid; gap: 15px; }
         .food-card { background: var(--white); border-radius: 20px; padding: 15px; display: flex; justify-content: space-between; gap: 15px; box-shadow: var(--shadow); cursor: pointer; position: relative; }
+        .food-details { flex: 1; display: flex; flex-direction: column; padding-right: 10px; }
+        .veg-icon { width: 15px; height: 15px; border: 1.5px solid var(--veg-green); border-radius: 3px; display: flex; align-items: center; justify-content: center; margin-bottom: 5px; }
+        .veg-icon::after { content: ''; width: 7px; height: 7px; background: var(--veg-green); border-radius: 50%; }
+        .food-name { font-size: 1.1rem; font-weight: 700; color: var(--text-main); line-height: 1.3; }
+        .food-price { font-size: 1rem; font-weight: 700; margin-top: 4px; color: var(--text-main); }
+        .food-desc { font-size: 0.8rem; color: var(--text-sub); margin-top: 6px; line-height: 1.4; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+        .food-img-container { width: 110px; height: 110px; position: relative; flex-shrink: 0; }
+        .food-img { width: 100%; height: 100%; border-radius: 16px; object-fit: cover; background: #f0f0f0; border: 1px solid rgba(0,0,0,0.05); }
         
-        .food-details { flex: 1; display: flex; flex-direction: column; }
-        .veg-icon { width: 14px; height: 14px; border: 1.5px solid var(--veg-green); border-radius: 3px; display: flex; align-items: center; justify-content: center; margin-bottom: 5px; background: white; }
-        .veg-icon::after { content: ''; width: 6px; height: 6px; background: var(--veg-green); border-radius: 50%; }
-        
-        .food-name { font-size: 1.05rem; font-weight: 700; color: var(--text-main); }
-        .food-price { font-size: 0.95rem; font-weight: 600; margin-top: 3px; color: var(--text-main); }
-        .food-desc { font-size: 0.75rem; color: var(--text-sub); margin-top: 6px; line-height: 1.3; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+        /* ADD Button */
+        .add-action-box { position: absolute; bottom: -12px; left: 50%; transform: translateX(-50%); width: 90px; height: 36px; z-index: 10; box-shadow: 0 4px 10px rgba(0,0,0,0.15); border-radius: 8px; overflow: hidden; }
+        .btn-add-start { width: 100%; height: 100%; background: var(--white); color: var(--zomato-red); font-weight: 800; font-size: 0.9rem; display: flex; align-items: center; justify-content: center; border: 1px solid #e0e0e0; cursor: pointer; text-transform: uppercase; }
+        .qty-controls { width: 100%; height: 100%; background: var(--zomato-red); display: flex; align-items: center; justify-content: space-between; color: white; }
+        .q-btn { width: 30px; height: 100%; display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 1.1rem; cursor: pointer; }
+        .q-num { font-weight: 700; font-size: 1rem; }
 
-        .food-img-container { width: 105px; height: 105px; position: relative; flex-shrink: 0; }
-        .food-img { width: 100%; height: 100%; border-radius: 12px; object-fit: cover; background: #f0f0f0; }
-        
-        .add-btn-wrap { position: absolute; bottom: -8px; left: 50%; transform: translateX(-50%); width: 80px; z-index: 10; }
-        .btn-zomato-add { background: var(--white); color: var(--zomato-red); font-weight: 800; font-size: 0.8rem; padding: 6px 0; border-radius: 8px; border: 1px solid #e8e8e8; box-shadow: 0 3px 10px rgba(0,0,0,0.1); text-align: center; cursor: pointer; text-transform: uppercase; }
-        .qty-zomato { background: var(--zomato-red); color: white; display: flex; align-items: center; justify-content: space-between; border-radius: 8px; height: 30px; padding: 0 5px; box-shadow: 0 4px 10px rgba(226, 55, 68, 0.2); }
-        .q-act { width: 22px; height: 100%; display: flex; align-items: center; justify-content: center; font-weight: 900; }
+        /* Floating Cart Bar */
+        .cart-bar-float { position: fixed; bottom: 25px; left: 50%; transform: translateX(-50%) translateY(150px); width: 92%; max-width: 500px; background: var(--zomato-red); color: white; padding: 14px 20px; border-radius: 15px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 10px 30px rgba(226, 55, 68, 0.4); z-index: 1200; transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); cursor: pointer; visibility: hidden; }
+        .cart-bar-float.show { transform: translateX(-50%) translateY(0); visibility: visible; }
+        .cart-count-txt { font-weight: 800; font-size: 0.9rem; text-transform: uppercase; }
+        .cart-price-txt { font-weight: 900; font-size: 1.1rem; margin-left: 5px; }
+        .cart-view-txt { font-weight: 800; display: flex; align-items: center; gap: 5px; text-transform: uppercase; font-size: 0.85rem; }
 
-        .cart-bar-float { position: fixed; bottom: 25px; left: 50%; transform: translateX(-50%) translateY(150px); width: 92%; max-width: 450px; background: var(--zomato-red); color: white; padding: 14px 20px; border-radius: 15px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 10px 30px rgba(226, 55, 68, 0.4); z-index: 1200; transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); cursor: pointer; }
-        .cart-bar-float.show { transform: translateX(-50%) translateY(0); }
-
+        /* FAB */
         .fab-container { position: fixed; bottom: 25px; right: 20px; z-index: 1100; display: flex; flex-direction: column; align-items: center; transition: 0.3s; }
         .fab-sub { width: 45px; height: 45px; border-radius: 50%; color: white; display: flex; align-items: center; justify-content: center; margin-bottom: 12px; box-shadow: 0 5px 15px rgba(0,0,0,0.2); cursor: pointer; transform: translateY(20px) scale(0); opacity: 0; transition: 0.3s; }
+        .fab-call { background: #1E88E5; } .fab-wa { background: #24963F; }
         .fab-main { width: 55px; height: 55px; border-radius: 50%; background: var(--zomato-red); color: white; display: flex; align-items: center; justify-content: center; font-size: 1.4rem; box-shadow: 0 8px 25px rgba(226, 55, 68, 0.3); cursor: pointer; transition: 0.4s; }
         .fab-container.active .fab-sub { transform: translateY(0) scale(1); opacity: 1; }
         .fab-container.active .fab-main { transform: rotate(135deg); background: #333; }
 
+        /* Modals */
         .modal-bg { position: fixed; inset: 0; background: rgba(0,0,0,0.7); backdrop-filter: blur(5px); z-index: 2000; display: none; align-items: flex-end; justify-content: center; }
         .sheet { background: var(--white); width: 100%; max-width: 550px; border-radius: 30px 30px 0 0; padding: 0 25px 35px; max-height: 94vh; overflow-y: auto; animation: sheetUp 0.4s ease; position: relative; }
         @keyframes sheetUp { from{transform:translateY(100%)} to{transform:translateY(0)} }
-        .handle { width: 40px; height: 4px; background: #e0e0e0; border-radius: 10px; margin: 15px auto 20px; }
+        .handle { width: 40px; height: 5px; background: #e0e0e0; border-radius: 10px; margin: 15px auto 20px; }
 
         .d-img { width: 100%; height: 230px; border-radius: 18px; object-fit: cover; margin-bottom: 15px; border: 1px solid rgba(0,0,0,0.05); }
         .receipt-box { background: var(--bg-gray); border-radius: 15px; padding: 18px; margin-bottom: 20px; border: 1px dashed #cbd5e1; }
@@ -135,27 +148,33 @@
         </div>
     </div>
 
+    <!-- Floating Cart Bar -->
     <div class="cart-bar-float" id="z-cart-bar" onclick="openModal('cart')">
-        <div style="font-weight:800; font-size:0.9rem;" id="z-count-label">0 ITEM</div>
-        <div style="font-weight:800; display:flex; align-items:center; gap:5px; text-transform:uppercase; font-size:0.85rem;" id="z-total-label">VIEW CART ₹0 <i class="fas fa-caret-right"></i></div>
+        <div class="cart-info-left">
+            <span class="cart-count-txt" id="z-count-label">0 ITEMS</span>
+            <span class="cart-price-txt" id="z-price-label">₹0</span>
+        </div>
+        <div class="cart-view-txt">View Cart <i class="fas fa-caret-right"></i></div>
     </div>
 
+    <!-- FAB -->
     <div class="fab-container" id="fab-menu">
-        <div class="fab-sub" style="background:#1E88E5;" onclick="triggerCall()"><i class="fas fa-phone-alt"></i></div>
-        <div class="fab-sub" style="background:#24963F;" onclick="triggerWA()"><i class="fab fa-whatsapp"></i></div>
+        <div class="fab-sub fab-call" onclick="triggerCall()"><i class="fas fa-phone-alt"></i></div>
+        <div class="fab-sub fab-wa" onclick="triggerWA()"><i class="fab fa-whatsapp"></i></div>
         <div class="fab-main" onclick="toggleFab()"><i class="fas fa-headset"></i></div>
     </div>
 
+    <!-- Modals -->
     <div class="modal-bg" id="modal-cart">
         <div class="sheet" id="sheet-cart">
             <div class="handle"></div>
-            <h2 style="font-weight:800; margin-bottom:20px; text-align:center; letter-spacing: -0.5px;">Order Summary</h2>
+            <h2 style="font-weight:800; margin-bottom:20px; text-align:center;">Order Summary</h2>
             <div class="receipt-box">
                 <div id="cart-items-list"></div>
                 <div class="cart-total-row"><span>Grand Total</span><span id="m-total">₹0</span></div>
             </div>
             <input type="text" id="o-name" placeholder="Full Name (আপনার নাম)">
-            <input type="tel" id="o-phone" placeholder="Mobile Number (মোবাইল)">
+            <input type="tel" id="o-phone" placeholder="Mobile Number (মোবাইল Number)">
             <textarea id="o-addr" rows="2" placeholder="Full Address (ঠিকানা)"></textarea>
             <input type="text" id="o-land" placeholder="Landmark (Optional)">
             <select id="o-pay"><option>Cash on Delivery</option><option>Online / UPI Payment</option></select>
@@ -170,7 +189,7 @@
             <img src="" id="d-img" class="d-img">
             <div style="font-size:1.5rem; font-weight:800;" id="d-name"></div>
             <div style="font-size:1.2rem; font-weight:700; color:var(--zomato-red); margin:5px 0 15px;" id="d-price"></div>
-            <div id="d-desc" style="color:var(--text-sub); line-height:1.6; font-size:0.9rem;"></div>
+            <div id="d-desc" style="color:var(--text-sub); line-height:1.6; font-size:0.9rem; font-weight:500;"></div>
             <div style="height:30px;"></div>
         </div>
     </div>
@@ -190,7 +209,6 @@
             t.classList.add('show'); setTimeout(()=>t.classList.remove('show'),2500);
         }
 
-        // টাইম ফরম্যাট করার জন্য হেল্পার ফাংশন
         function formatTime12(time24) {
             if (!time24) return "";
             let [h, m] = time24.split(':');
@@ -235,10 +253,31 @@
         function renderMenu() {
             const d=document.getElementById('menu-container'); d.innerHTML='';
             for(let id in menu) {
-                let i=menu[id]; if(i.isAvailable===false || (activeCat!=='all' && i.category!==activeCat)) continue;
+                let i=menu[id]; 
+                if(i.isAvailable===false || (activeCat!=='all' && i.category!==activeCat)) continue;
                 let q=cart[id]||0;
-                let action = q===0 ? `<div class="btn-zomato-add" onclick="upd(event,'${id}',1)">ADD</div>` : `<div class="qty-box" onclick="event.stopPropagation()"><div class="q-act" onclick="upd(event,'${id}',-1)">-</div><div style="font-weight:900;">${q}</div><div class="q-act" onclick="upd(event,'${id}',1)">+</div></div>`;
-                d.innerHTML += `<div class="food-card" onclick="openDet('${id}')"><div class="food-details"><div class="veg-icon"></div><div class="food-name">${i.name}</div><div class="food-price">₹${i.price}</div>${i.description ? `<div class="food-desc">${i.description}</div>` : ''}</div><div class="food-img-container"><img src="${i.image||'https://via.placeholder.com/150'}" class="food-img"><div class="add-btn-wrap">${action}</div></div></div>`;
+                
+                let action = q === 0 
+                    ? `<div class="btn-add-start" onclick="upd(event,'${id}',1)">ADD</div>`
+                    : `<div class="qty-controls" onclick="event.stopPropagation()">
+                         <div class="q-btn" onclick="upd(event,'${id}',-1)">-</div>
+                         <div class="q-num">${q}</div>
+                         <div class="q-btn" onclick="upd(event,'${id}',1)">+</div>
+                       </div>`;
+
+                d.innerHTML += `
+                <div class="food-card" onclick="openDet('${id}')">
+                    <div class="food-details">
+                        <div class="veg-icon"></div>
+                        <div class="food-name">${i.name}</div>
+                        <div class="food-price">₹${i.price}</div>
+                        ${i.description ? `<div class="food-desc">${i.description}</div>` : ''}
+                    </div>
+                    <div class="food-img-container">
+                        <img src="${i.image||'https://via.placeholder.com/150'}" class="food-img">
+                        <div class="add-action-box">${action}</div>
+                    </div>
+                </div>`;
             }
         }
 
@@ -251,13 +290,19 @@
         }
 
         function updateCartDock() {
-            let c=0, t=0; for(let id in cart){c+=cart[id]; t+=cart[id]*menu[id].price;}
+            let c=0, t=0; 
+            for(let id in cart){
+                if(menu[id]) {
+                    c += cart[id]; 
+                    t += (Number(menu[id].price) * cart[id]);
+                }
+            }
             const bar = document.getElementById('z-cart-bar');
             const fab = document.getElementById('fab-menu');
             if(c > 0) {
                 bar.classList.add('show'); fab.style.display = 'none';
                 document.getElementById('z-count-label').innerText = `${c} ITEM${c>1?'S':''}`;
-                document.getElementById('z-total-label').innerHTML = `VIEW CART ₹${t} <i class="fas fa-caret-right"></i>`;
+                document.getElementById('z-price-label').innerText = `₹${t}`;
             } else {
                 bar.classList.remove('show'); fab.style.display = 'flex';
             }
@@ -272,9 +317,23 @@
             window.history.pushState({modal: true}, null, "");
             if(type==='cart') {
                 let d=document.getElementById('cart-items-list'); d.innerHTML=''; let t=0;
+                // HEADER FOR RECEIPT
+                d.innerHTML += `<div style="display:flex; justify-content:space-between; border-bottom:1px solid #ddd; padding-bottom:5px; margin-bottom:10px; font-weight:700; color:#555; font-size:0.8rem;">
+                    <div style="flex:1">ITEM</div>
+                    <div style="width:40px; text-align:center;">QTY</div>
+                    <div style="width:60px; text-align:right;">PRICE</div>
+                </div>`;
+
                 for(let id in cart){
-                    let i=menu[id], sub=i.price*cart[id]; t+=sub;
-                    d.innerHTML+=`<div class="cart-row"><div style="flex:1;">${i.name}</div><div style="margin:0 15px; color:var(--text-gray);">x ${cart[id]}</div><div>₹${sub}</div></div>`;
+                    if(menu[id]) {
+                        let i=menu[id], sub=Number(i.price)*cart[id]; t+=sub;
+                        d.innerHTML+=`
+                        <div class="cart-row" style="align-items:center;">
+                            <div style="flex:1; line-height:1.2;">${i.name}</div>
+                            <div style="width:40px; text-align:center; color:var(--text-sub); background:#f0f0f0; border-radius:5px; padding:2px 0;">x${cart[id]}</div>
+                            <div style="width:60px; text-align:right;">₹${sub}</div>
+                        </div>`;
+                    }
                 }
                 document.getElementById('m-total').innerText = `₹${t}`;
             }
@@ -313,15 +372,29 @@
 
         window.confirmOrder = () => {
             const n=document.getElementById('o-name').value.trim(), p=document.getElementById('o-phone').value.trim(), a=document.getElementById('o-addr').value.trim(), l=document.getElementById('o-land').value.trim();
-            if(!n || !p || !a) { showToast("Missing Info!"); return; }
+            if(!n || !p || !a) { showToast("Missing Details!"); return; }
             let itemsTxt = ""; let total = 0; let count = 1;
+            
+            // HEADER FOR WHATSAPP
+            itemsTxt += "ITEM             QTY    AMT\n";
+            itemsTxt += "───────────────────────────\n";
+
             for(let id in cart){ 
-                let i = menu[id]; 
-                let sub = i.price*cart[id];
-                itemsTxt += `| ${count}. ${i.name.padEnd(20)} | x${cart[id]} | ₹${sub.toString().padStart(4)} |\n`; 
-                total += sub; count++; 
+                if(menu[id]) {
+                    let i = menu[id]; 
+                    let sub = Number(i.price)*cart[id];
+                    // Formatting for Monospace
+                    let name = i.name.substring(0, 15).padEnd(16, ' ');
+                    let qty = `x${cart[id]}`.padEnd(6, ' ');
+                    let price = `₹${sub}`.padStart(5, ' ');
+
+                    itemsTxt += `${name}${qty}${price}\n`; 
+                    total += sub; count++; 
+                }
             }
-            let msg = `🔔🔔 *NEW ORDER ALERT* 🔔🔔\n\n🌸 *RADHE KRISHNA* 🌸\n🌿 Pure Vegetarian | Midnight Service\n━━━━━━━━━━━━━━━━━━━━━━\n\n🧾 *ORDER BILL / INVOICE*\n\n👤 *Customer Details:*\nName    : ${n}\nMobile  : ${p}\nAddress : ${a}\nLandmark: ${l || 'Not Provided'}\n\n━━━━━━━━━━━━━━━━━━━━━━\n\n🛒 *Order Summary:*\n\`\`\`\n--------------------------------\n${itemsTxt}--------------------------------\n\`\`\`\n💰 *GRAND TOTAL : ₹${total}*\n\n━━━━━━━━━━━━━━━━━━━━━━\n\n💳 *Payment Mode* : ${document.getElementById('o-pay').value}\n⏰ *Delivery Time*: ${document.getElementById('o-time').value}\n\n━━━━━━━━━━━━━━━━━━━━━━\n🙏 Thank you for choosing\n🌸 *RADHE KRISHNA* 🌸\n📲 Digital Order Receipt`;
+
+            let msg = `🔔🔔 *NEW ORDER ALERT* 🔔🔔\n\n🌸 *RADHE KRISHNA* 🌸\n🌿 Pure Vegetarian | Midnight Service\n━━━━━━━━━━━━━━━━━━━━━━\n\n🧾 *ORDER BILL / INVOICE*\n\n👤 *Customer Details:*\nName    : ${n}\nMobile  : ${p}\nAddress : ${a}\nLandmark: ${l || 'Not Provided'}\n\n━━━━━━━━━━━━━━━━━━━━━━\n\n🛒 *Order Summary:*\n\`\`\`\n${itemsTxt}\n\`\`\`\n💰 *GRAND TOTAL : ₹${total}*\n\n━━━━━━━━━━━━━━━━━━━━━━\n\n💳 *Payment Mode* : ${document.getElementById('o-pay').value}\n⏰ *Delivery Time*: ${document.getElementById('o-time').value}\n\n━━━━━━━━━━━━━━━━━━━━━━\n🙏 Thank you for choosing\n🌸 *RADHE KRISHNA* 🌸\n📲 Digital Order Receipt`;
+            
             window.open(`https://wa.me/${conf.whatsappOrderNumber}?text=${encodeURIComponent(msg)}`,'_blank');
         }
     </script>
