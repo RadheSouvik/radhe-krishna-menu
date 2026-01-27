@@ -4,8 +4,8 @@
   "description": "Order Pure Veg Food Nightly",
   "start_url": "./index.html",
   "display": "standalone",
-  "background_color": "#ffffff",
-  "theme_color": "#E23744",
+  "background_color": "#000000",
+  "theme_color": "#ffffff",
   "icons": [
     {
       "src": "icon-192.png",
