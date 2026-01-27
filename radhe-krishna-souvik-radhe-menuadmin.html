@@ -107,13 +107,14 @@
 <script>
   if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
-      // এখানে আমরা নতুন নাম 'admin_sw.js' ব্যবহার করছি
+      // Registering the custom admin service worker
       navigator.serviceWorker.register('./admin_sw.js')
         .then(reg => console.log('Admin SW Registered'))
         .catch(err => console.log('Admin SW Failed', err));
     });
   }
 </script>
+
 
 </head>
 <body>
