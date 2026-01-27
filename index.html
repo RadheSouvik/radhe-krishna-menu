@@ -19,8 +19,6 @@
   }
 </script>
 
-
-
     <!-- Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Hind+Siliguri:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -82,7 +80,13 @@
         .st-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--veg-green); }
         .closed .st-dot { background: var(--zomato-red); }
 
-        /* PROMO / OFFER BANNER STYLES (NEW) */
+        /* SEARCH BAR (NEW) */
+        .search-area { padding: 0 15px; max-width: 600px; margin: 10px auto 0; position: sticky; top: 60px; z-index: 950; }
+        .search-box { display: flex; align-items: center; background: var(--white); border-radius: 12px; padding: 0 15px; box-shadow: var(--shadow); border: 1px solid rgba(0,0,0,0.05); }
+        .search-box i { color: var(--text-sub); }
+        .search-box input { border: none; background: transparent; padding: 12px; margin: 0; font-size: 0.95rem; width: 100%; outline: none; color: var(--text-main); }
+
+        /* PROMO / OFFER BANNER STYLES */
         .promo-area { max-width: 600px; margin: 15px auto 5px; padding: 0 15px; display: none; }
         .promo-card {
             background: var(--offer-bg);
@@ -105,8 +109,8 @@
         .promo-sub { font-size: 0.8rem; font-weight: 600; color: var(--text-sub); }
 
         /* Categories */
-        .cats-bar { display: flex; gap: 10px; overflow-x: auto; padding: 15px 20px; scrollbar-width: none; position: sticky; top: 55px; background: var(--bg-gray); z-index: 900; }
-        .cat-btn { padding: 8px 18px; background: var(--white); border-radius: 12px; font-weight: 700; font-size: 0.85rem; color: var(--text-gray); white-space: nowrap; cursor: pointer; border: 1px solid transparent; box-shadow: var(--shadow); transition: 0.2s; }
+        .cats-bar { display: flex; gap: 10px; overflow-x: auto; padding: 15px 20px; scrollbar-width: none; position: sticky; top: 55px; z-index: 900; } /* Adjusted Z-index due to search bar */
+        .cat-btn { padding: 8px 18px; background: var(--white); border-radius: 12px; font-weight: 700; font-size: 0.85rem; color: var(--text-sub); white-space: nowrap; cursor: pointer; border: 1px solid transparent; box-shadow: var(--shadow); transition: 0.2s; }
         .cat-btn.active { border-color: var(--zomato-red); color: var(--zomato-red); background: #fff5f6; }
 
         /* Menu Grid */
@@ -116,11 +120,14 @@
         .veg-icon { width: 15px; height: 15px; border: 1.5px solid var(--veg-green); border-radius: 3px; display: flex; align-items: center; justify-content: center; margin-bottom: 5px; }
         .veg-icon::after { content: ''; width: 7px; height: 7px; background: var(--veg-green); border-radius: 50%; }
         .food-name { font-size: 1.1rem; font-weight: 700; color: var(--text-main); line-height: 1.3; }
+        .food-badge { display: inline-block; font-size: 0.65rem; font-weight: 800; background: #fef3c7; color: #d97706; padding: 2px 6px; border-radius: 4px; margin-left: 5px; text-transform: uppercase; vertical-align: middle; }
         .food-price { font-size: 1rem; font-weight: 700; margin-top: 4px; color: var(--text-main); }
         .food-desc { font-size: 0.8rem; color: var(--text-sub); margin-top: 6px; line-height: 1.4; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
         .food-img-container { width: 110px; height: 110px; position: relative; flex-shrink: 0; }
         .food-img { width: 100%; height: 100%; border-radius: 16px; object-fit: cover; background: #f0f0f0; border: 1px solid rgba(0,0,0,0.05); }
-        
+        .fav-btn { position: absolute; top: 5px; right: 5px; background: rgba(255,255,255,0.8); width: 25px; height: 25px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #ccc; z-index: 5; transition: 0.2s; }
+        .fav-btn.active { color: var(--zomato-red); }
+
         /* ADD Button */
         .add-action-box { position: absolute; bottom: -12px; left: 50%; transform: translateX(-50%); width: 90px; height: 36px; z-index: 10; box-shadow: 0 4px 10px rgba(0,0,0,0.15); border-radius: 8px; overflow: hidden; }
         .btn-add-start { width: 100%; height: 100%; background: var(--white); color: var(--zomato-red); font-weight: 800; font-size: 0.9rem; display: flex; align-items: center; justify-content: center; border: 1px solid #e0e0e0; cursor: pointer; text-transform: uppercase; }
@@ -128,7 +135,7 @@
         .q-btn { width: 30px; height: 100%; display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 1.1rem; cursor: pointer; }
         .q-num { font-weight: 700; font-size: 1rem; }
 
-        /* Floating Cart (Zomato Style) */
+        /* Floating Cart */
         .cart-bar-float { 
             position: fixed; bottom: 25px; left: 50%; transform: translateX(-50%) translateY(150px); 
             width: 92%; max-width: 500px; background: var(--zomato-red); color: white; 
@@ -137,11 +144,9 @@
             transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); cursor: pointer; visibility: hidden;
         }
         .cart-bar-float.show { transform: translateX(-50%) translateY(0); visibility: visible; }
-        
         .cart-info-left { display: flex; flex-direction: column; line-height: 1.2; }
         .cart-count-txt { font-weight: 800; font-size: 0.85rem; text-transform: uppercase; opacity: 0.9; }
         .cart-price-txt { font-weight: 900; font-size: 1.1rem; }
-        
         .cart-view-txt { font-weight: 800; display: flex; align-items: center; gap: 5px; text-transform: uppercase; font-size: 0.9rem; }
 
         /* FAB */
@@ -160,12 +165,21 @@
 
         .d-img { width: 100%; height: 230px; border-radius: 18px; object-fit: cover; margin-bottom: 15px; border: 1px solid rgba(0,0,0,0.05); }
         .receipt-box { background: var(--bg-gray); border-radius: 15px; padding: 18px; margin-bottom: 20px; border: 1px dashed #cbd5e1; }
-        .cart-row { display: flex; justify-content: space-between; margin-bottom: 10px; font-weight: 600; font-size: 0.9rem; }
+        .cart-row { display: flex; justify-content: space-between; margin-bottom: 8px; font-weight: 600; font-size: 0.9rem; }
         .cart-total-row { display: flex; justify-content: space-between; padding-top: 12px; border-top: 2px solid var(--zomato-red); font-weight: 800; font-size: 1.3rem; color: var(--text-main); }
-        .discount-row { color: var(--veg-green); font-size: 0.9rem; margin-bottom: 10px; display: flex; justify-content: space-between; font-weight: 700; }
+        .discount-row { color: var(--veg-green); font-size: 0.9rem; margin-bottom: 8px; display: flex; justify-content: space-between; font-weight: 700; }
+        .delivery-row { color: #666; font-size: 0.9rem; margin-bottom: 8px; display: flex; justify-content: space-between; }
         
+        /* COUPON INPUT */
+        .coupon-input-group { display: flex; gap: 10px; margin-bottom: 15px; }
+        .coupon-input-group input { margin-bottom: 0; text-transform: uppercase; font-weight: 700; letter-spacing: 1px; }
+        .btn-apply { background: var(--text-main); color: white; border: none; border-radius: 12px; padding: 0 20px; font-weight: 700; cursor: pointer; }
+        .coupon-list-avail { margin-bottom: 15px; max-height: 120px; overflow-y: auto; display: flex; flex-wrap: wrap; gap: 8px; }
+        .coupon-tag { background: #e0f2fe; color: #0369a1; padding: 5px 12px; border-radius: 20px; font-size: 0.75rem; font-weight: 700; border: 1px solid #bae6fd; cursor: pointer; }
+
         input, select, textarea { width: 100%; padding: 14px; margin-bottom: 12px; border: 1px solid #ddd; border-radius: 12px; background: var(--bg-gray); color: var(--text-main); font-family: inherit; font-size: 0.95rem; outline: none; }
         .checkout-btn { background: var(--zomato-red); color: white; width: 100%; padding: 18px; border: none; border-radius: 15px; font-size: 1.05rem; font-weight: 800; cursor: pointer; }
+        .checkout-btn:disabled { background: #ccc; cursor: not-allowed; }
 
         .loc-section { padding: 30px 20px; display: none; max-width: 600px; margin: 0 auto; }
         .loc-card { background: var(--white); border-radius: 25px; overflow: hidden; box-shadow: var(--shadow); text-align: center; }
@@ -183,6 +197,14 @@
         </div>
     </div>
 
+    <!-- NEW: Live Search Bar -->
+    <div class="search-area">
+        <div class="search-box">
+            <i class="fas fa-search"></i>
+            <input type="text" id="live-search" placeholder="Search for food..." oninput="filterMenu(this.value)">
+        </div>
+    </div>
+
     <div class="marquee-container">
         <div class="marquee-pill">
             <i class="fas fa-bullhorn" style="color:var(--zomato-red); font-size:0.75rem;"></i>
@@ -192,7 +214,7 @@
 
     <div class="banner-area"><div class="slider-box" id="banner-slider"></div></div>
     
-    <!-- NEW: ACTIVE OFFER BANNER -->
+    <!-- ACTIVE PROMO BANNER -->
     <div class="promo-area" id="active-promo-area">
         <div class="promo-card">
             <div class="promo-icon"><i class="fas fa-percentage"></i></div>
@@ -213,7 +235,7 @@
         </div>
     </div>
 
-    <!-- Fixed Floating Cart Bar (Updated Design) -->
+    <!-- Fixed Floating Cart Bar -->
     <div class="cart-bar-float" id="z-cart-bar" onclick="openModal('cart')">
         <div class="cart-info-left">
             <div class="cart-count-txt" id="z-count-label">0 ITEMS</div>
@@ -233,18 +255,31 @@
         <div class="sheet" id="sheet-cart">
             <div class="handle"></div>
             <h2 style="font-weight:800; margin-bottom:20px; text-align:center;">Order Summary</h2>
+            
             <div class="receipt-box">
                 <div id="cart-items-list"></div>
+                <hr style="margin:10px 0; border:0; border-top:1px dashed #ccc;">
+                
+                <!-- NEW: Coupon Section in Cart -->
+                <div class="coupon-input-group">
+                    <input type="text" id="coupon-code-input" placeholder="Coupon Code">
+                    <button class="btn-apply" onclick="applyCoupon()">APPLY</button>
+                </div>
+                <div id="coupon-msg" style="font-size:0.8rem; margin-bottom:10px;"></div>
+                <div class="coupon-list-avail" id="avail-coupons-list"></div>
+                
                 <div id="cart-summary-area"></div>
                 <div class="cart-total-row"><span>Grand Total</span><span id="m-total">₹0</span></div>
+                <div id="min-order-warning" style="color:red; font-size:0.85rem; margin-top:5px; display:none; text-align:right;"></div>
             </div>
+
             <input type="text" id="o-name" placeholder="Full Name (আপনার নাম)">
             <input type="tel" id="o-phone" placeholder="Mobile Number (মোবাইল Number)">
             <textarea id="o-addr" rows="2" placeholder="Full Address (ঠিকানা)"></textarea>
             <input type="text" id="o-land" placeholder="Landmark (Optional)">
             <select id="o-pay"><option>Cash on Delivery</option><option>Online / UPI Payment</option></select>
             <select id="o-time"><option>9:00 PM – 10:00 PM</option><option>10:00 PM – 11:00 PM</option><option>11:00 PM – 12:00 AM</option></select>
-            <button class="checkout-btn" onclick="confirmOrder()"><i class="fab fa-whatsapp"></i> Confirm WhatsApp Order</button>
+            <button class="checkout-btn" id="btn-conf-order" onclick="confirmOrder()"><i class="fab fa-whatsapp"></i> Confirm WhatsApp Order</button>
         </div>
     </div>
 
@@ -261,12 +296,13 @@
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js";
-        import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-database.js";
+        import { getDatabase, ref, onValue, get, set } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-database.js";
         const firebaseConfig = { apiKey: "AIzaSyDifkwUmP5MehfgXdhFTs6DQzX-pNR2snE", authDomain: "radhe-krishna-1bc79.firebaseapp.com", databaseURL: "https://radhe-krishna-1bc79-default-rtdb.asia-southeast1.firebasedatabase.app", projectId: "radhe-krishna-1bc79", storageBucket: "radhe-krishna-1bc79.firebasestorage.app", messagingSenderId: "755534416421", appId: "1:755534416421:web:6b97cac0c954d223094dcc" };
         const app = initializeApp(firebaseConfig);
         const db = getDatabase(app);
 
-        let menu={}, cats={}, conf={}, cart={}, activeCat='all', slideInt, curModal=null;
+        let menu={}, cats={}, conf={}, coupons={}, cart={}, activeCat='all', slideInt, curModal=null, appliedCoupon=null;
+        let favorites = JSON.parse(localStorage.getItem('radhe_favs')) || [];
 
         function showToast(msg) {
             const t = document.getElementById('toast');
@@ -285,6 +321,7 @@
         onValue(ref(db, 'config'), snap => { conf=snap.val()||{}; updateUI(); });
         onValue(ref(db, 'categories'), snap => { cats=snap.val()||{}; renderCats(); renderMenu(); });
         onValue(ref(db, 'menu'), snap => { menu=snap.val()||{}; renderMenu(); });
+        onValue(ref(db, 'coupons'), snap => { coupons=snap.val()||{}; });
 
         function updateUI() {
             document.getElementById('scroll-text').innerText = conf.marqueeText || "Welcome to Radhe Krishna";
@@ -300,13 +337,13 @@
                 const s=document.querySelectorAll('.slide');
                 if(s.length){s[sIdx].classList.remove('active'); sIdx=(sIdx+1)%s.length; s[sIdx].classList.add('active');}
             }, (conf.bannerSpeed||3)*1000);
+            
             if(conf.mapEmbed && conf.mapLink) {
                 document.getElementById('loc-area').style.display='block';
                 document.getElementById('map-iframe').src = conf.mapEmbed;
                 document.getElementById('map-link').href = conf.mapLink;
             }
 
-            // SHOW/HIDE ACTIVE PROMO BANNER
             const promoArea = document.getElementById('active-promo-area');
             if(conf.discountActive) {
                 let title = conf.discountType === 'percent' ? `FLAT ${conf.discountValue}% OFF` : `FLAT ₹${conf.discountValue} OFF`;
@@ -324,15 +361,20 @@
             for(let k in cats) h+=`<div class="cat-btn ${activeCat==k?'active':''}" onclick="setCat('${k}')">${cats[k].name}</div>`;
             d.innerHTML=h;
         }
-        window.setCat=(c)=>{activeCat=c; renderCats(); renderMenu();}
+        window.setCat=(c)=>{activeCat=c; renderMenu();}
+        window.filterMenu=(q)=>{ renderMenu(q); }
 
-        function renderMenu() {
+        function renderMenu(query = "") {
             const d=document.getElementById('menu-container'); d.innerHTML='';
             for(let id in menu) {
                 let i=menu[id]; 
-                if(i.isAvailable===false || (activeCat!=='all' && i.category!==activeCat)) continue;
+                if(i.isAvailable===false) continue;
+                if(activeCat!=='all' && i.category!==activeCat) continue;
+                if(query && !i.name.toLowerCase().includes(query.toLowerCase())) continue;
+
                 let q=cart[id]||0;
-                
+                let isFav = favorites.includes(id);
+
                 let action = q === 0 
                     ? `<div class="btn-add-start" onclick="upd(event,'${id}',1)">ADD</div>`
                     : `<div class="qty-controls" onclick="event.stopPropagation()">
@@ -341,23 +383,20 @@
                          <div class="q-btn" onclick="upd(event,'${id}',1)">+</div>
                        </div>`;
 
-                // Calculate Price Display (With Discount Logic)
                 let priceDisplay = `₹${i.price}`;
-                
-                // Only show visual discount if Percentage is active
                 if(conf.discountActive && conf.discountType === 'percent' && conf.discountValue > 0) {
                     let original = Number(i.price);
                     let discAmt = (original * conf.discountValue) / 100;
                     let final = Math.round(original - discAmt);
-                    // Shows: <crossed-out>Old</crossed-out> New
                     priceDisplay = `<span style="text-decoration: line-through; color: #999; font-size: 0.9rem; margin-right: 6px;">₹${original}</span> ₹${final}`;
                 }
 
                 d.innerHTML += `
                 <div class="food-card" onclick="openDet('${id}')">
+                    <div class="fav-btn ${isFav?'active':''}" onclick="toggleFav(event,'${id}')"><i class="fas fa-heart"></i></div>
                     <div class="food-details">
                         <div class="veg-icon"></div>
-                        <div class="food-name">${i.name}</div>
+                        <div class="food-name">${i.name} ${i.badge ? `<span class="food-badge">${i.badge}</span>` : ''}</div>
                         <div class="food-price">${priceDisplay}</div>
                         ${i.description ? `<div class="food-desc">${i.description}</div>` : ''}
                     </div>
@@ -369,12 +408,21 @@
             }
         }
 
+        window.toggleFav=(e,id)=>{
+            e.stopPropagation();
+            if(favorites.includes(id)) favorites = favorites.filter(x=>x!==id);
+            else favorites.push(id);
+            localStorage.setItem('radhe_favs', JSON.stringify(favorites));
+            renderMenu();
+        }
+
         window.upd=(e,id,v)=>{
             e.stopPropagation();
             if(!conf.restaurantOpen){showToast("Restaurant Closed!");return;}
             if(!cart[id]) cart[id]=0;
             cart[id]+=v; if(cart[id]<=0) delete cart[id];
             renderMenu(); updateCartDock();
+            if(curModal==='modal-cart') calculateTotals();
         }
 
         function updateCartDock() {
@@ -385,15 +433,11 @@
                     t += (Number(menu[id].price) * cart[id]);
                 }
             }
-            // Discount Logic for Dock View
+            
+            // Basic approximation for dock
             let finalPrice = t;
             if(conf.discountActive && t >= (conf.minOrderValue || 0)) {
-                let discountAmt = 0;
-                if(conf.discountType === 'percent') {
-                    discountAmt = (t * (conf.discountValue || 0)) / 100;
-                } else {
-                    discountAmt = (conf.discountValue || 0);
-                }
+                let discountAmt = (conf.discountType === 'percent') ? (t * conf.discountValue) / 100 : conf.discountValue;
                 finalPrice = Math.max(0, t - discountAmt);
             }
 
@@ -410,6 +454,8 @@
 
         window.toggleFab = () => document.getElementById('fab-menu').classList.toggle('active');
 
+        // ---------- NEW CART LOGIC ----------
+        
         window.openModal = (type) => {
             curModal = 'modal-' + type;
             document.getElementById(curModal).style.display = 'flex';
@@ -417,57 +463,217 @@
             window.history.pushState({modal: true}, null, "");
             
             if(type==='cart') {
-                let d=document.getElementById('cart-items-list'); 
-                let s=document.getElementById('cart-summary-area');
-                d.innerHTML=''; s.innerHTML='';
+                appliedCoupon = null; // Reset coupon on re-open
+                document.getElementById('coupon-code-input').value = "";
+                document.getElementById('coupon-msg').innerText = "";
                 
-                let subTotal=0;
-                for(let id in cart){
-                    if(menu[id]) {
-                        let i=menu[id], sub=Number(i.price)*cart[id]; subTotal+=sub;
-                        d.innerHTML+=`<div class="cart-row"><div style="flex:1;">${i.name}</div><div style="margin:0 15px; color:var(--text-sub);">x ${cart[id]}</div><div>₹${sub}</div></div>`;
+                // Show available coupons
+                let cl = document.getElementById('avail-coupons-list'); cl.innerHTML = '';
+                for(let k in coupons) {
+                    if(coupons[k].isActive) {
+                        cl.innerHTML += `<div class="coupon-tag" onclick="fillCoupon('${k}')">${k}</div>`;
                     }
                 }
-
-                let discount = 0;
-                let grandTotal = subTotal;
                 
-                // Discount Calculation
-                if(conf.discountActive && subTotal >= (conf.minOrderValue || 0)) {
-                     if(conf.discountType === 'percent') {
-                         discount = Math.round((subTotal * (conf.discountValue || 0)) / 100);
-                     } else {
-                         discount = parseInt(conf.discountValue || 0);
-                     }
-                     grandTotal = Math.max(0, subTotal - discount);
-
-                     // Display Discount in Modal
-                     s.innerHTML = `
-                        <div style="border-top:1px solid #ddd; margin-top:10px; padding-top:10px;">
-                            <div class="cart-row" style="color:#666;"><span>Subtotal</span><span>₹${subTotal}</span></div>
-                            <div class="discount-row"><span>Discount Applied</span><span>- ₹${discount}</span></div>
-                        </div>
-                     `;
-                }
-
-                document.getElementById('m-total').innerText = `₹${grandTotal}`;
+                calculateTotals();
             }
         }
 
+        window.fillCoupon = (c) => {
+            document.getElementById('coupon-code-input').value = c;
+            applyCoupon();
+        }
+
+        window.applyCoupon = () => {
+            let code = document.getElementById('coupon-code-input').value.toUpperCase().trim();
+            const msg = document.getElementById('coupon-msg');
+            msg.style.color = 'red';
+            
+            if(!code) { msg.innerText = "Enter a code"; return; }
+            if(!coupons[code]) { msg.innerText = "Invalid Coupon"; appliedCoupon=null; calculateTotals(); return; }
+            
+            let c = coupons[code];
+            if(!c.isActive) { msg.innerText = "Coupon Inactive"; appliedCoupon=null; return; }
+            
+            // Subtotal check happens in calculateTotals but preliminary check here
+            let sub = 0;
+            for(let id in cart) if(menu[id]) sub += menu[id].price * cart[id];
+
+            if(c.minOrder > sub) { 
+                msg.innerText = `Add ₹${c.minOrder - sub} more to apply`; 
+                appliedCoupon=null; 
+                calculateTotals();
+                return; 
+            }
+            
+            // Check Expiry
+            if(c.expiry) {
+                let today = new Date().toISOString().split('T')[0];
+                if(today > c.expiry) { msg.innerText = "Coupon Expired"; appliedCoupon=null; return; }
+            }
+
+            appliedCoupon = c;
+            msg.style.color = 'green';
+            msg.innerText = "Coupon Applied! Discount will be calculated.";
+            calculateTotals();
+        }
+
+        function calculateTotals() {
+            let d = document.getElementById('cart-items-list'); 
+            let s = document.getElementById('cart-summary-area');
+            let btn = document.getElementById('btn-conf-order');
+            d.innerHTML=''; s.innerHTML='';
+
+            let subTotal = 0;
+            for(let id in cart){
+                if(menu[id]) {
+                    let i=menu[id], sub=Number(i.price)*cart[id]; subTotal+=sub;
+                    d.innerHTML+=`<div class="cart-row"><div style="flex:1;">${i.name}</div><div style="margin:0 15px; color:var(--text-sub);">x ${cart[id]}</div><div>₹${sub}</div></div>`;
+                }
+            }
+
+            // --- DISCOUNT LOGIC ---
+            let discount = 0;
+            let discountName = "";
+            let discountMsg = "";
+            
+            // Priority: Applied Coupon > Auto Config
+            if(appliedCoupon) {
+                // Verify min order again
+                if(subTotal >= appliedCoupon.minOrder) {
+                    if(appliedCoupon.type === 'percent') {
+                        discount = (subTotal * appliedCoupon.value) / 100;
+                        if(appliedCoupon.maxDiscount > 0 && discount > appliedCoupon.maxDiscount) {
+                            discount = appliedCoupon.maxDiscount;
+                        }
+                    } else {
+                        discount = appliedCoupon.value;
+                    }
+                    discount = Math.round(discount);
+                    discountName = `Coupon (${appliedCoupon.code})`;
+                } else {
+                    appliedCoupon = null; // Remove if min order violated
+                    document.getElementById('coupon-msg').innerText = `Order value too low for coupon`;
+                    document.getElementById('coupon-msg').style.color = 'red';
+                }
+            }
+            
+            // Fallback to Auto Discount if no coupon applied
+            if(!appliedCoupon && conf.discountActive && subTotal >= (conf.minOrderValue || 0)) {
+                if(conf.discountType === 'percent') {
+                    discount = Math.round((subTotal * (conf.discountValue || 0)) / 100);
+                } else {
+                    discount = parseInt(conf.discountValue || 0);
+                }
+                discountName = "Auto Discount";
+            }
+
+            // --- DELIVERY LOGIC ---
+            let delivery = conf.deliveryCharge || 0;
+            if(conf.freeDeliveryAbove && subTotal >= conf.freeDeliveryAbove) {
+                delivery = 0;
+            }
+
+            let grandTotal = Math.max(0, subTotal - discount + delivery);
+
+            // RENDER SUMMARY
+            let summaryHTML = `<div class="cart-row" style="color:#666;"><span>Subtotal</span><span>₹${subTotal}</span></div>`;
+            
+            if(discount > 0) {
+                summaryHTML += `<div class="discount-row"><span>${discountName}</span><span>- ₹${discount}</span></div>`;
+            }
+            
+            if(delivery === 0) {
+                summaryHTML += `<div class="delivery-row"><span>Delivery Charge</span><span style="color:green;">FREE</span></div>`;
+            } else {
+                summaryHTML += `<div class="delivery-row"><span>Delivery Charge</span><span>+ ₹${delivery}</span></div>`;
+                if(conf.freeDeliveryAbove) {
+                    let more = conf.freeDeliveryAbove - subTotal;
+                    if(more > 0) summaryHTML += `<div style="font-size:0.75rem; color:#d97706; text-align:right;">Add ₹${more} for Free Delivery</div>`;
+                }
+            }
+
+            s.innerHTML = `<div style="border-top:1px solid #ddd; margin-top:10px; padding-top:10px;">${summaryHTML}</div>`;
+            document.getElementById('m-total').innerText = `₹${grandTotal}`;
+
+            // GLOBAL MIN ORDER CHECK
+            const minWarn = document.getElementById('min-order-warning');
+            if(conf.minOrderValueGlobal && subTotal < conf.minOrderValueGlobal) {
+                btn.disabled = true;
+                btn.style.opacity = "0.5";
+                minWarn.style.display = "block";
+                minWarn.innerText = `Minimum order value is ₹${conf.minOrderValueGlobal}. Add more items.`;
+            } else {
+                btn.disabled = false;
+                btn.style.opacity = "1";
+                minWarn.style.display = "none";
+            }
+
+            return { subTotal, discount, delivery, grandTotal, discountName };
+        }
+
+        window.confirmOrder = async () => {
+            const n=document.getElementById('o-name').value.trim();
+            const p=document.getElementById('o-phone').value.trim();
+            const a=document.getElementById('o-addr').value.trim();
+            
+            if(!n || !p || !a) { showToast("Missing Details!"); return; }
+            if(p.length < 10) { showToast("Invalid Mobile Number"); return; }
+
+            const { subTotal, discount, delivery, grandTotal, discountName } = calculateTotals();
+
+            // Check Coupon Usage in DB
+            if(appliedCoupon) {
+                const btn = document.getElementById('btn-conf-order');
+                btn.innerText = "Checking Coupon...";
+                btn.disabled = true;
+
+                try {
+                    const snap = await get(ref(db, `couponUsage/${p}/${appliedCoupon.code}`));
+                    if(snap.exists()) {
+                        showToast("Coupon already used by this number!");
+                        btn.innerText = "Confirm WhatsApp Order";
+                        btn.disabled = false;
+                        return;
+                    } else {
+                        // Mark as used
+                        await set(ref(db, `couponUsage/${p}/${appliedCoupon.code}`), true);
+                    }
+                } catch(e) {
+                    console.error(e);
+                    // Proceed anyway in case of error to not block sales
+                }
+            }
+
+            let itemsTxt = ""; let count = 1;
+            for(let id in cart){ 
+                if(menu[id]) {
+                    let i = menu[id]; 
+                    itemsTxt += `*${count}. ${i.name}* x ${cart[id]}\n`; 
+                    count++; 
+                }
+            }
+
+            let breakdown = `\n📜 Subtotal: ₹${subTotal}`;
+            if(discount > 0) breakdown += `\n🎉 ${discountName}: - ₹${discount}`;
+            if(delivery > 0) breakdown += `\n🚚 Delivery: + ₹${delivery}`;
+            else breakdown += `\n🚚 Delivery: FREE`;
+
+            let l=document.getElementById('o-land').value.trim();
+            
+            let msg = `🧾 *NEW ORDER*\n*RADHE KRISHNA - Night Menu*\n................................................\n\n👤 *DETAILS*\nName: ${n}\nMobile: ${p}\nAddress: ${a}\nLandmark: ${l || '--'}\n\n🛒 *ORDER*\n................................................\n${itemsTxt}................................................${breakdown}\n\n💵 *TOTAL PAYABLE: ₹${grandTotal}*\n\n................................................\nPayment: ${document.getElementById('o-pay').value}\nTime: ${document.getElementById('o-time').value}`;
+            
+            window.open(`https://wa.me/${conf.whatsappOrderNumber}?text=${encodeURIComponent(msg)}`,'_blank');
+        }
+
+        window.triggerCall = () => { window.open(`tel:${conf.contactCallNumber}`, '_self'); }
+        window.triggerWA = () => { window.open(`https://wa.me/${conf.whatsappOrderNumber}`, '_blank'); }
+        
         window.openDet = (id) => {
             const i = menu[id];
             document.getElementById('d-img').src = i.image || 'https://via.placeholder.com/400';
             document.getElementById('d-name').innerText = i.name;
-            // Also update detail modal price
-            let priceTxt = `₹${i.price}`;
-            if(conf.discountActive && conf.discountType === 'percent' && conf.discountValue > 0) {
-                 let original = Number(i.price);
-                 let discAmt = (original * conf.discountValue) / 100;
-                 let final = Math.round(original - discAmt);
-                 priceTxt = `<span style="text-decoration:line-through; color:#999; margin-right:10px;">₹${original}</span> ₹${final}`;
-            }
-            document.getElementById('d-price').innerHTML = priceTxt;
-
+            document.getElementById('d-price').innerHTML = `₹${i.price}`;
             const descBox = document.getElementById('d-desc');
             if(i.description) { descBox.innerText = i.description; descBox.style.display = 'block'; } else { descBox.style.display = 'none'; }
             openModal('detail');
@@ -477,57 +683,10 @@
             if(curModal) {
                 document.getElementById(curModal).style.display = 'none';
                 document.body.classList.remove('modal-open');
-                document.getElementById('sheet-cart').style.transform = '';
-                document.getElementById('sheet-detail').style.transform = '';
                 curModal = null;
             }
         }
         window.addEventListener('popstate', () => { if(curModal) closeAny(); });
-
-        ['sheet-cart', 'sheet-detail'].forEach(id => {
-            const s = document.getElementById(id); let sY = 0;
-            s.addEventListener('touchstart', (e) => sY = e.touches[0].clientY);
-            s.addEventListener('touchmove', (e) => { const cY = e.touches[0].clientY; if(cY > sY) s.style.transform = `translateY(${cY - sY}px)`; });
-            s.addEventListener('touchend', (e) => { const eY = e.changedTouches[0].clientY; if(eY - sY > 100) window.history.back(); else s.style.transform = `translateY(0)`; });
-        });
-
-        window.triggerCall = () => { window.open(`tel:${conf.contactCallNumber}`, '_self'); }
-        window.triggerWA = () => { window.open(`https://wa.me/${conf.whatsappOrderNumber}`, '_blank'); }
-
-        window.confirmOrder = () => {
-            const n=document.getElementById('o-name').value.trim(), p=document.getElementById('o-phone').value.trim(), a=document.getElementById('o-addr').value.trim(), l=document.getElementById('o-land').value.trim();
-            if(!n || !p || !a) { showToast("Missing Details!"); return; }
-            
-            let itemsTxt = ""; let subTotal = 0; let count = 1;
-            
-            for(let id in cart){ 
-                if(menu[id]) {
-                    let i = menu[id]; 
-                    let sub = Number(i.price)*cart[id];
-                    itemsTxt += `*${count}. ${i.name}* (₹${i.price})\n   x ${cart[id]}  =  ₹${sub}\n`; 
-                    subTotal += sub; count++; 
-                }
-            }
-
-            let discount = 0;
-            let grandTotal = subTotal;
-            let discountMsg = "";
-
-            if(conf.discountActive && subTotal >= (conf.minOrderValue || 0)) {
-                if(conf.discountType === 'percent') {
-                    discount = Math.round((subTotal * (conf.discountValue || 0)) / 100);
-                } else {
-                    discount = parseInt(conf.discountValue || 0);
-                }
-                grandTotal = Math.max(0, subTotal - discount);
-                discountMsg = `\n📜 Subtotal: ₹${subTotal}\n🎉 Discount: - ₹${discount}\n`;
-            }
-            
-            let msg = `🧾 *ORDER RECEIPT*\n*RADHE KRISHNA - Night Menu*\n................................................\n\n👤 *CUSTOMER DETAILS*\nName: ${n}\nMobile: ${p}\nAddress: ${a}\nLandmark: ${l || '--'}\n\n🛒 *YOUR ORDER*\n................................................\n${itemsTxt}................................................${discountMsg}\n💵 *TOTAL PAYABLE: ₹${grandTotal}*\n\n................................................\nPayment: ${document.getElementById('o-pay').value}\nDelivery: ${document.getElementById('o-time').value}\n\n🙏 *Thank you for ordering!*`;
-            
-            window.open(`https://wa.me/${conf.whatsappOrderNumber}?text=${encodeURIComponent(msg)}`,'_blank');
-        }
-
     </script>
 </body>
 </html>
