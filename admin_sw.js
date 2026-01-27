@@ -1,7 +1,7 @@
 const CACHE_NAME = 'rk-admin-cache-v1';
 const assets = [
   './',
-  './​radhe-krishna-souvik-radhe-menuadmin.html',
+  './Radhe-krishna-souvik-radhe-menuad.html',
   'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css',
   'https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap'
 ];
