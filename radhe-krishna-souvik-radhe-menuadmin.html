@@ -1,3 +1,5 @@
+<!-- START OF FILE radhe-krishna-souvik-radhe-menuadmin (3).html -->
+
 <!DOCTYPE html>
 <html lang="bn">
 <head>
@@ -12,6 +14,7 @@
             --primary: #3b82f6;
             --success: #10b981;
             --danger: #ef4444;
+            --warning: #f59e0b;
             --dark: #0f172a;
             --slate: #64748b;
             --bg: #f1f5f9;
@@ -79,6 +82,7 @@
         .bg-blue { background: var(--primary); color: white; }
         .bg-green { background: var(--success); color: white; }
         .bg-red { background: var(--danger); color: white; }
+        .bg-warning { background: var(--warning); color: white; }
 
         /* Toggle Switch */
         .switch { position: relative; display: inline-block; width: 46px; height: 24px; }
@@ -93,6 +97,11 @@
         .info-group { display: flex; align-items: center; gap: 12px; flex: 1; overflow: hidden; }
         .img-prev { width: 45px; height: 45px; border-radius: 10px; object-fit: cover; background: #eee; flex-shrink: 0; }
         .name-txt { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-weight: 700; font-size: 0.95rem; }
+
+        /* Coupon Card */
+        .coupon-card { background: #f8fafc; border: 1px dashed #cbd5e1; padding: 15px; border-radius: 15px; margin-bottom: 10px; }
+        .coupon-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px; }
+        .coupon-code { font-family: monospace; font-size: 1.1rem; font-weight: 800; color: var(--primary); background: #e0f2fe; padding: 2px 8px; border-radius: 6px; }
 
         /* Modals */
         .modal-bg { position: fixed; inset: 0; background: rgba(15, 23, 42, 0.7); backdrop-filter: blur(5px); z-index: 5000; display: none; align-items: flex-end; justify-content: center; }
@@ -134,7 +143,8 @@
         <div class="nav-link active" onclick="nav('dash')"><i class="fas fa-house"></i> Dashboard</div>
         <div class="nav-link" onclick="nav('cats-page')"><i class="fas fa-list"></i> Categories</div>
         <div class="nav-link" onclick="nav('items-page')"><i class="fas fa-burger"></i> Menu Items</div>
-        <div class="nav-link" onclick="nav('offer-page')"><i class="fas fa-tags"></i> Offers & Discounts</div>
+        <div class="nav-link" onclick="nav('offer-page')"><i class="fas fa-tags"></i> Offers & Auto Discount</div>
+        <div class="nav-link" onclick="nav('coupons-page')"><i class="fas fa-ticket"></i> Coupon Manager</div>
         <div class="nav-link" onclick="nav('banners-page')"><i class="fas fa-image"></i> Banners</div>
         <div class="nav-link" onclick="nav('loc-page')"><i class="fas fa-map-location"></i> Map Settings</div>
         
@@ -161,12 +171,25 @@
                 </div>
             </div>
 
+            <!-- NEW: Global Order Settings -->
+            <div class="card" style="border-top:4px solid var(--primary);">
+                <h3><i class="fas fa-truck"></i> Order & Delivery Settings</h3>
+                <label>Global Minimum Order Value (₹)</label>
+                <input type="number" id="global-min-order" placeholder="Ex: 50">
+                
+                <div style="display:grid; grid-template-columns:1fr 1fr; gap:15px;">
+                    <div><label>Delivery Charge (₹)</label><input type="number" id="del-charge" placeholder="Ex: 20"></div>
+                    <div><label>Free Delivery Above (₹)</label><input type="number" id="free-del-above" placeholder="Ex: 500"></div>
+                </div>
+                <button class="btn bg-blue" onclick="saveConfig()">Save Order Settings</button>
+            </div>
+
             <div class="card">
                 <h3><i class="fas fa-phone"></i> Numbers & Marquee</h3>
                 <label>WhatsApp Order (10 Digit)</label><input type="number" id="wa-num">
                 <label>Call Button (10 Digit)</label><input type="number" id="call-num">
                 <label>Marquee Text</label><textarea id="marquee-txt" rows="2"></textarea>
-                <button class="btn bg-blue" onclick="saveConfig()">Save Settings</button>
+                <button class="btn bg-blue" onclick="saveConfig()">Save Contact Settings</button>
             </div>
         </section>
 
@@ -189,6 +212,14 @@
                 <input type="text" id="i-name" placeholder="Item Name">
                 <input type="number" id="i-price" placeholder="Price">
                 <select id="i-cat-select"></select>
+                <!-- Badge Selection -->
+                <select id="i-badge-select">
+                    <option value="">No Badge</option>
+                    <option value="Bestseller">Bestseller</option>
+                    <option value="New">New</option>
+                    <option value="Must Try">Must Try</option>
+                    <option value="Spicy">Spicy</option>
+                </select>
                 <input type="text" id="i-image" placeholder="Image URL">
                 <input type="text" id="i-desc" placeholder="Brief Description">
                 <button class="btn bg-green" onclick="addItem()">Create Item</button>
@@ -197,15 +228,17 @@
             <div id="menu-items-render"></div>
         </section>
 
-        <!-- OFFERS & DISCOUNT SECTION -->
+        <!-- AUTO OFFERS & DISCOUNT SECTION -->
         <section id="offer-page" class="page">
-            <h2>Offers & Discounts</h2>
+            <h2>Offers & Auto Discounts</h2>
             <div class="card" style="border-top:4px solid #F59E0B;">
                 <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
-                    <h3><i class="fas fa-tag"></i> Active Discount</h3>
+                    <h3><i class="fas fa-tag"></i> Auto Apply Discount</h3>
                     <label class="switch"><input type="checkbox" id="disc-active"><span class="slider"></span></label>
                 </div>
                 
+                <p style="font-size:0.85rem; color:var(--slate); margin-bottom:15px;">This discount applies automatically if no coupon is used.</p>
+
                 <label>Discount Type</label>
                 <select id="disc-type">
                     <option value="percent">Percentage (%)</option>
@@ -218,11 +251,45 @@
                 <label>Minimum Order Value to Apply</label>
                 <input type="number" id="disc-min" placeholder="Ex: 200">
 
-                <button class="btn bg-blue" onclick="saveDiscount()">Save Offer Settings</button>
+                <button class="btn bg-blue" onclick="saveDiscount()">Save Auto Offer</button>
 
-                <!-- NEW: Live Preview Box -->
                 <div id="live-offer-preview" style="margin-top:25px;"></div>
             </div>
+        </section>
+
+        <!-- NEW: COUPON MANAGER SECTION -->
+        <section id="coupons-page" class="page">
+            <h2>Coupon Manager</h2>
+            <div class="card" style="border-top:4px solid var(--primary);">
+                <h3>Create New Coupon</h3>
+                <input type="text" id="cp-code" placeholder="Coupon Code (e.g., SAVE50)" style="text-transform:uppercase;">
+                
+                <div style="display:grid; grid-template-columns:1fr 1fr; gap:15px;">
+                    <div>
+                        <label>Type</label>
+                        <select id="cp-type" onchange="toggleMaxCap(this.value)">
+                            <option value="flat">Flat ₹ Off</option>
+                            <option value="percent">% Off</option>
+                        </select>
+                    </div>
+                    <div><label>Value</label><input type="number" id="cp-val" placeholder="Amount or %"></div>
+                </div>
+
+                <div id="cp-max-cap-div" style="display:none;">
+                    <label>Maximum Discount Cap (₹)</label>
+                    <input type="number" id="cp-max" placeholder="Max discount allowed (e.g. 100)">
+                </div>
+
+                <div style="display:grid; grid-template-columns:1fr 1fr; gap:15px;">
+                     <div><label>Min Order (₹)</label><input type="number" id="cp-min" value="0"></div>
+                     <div><label>Expiry Date</label><input type="date" id="cp-exp"></div>
+                </div>
+
+                <button class="btn bg-blue" onclick="createCoupon()">Create Coupon</button>
+            </div>
+            
+            <h3>Active Coupons</h3>
+            <div id="coupons-list-render">Loading...</div>
         </section>
 
         <!-- BANNERS -->
@@ -276,6 +343,15 @@
             <label>Name</label><input type="text" id="eitem-name">
             <label>Price</label><input type="number" id="eitem-price">
             <label>Category</label><select id="eitem-cat-select"></select>
+            <!-- Badge Edit -->
+            <label>Badge</label>
+            <select id="eitem-badge-select">
+                <option value="">No Badge</option>
+                <option value="Bestseller">Bestseller</option>
+                <option value="New">New</option>
+                <option value="Must Try">Must Try</option>
+                <option value="Spicy">Spicy</option>
+            </select>
             <label>Image Link</label><input type="text" id="eitem-image">
             <label>Description</label><input type="text" id="eitem-desc">
             <div style="display:flex; gap:10px;"><button class="btn bg-green" style="flex:1;" onclick="saveItemEdit()">Update</button><button class="btn bg-red" style="flex:1;" onclick="closeModal()">Close</button></div>
@@ -284,11 +360,11 @@
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js";
-        import { getDatabase, ref, onValue, update, push, remove } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-database.js";
+        import { getDatabase, ref, onValue, update, push, remove, set } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-database.js";
         const firebaseConfig = { apiKey: "AIzaSyDifkwUmP5MehfgXdhFTs6DQzX-pNR2snE", authDomain: "radhe-krishna-1bc79.firebaseapp.com", databaseURL: "https://radhe-krishna-1bc79-default-rtdb.asia-southeast1.firebasedatabase.app", projectId: "radhe-krishna-1bc79", storageBucket: "radhe-krishna-1bc79.firebasestorage.app", messagingSenderId: "755534416421", appId: "1:755534416421:web:6b97cac0c954d223094dcc" };
         const app = initializeApp(firebaseConfig); const db = getDatabase(app);
         
-        let cats={}, menu={}, currentPin="1234";
+        let cats={}, menu={}, coupons={}, currentPin="1234";
 
         function setScroll(st) { document.body.classList.toggle('no-scroll', st); }
         window.moveFocus=(c,n)=>{if(c.value.length==1)document.getElementById(n).focus();}
@@ -309,18 +385,22 @@
             document.getElementById('marquee-txt').value = c.marqueeText || '';
             document.getElementById('wa-num').value = (c.whatsappOrderNumber||'').replace('91','');
             document.getElementById('call-num').value = (c.contactCallNumber||'').replace('91','');
+            
+            // New Config Fields
+            document.getElementById('global-min-order').value = c.minOrderValueGlobal || '';
+            document.getElementById('del-charge').value = c.deliveryCharge || '';
+            document.getElementById('free-del-above').value = c.freeDeliveryAbove || '';
+
             if(c.banners){document.getElementById('b1').value=c.banners[0]||'';document.getElementById('b2').value=c.banners[1]||'';document.getElementById('b3').value=c.banners[2]||'';}
             document.getElementById('ban-speed').value = c.bannerSpeed || 3;
             document.getElementById('map-src').value = c.mapEmbed || '';
             document.getElementById('map-link').value = c.mapLink || '';
             
-            // Populate Discount Fields
             document.getElementById('disc-active').checked = c.discountActive || false;
             document.getElementById('disc-type').value = c.discountType || 'percent';
             document.getElementById('disc-val').value = c.discountValue || '';
             document.getElementById('disc-min').value = c.minOrderValue || '';
 
-            // Update Live Preview Box
             const previewBox = document.getElementById('live-offer-preview');
             if(c.discountActive) {
                 let dType = c.discountType === 'percent' ? '%' : '₹';
@@ -348,12 +428,28 @@
 
         onValue(ref(db, 'categories'), snap => { cats = snap.val() || {}; renderCats(); });
         onValue(ref(db, 'menu'), snap => { menu = snap.val() || {}; renderItems(); });
+        
+        // COUPONS LISTENER
+        onValue(ref(db, 'coupons'), snap => { coupons = snap.val() || {}; renderCoupons(); });
 
-        window.saveConfig=()=>{loader(1); update(ref(db,'config'),{restaurantOpen:document.getElementById('shop-toggle').checked,openTime:document.getElementById('open-time').value,closeTime:document.getElementById('close-time').value,whatsappOrderNumber:"91"+document.getElementById('wa-num').value,contactCallNumber:"91"+document.getElementById('call-num').value,marqueeText:document.getElementById('marquee-txt').value}).then(()=>{loader(0);showToast("Saved!");});}
+        window.saveConfig=()=>{
+            loader(1); 
+            update(ref(db,'config'),{
+                restaurantOpen:document.getElementById('shop-toggle').checked,
+                openTime:document.getElementById('open-time').value,
+                closeTime:document.getElementById('close-time').value,
+                minOrderValueGlobal: Number(document.getElementById('global-min-order').value),
+                deliveryCharge: Number(document.getElementById('del-charge').value),
+                freeDeliveryAbove: Number(document.getElementById('free-del-above').value),
+                whatsappOrderNumber:"91"+document.getElementById('wa-num').value,
+                contactCallNumber:"91"+document.getElementById('call-num').value,
+                marqueeText:document.getElementById('marquee-txt').value
+            }).then(()=>{loader(0);showToast("Saved!");});
+        }
+        
         window.saveBanners=()=>{loader(1); update(ref(db,'config'),{bannerSpeed:parseInt(document.getElementById('ban-speed').value),banners:[document.getElementById('b1').value,document.getElementById('b2').value,document.getElementById('b3').value]}).then(()=>{loader(0);showToast("Updated!");});}
         window.saveLocation=()=>{loader(1); update(ref(db,'config'),{mapEmbed:document.getElementById('map-src').value,mapLink:document.getElementById('map-link').value}).then(()=>{loader(0);showToast("Map Saved!");});}
         
-        // Save Discount Function
         window.saveDiscount=()=>{
             loader(1);
             update(ref(db,'config'),{
@@ -368,11 +464,49 @@
         window.delCat=(id)=>{for(let k in menu) if(menu[k].category===id) return showToast("Category not empty!"); if(confirm("Delete?")){loader(1);remove(ref(db,`categories/${id}`)).then(()=>{loader(0);});}}
         window.openCatEdit=(id,n)=>{document.getElementById('ecat-id').value=id; document.getElementById('ecat-name').value=n; openModal('modal-edit-cat');}
         window.saveCatEdit=()=>{loader(1);update(ref(db,`categories/${document.getElementById('ecat-id').value}`),{name:document.getElementById('ecat-name').value}).then(()=>{loader(0);closeModal();});}
-        window.addItem=()=>{const n=document.getElementById('i-name').value; if(n){loader(1);push(ref(db,'menu'),{name:n,price:parseInt(document.getElementById('i-price').value),category:document.getElementById('i-cat-select').value,image:document.getElementById('i-image').value,description:document.getElementById('i-desc').value,isAvailable:true}).then(()=>{loader(0);document.getElementById('i-name').value='';});}}
+        
+        window.addItem=()=>{
+            const n=document.getElementById('i-name').value; 
+            if(n){
+                loader(1);
+                push(ref(db,'menu'),{
+                    name:n,
+                    price:parseInt(document.getElementById('i-price').value),
+                    category:document.getElementById('i-cat-select').value,
+                    badge:document.getElementById('i-badge-select').value,
+                    image:document.getElementById('i-image').value,
+                    description:document.getElementById('i-desc').value,
+                    isAvailable:true
+                }).then(()=>{loader(0);document.getElementById('i-name').value='';});
+            }
+        }
         window.toggleItem=(id,st)=>update(ref(db,`menu/${id}`),{isAvailable:st});
         window.delItem=(id)=>{if(confirm("Delete?")){loader(1);remove(ref(db,`menu/${id}`)).then(()=>{loader(0);});}}
-        window.openItemEdit=(id)=>{let i=menu[id]; document.getElementById('eitem-id').value=id; document.getElementById('eitem-name').value=i.name; document.getElementById('eitem-price').value=i.price; document.getElementById('eitem-cat-select').value=i.category; document.getElementById('eitem-image').value=i.image||''; document.getElementById('eitem-desc').value=i.description||''; openModal('modal-edit-item');}
-        window.saveItemEdit=()=>{loader(1);update(ref(db,`menu/${document.getElementById('eitem-id').value}`),{name:document.getElementById('eitem-name').value,price:parseInt(document.getElementById('eitem-price').value),category:document.getElementById('eitem-cat-select').value,image:document.getElementById('eitem-image').value,description:document.getElementById('eitem-desc').value}).then(()=>{loader(0);closeModal();});}
+        
+        window.openItemEdit=(id)=>{
+            let i=menu[id]; 
+            document.getElementById('eitem-id').value=id; 
+            document.getElementById('eitem-name').value=i.name; 
+            document.getElementById('eitem-price').value=i.price; 
+            document.getElementById('eitem-cat-select').value=i.category; 
+            document.getElementById('eitem-badge-select').value=i.badge||""; 
+            document.getElementById('eitem-image').value=i.image||''; 
+            document.getElementById('eitem-desc').value=i.description||''; 
+            openModal('modal-edit-item');
+        }
+        
+        window.saveItemEdit=()=>{
+            loader(1);
+            update(ref(db,`menu/${document.getElementById('eitem-id').value}`),{
+                name:document.getElementById('eitem-name').value,
+                price:parseInt(document.getElementById('eitem-price').value),
+                category:document.getElementById('eitem-cat-select').value,
+                badge:document.getElementById('eitem-badge-select').value,
+                image:document.getElementById('eitem-image').value,
+                description:document.getElementById('eitem-desc').value
+            }).then(()=>{loader(0);closeModal();});
+        }
+        
         window.openPinModal=()=>{openModal('modal-pin');}
         window.updatePinLogic=()=>{if(document.getElementById('old-pin').value==currentPin && document.getElementById('new-pin').value==document.getElementById('confirm-pin').value){loader(1);update(ref(db,'config'),{adminPin:document.getElementById('new-pin').value}).then(()=>{loader(0);closeModal();});}else{alert("Error!");}}
 
@@ -381,28 +515,23 @@
             for(let id in cats){if(q && !cats[id].name.toLowerCase().includes(q.toLowerCase())) continue; l.innerHTML += `<div class="item-row"><b>${cats[id].name}</b> <div><button class="btn-icon bg-blue" onclick="openCatEdit('${id}','${cats[id].name}')"><i class="fas fa-edit"></i></button><button class="btn-icon bg-red" onclick="delCat('${id}')"><i class="fas fa-trash"></i></button></div></div>`; let opt=`<option value="${id}">${cats[id].name}</option>`; s.innerHTML+=opt; es.innerHTML+=opt;}
         }
 
-        // ---------- CHANGED LOGIC START (Category-wise Grouping) ----------
         window.renderItems = (q = "") => {
-            const l = document.getElementById('menu-items-render');
-            l.innerHTML = '';
-
+            const l = document.getElementById('menu-items-render'); l.innerHTML = '';
             for (let catId in cats) {
-                let catName = cats[catId].name;
-                let itemsHtml = "";
-                let hasItem = false;
-
+                let catName = cats[catId].name; let itemsHtml = ""; let hasItem = false;
                 for (let itemId in menu) {
                     let i = menu[itemId];
                     if (i.category === catId) {
-                        // Search by Item Name OR Category Name
                         if (q && !i.name.toLowerCase().includes(q.toLowerCase()) && !catName.toLowerCase().includes(q.toLowerCase())) continue;
-
                         hasItem = true;
                         itemsHtml += `
                         <div class="item-row">
                             <div class="info-group">
                                 <img src="${i.image}" class="img-prev" onerror="this.src='https://placehold.co/50?text=Food'">
-                                <div class="name-txt">${i.name}<br><small>₹${i.price}</small></div>
+                                <div class="name-txt">
+                                    ${i.name} ${i.badge ? `<span style="font-size:0.7em; background:#fef3c7; color:#d97706; padding:2px 5px; border-radius:4px;">${i.badge}</span>` : ''}<br>
+                                    <small>₹${i.price}</small>
+                                </div>
                             </div>
                             <div style="display:flex; align-items:center; gap:8px;">
                                 <label class="switch">
@@ -415,13 +544,78 @@
                         </div>`;
                     }
                 }
-
-                if (hasItem) {
-                    l.innerHTML += `<h3 style="margin-top:25px; margin-bottom:10px; color:var(--primary); border-bottom:2px solid #e2e8f0; padding-bottom:5px;">${catName}</h3>` + itemsHtml;
-                }
+                if (hasItem) l.innerHTML += `<h3 style="margin-top:25px; margin-bottom:10px; color:var(--primary); border-bottom:2px solid #e2e8f0; padding-bottom:5px;">${catName}</h3>` + itemsHtml;
             }
         }
-        // ---------- CHANGED LOGIC END ----------
+
+        // ---------- COUPON LOGIC ----------
+        window.toggleMaxCap = (val) => {
+            document.getElementById('cp-max-cap-div').style.display = (val === 'percent') ? 'block' : 'none';
+        }
+
+        window.createCoupon = () => {
+            const code = document.getElementById('cp-code').value.toUpperCase().trim();
+            const val = document.getElementById('cp-val').value;
+            if(!code || !val) return showToast("Code & Value required");
+
+            const data = {
+                code: code,
+                type: document.getElementById('cp-type').value,
+                value: Number(val),
+                minOrder: Number(document.getElementById('cp-min').value || 0),
+                maxDiscount: Number(document.getElementById('cp-max').value || 0),
+                expiry: document.getElementById('cp-exp').value,
+                isActive: true
+            };
+
+            loader(1);
+            set(ref(db, `coupons/${code}`), data).then(() => {
+                loader(0); showToast("Coupon Created!");
+                document.getElementById('cp-code').value = '';
+                document.getElementById('cp-val').value = '';
+            });
+        }
+
+        window.deleteCoupon = (code) => {
+            if(confirm("Delete this coupon permanently?")) {
+                loader(1); remove(ref(db, `coupons/${code}`)).then(() => loader(0));
+            }
+        }
+
+        window.toggleCoupon = (code, status) => {
+            update(ref(db, `coupons/${code}`), { isActive: status });
+        }
+
+        window.renderCoupons = () => {
+            const list = document.getElementById('coupons-list-render');
+            if(Object.keys(coupons).length === 0) { list.innerHTML = '<p style="color:#aaa;">No coupons created.</p>'; return; }
+            
+            list.innerHTML = '';
+            for(let key in coupons) {
+                let c = coupons[key];
+                let desc = c.type === 'percent' ? `${c.value}% OFF` : `₹${c.value} OFF`;
+                if(c.type === 'percent' && c.maxDiscount > 0) desc += ` (Max ₹${c.maxDiscount})`;
+                desc += ` | Min Order: ₹${c.minOrder}`;
+                
+                let exp = c.expiry ? new Date(c.expiry).toLocaleDateString() : 'No Expiry';
+
+                list.innerHTML += `
+                <div class="coupon-card">
+                    <div class="coupon-header">
+                        <span class="coupon-code">${c.code}</span>
+                        <label class="switch" style="transform:scale(0.8);">
+                            <input type="checkbox" ${c.isActive ? 'checked' : ''} onchange="toggleCoupon('${c.code}', this.checked)">
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+                    <div style="font-weight:700; color:var(--dark);">${desc}</div>
+                    <div style="display:flex; justify-content:space-between; margin-top:5px; font-size:0.85rem; color:var(--slate);">
+                        <span>Exp: ${exp}</span>
+                        <i class="fas fa-trash" style="cursor:pointer; color:var(--danger);" onclick="deleteCoupon('${c.code}')"></i>
+                    </div>
+                </div>`;
+            }
+        }
 
         window.searchCats=(q)=>renderCats(q); window.searchItems=(q)=>renderItems(q);
     </script>
