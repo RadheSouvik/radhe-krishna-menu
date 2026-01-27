@@ -1,4 +1,4 @@
-const CACHE_NAME = 'rk-admin-cache-v1';
+const CACHE_NAME = 'rk-admin-v1';
 const assets = [
   './',
   './Radhe-krishna-souvik-radhe-menuadmin.html',
