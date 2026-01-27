@@ -380,10 +380,49 @@
             const l=document.getElementById('cat-list-render'), s=document.getElementById('i-cat-select'), es=document.getElementById('eitem-cat-select'); l.innerHTML=''; s.innerHTML=''; es.innerHTML='';
             for(let id in cats){if(q && !cats[id].name.toLowerCase().includes(q.toLowerCase())) continue; l.innerHTML += `<div class="item-row"><b>${cats[id].name}</b> <div><button class="btn-icon bg-blue" onclick="openCatEdit('${id}','${cats[id].name}')"><i class="fas fa-edit"></i></button><button class="btn-icon bg-red" onclick="delCat('${id}')"><i class="fas fa-trash"></i></button></div></div>`; let opt=`<option value="${id}">${cats[id].name}</option>`; s.innerHTML+=opt; es.innerHTML+=opt;}
         }
-        window.renderItems=(q="")=>{
-            const l=document.getElementById('menu-items-render'); l.innerHTML='';
-            for(let id in menu){let i=menu[id]; let cN=cats[i.category]?.name||''; if(q && !i.name.toLowerCase().includes(q.toLowerCase()) && !cN.toLowerCase().includes(q.toLowerCase())) continue; l.innerHTML += `<div class="item-row"><div class="info-group"><img src="${i.image}" class="img-prev"><div class="name-txt">${i.name}<br><small>${cN} • ₹${i.price}</small></div></div><div style="display:flex; align-items:center; gap:8px;"><label class="switch"><input type="checkbox" ${i.isAvailable!==false?'checked':''} onchange="toggleItem('${id}',this.checked)"><span class="slider"></span></label><button class="btn-icon bg-blue" onclick="openItemEdit('${id}')"><i class="fas fa-edit"></i></button><button class="btn-icon bg-red" onclick="delItem('${id}')"><i class="fas fa-trash"></i></button></div></div>`;}
+
+        // ---------- CHANGED LOGIC START (Category-wise Grouping) ----------
+        window.renderItems = (q = "") => {
+            const l = document.getElementById('menu-items-render');
+            l.innerHTML = '';
+
+            for (let catId in cats) {
+                let catName = cats[catId].name;
+                let itemsHtml = "";
+                let hasItem = false;
+
+                for (let itemId in menu) {
+                    let i = menu[itemId];
+                    if (i.category === catId) {
+                        // Search by Item Name OR Category Name
+                        if (q && !i.name.toLowerCase().includes(q.toLowerCase()) && !catName.toLowerCase().includes(q.toLowerCase())) continue;
+
+                        hasItem = true;
+                        itemsHtml += `
+                        <div class="item-row">
+                            <div class="info-group">
+                                <img src="${i.image}" class="img-prev" onerror="this.src='https://placehold.co/50?text=Food'">
+                                <div class="name-txt">${i.name}<br><small>₹${i.price}</small></div>
+                            </div>
+                            <div style="display:flex; align-items:center; gap:8px;">
+                                <label class="switch">
+                                    <input type="checkbox" ${i.isAvailable !== false ? 'checked' : ''} onchange="toggleItem('${itemId}',this.checked)">
+                                    <span class="slider"></span>
+                                </label>
+                                <button class="btn-icon bg-blue" onclick="openItemEdit('${itemId}')"><i class="fas fa-edit"></i></button>
+                                <button class="btn-icon bg-red" onclick="delItem('${itemId}')"><i class="fas fa-trash"></i></button>
+                            </div>
+                        </div>`;
+                    }
+                }
+
+                if (hasItem) {
+                    l.innerHTML += `<h3 style="margin-top:25px; margin-bottom:10px; color:var(--primary); border-bottom:2px solid #e2e8f0; padding-bottom:5px;">${catName}</h3>` + itemsHtml;
+                }
+            }
         }
+        // ---------- CHANGED LOGIC END ----------
+
         window.searchCats=(q)=>renderCats(q); window.searchItems=(q)=>renderItems(q);
     </script>
 </body>
