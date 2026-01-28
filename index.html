@@ -1,23 +1,55 @@
+<!-- START OF FILE index.html (Updated with Anti-Cache) -->
+
 <!DOCTYPE html>
 <html lang="bn">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    
+    <!-- ANTI-CACHE HEADERS (Forces browser to reload) -->
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+    <meta http-equiv="Pragma" content="no-cache" />
+    <meta http-equiv="Expires" content="0" />
+
     <title>Radhe Krishna | Order Food</title>
 
-<link rel="manifest" href="manifest.json">
-<meta name="theme-color" content="#ffffff">
-<link rel="apple-touch-icon" href="icon-192.png">
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#ffffff">
+    <link rel="apple-touch-icon" href="icon-192.png">
 
-<script>
-  if ('serviceWorker' in navigator) {
-    window.addEventListener('load', () => {
-      navigator.serviceWorker.register('./sw.js')
-        .then(reg => console.log('SW Registered'))
-        .catch(err => console.log('SW Failed', err));
-    });
-  }
-</script>
+    <!-- Version Control & SW Updater Script -->
+    <script>
+        const CURRENT_VERSION = "2.5.0"; // Change this if you make major updates
+
+        // 1. Version Check: If stored version != current version, force reload
+        const storedVer = localStorage.getItem('app_version');
+        if (storedVer !== CURRENT_VERSION) {
+            console.log('New version detected! Clearing cache...');
+            localStorage.setItem('app_version', CURRENT_VERSION);
+            if ('serviceWorker' in navigator) {
+                navigator.serviceWorker.getRegistrations().then(function(registrations) {
+                    for(let registration of registrations) {
+                        registration.unregister();
+                    }
+                });
+            }
+            // Optional: Force reload if needed, but the SW unregister helps
+        }
+
+        // 2. Service Worker Registration with Cache Busting
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                // We add a timestamp to the URL to force the browser to check for a new sw.js file
+                navigator.serviceWorker.register('./sw.js?v=' + new Date().getTime())
+                    .then(reg => {
+                        console.log('SW Registered');
+                        // Force update
+                        reg.update(); 
+                    })
+                    .catch(err => console.log('SW Failed', err));
+            });
+        }
+    </script>
 
     <!-- Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Hind+Siliguri:wght@400;600;700&display=swap" rel="stylesheet">
