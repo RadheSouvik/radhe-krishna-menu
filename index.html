@@ -1,4 +1,4 @@
-<!-- START OF FILE index.html (Fix: Popup Buttons Working) -->
+<!-- START OF FILE index.html (Updated: History Limit & Cart Recovery) -->
 <!DOCTYPE html>
 <html lang="bn">
 <head>
@@ -17,7 +17,7 @@
 
     <!-- Version Control -->
     <script>
-        const CURRENT_VERSION = "2.6.1"; 
+        const CURRENT_VERSION = "2.7.0"; 
         const storedVer = localStorage.getItem('app_version');
         if (storedVer !== CURRENT_VERSION) {
             localStorage.setItem('app_version', CURRENT_VERSION);
@@ -288,7 +288,7 @@
                 <div id="min-order-warning" style="color:red; font-size:0.85rem; margin-top:5px; display:none; text-align:right;"></div>
             </div>
             <input type="text" id="o-name" placeholder="Full Name (আপনার নাম)">
-            <input type="tel" id="o-phone" placeholder="Mobile Number (মোবাইল Number)">
+            <input type="tel" id="o-phone" placeholder="Mobile Number (মোবাইল Number)" maxlength="10" oninput="this.value=this.value.replace(/[^0-9]/g,'').slice(0,10)">
             <textarea id="o-addr" rows="2" placeholder="Full Address (ঠিকানা)"></textarea>
             <input type="text" id="o-land" placeholder="Landmark (Optional)">
             <select id="o-pay"><option>Cash on Delivery</option><option>Online / UPI Payment</option></select>
@@ -315,7 +315,7 @@
             <div class="handle"></div>
             <h2 style="font-weight:800; margin-bottom:20px;">My Orders</h2>
             <div class="coupon-input-group">
-                <input type="tel" id="hist-phone" placeholder="Enter Mobile Number">
+                <input type="tel" id="hist-phone" placeholder="Enter Mobile Number" maxlength="10" oninput="this.value=this.value.replace(/[^0-9]/g,'').slice(0,10)">
                 <button class="btn-apply" onclick="checkHistory()">CHECK</button>
             </div>
             <div id="history-results" style="padding-bottom:20px;">
@@ -345,6 +345,7 @@
         let menu={}, cats={}, conf={}, coupons={}, cart={}, activeCat='all', slideInt, curModal=null, appliedCoupon=null;
         let favorites = JSON.parse(localStorage.getItem('radhe_favs')) || [];
         let announceSeen = sessionStorage.getItem('ann_seen');
+        let cartLoaded = false;
 
         function showToast(msg) {
             const t = document.getElementById('toast');
@@ -362,8 +363,29 @@
 
         onValue(ref(db, 'config'), snap => { conf=snap.val()||{}; updateUI(); });
         onValue(ref(db, 'categories'), snap => { cats=snap.val()||{}; renderCats(); renderMenu(); });
-        onValue(ref(db, 'menu'), snap => { menu=snap.val()||{}; renderMenu(); renderPopular(); });
+        onValue(ref(db, 'menu'), snap => { 
+            menu=snap.val()||{}; 
+            // Load Cart from LocalStorage ONCE when menu loads
+            if(!cartLoaded) {
+                const savedCart = localStorage.getItem('radhe_cart');
+                if(savedCart) {
+                    try {
+                        cart = JSON.parse(savedCart);
+                        if(Object.keys(cart).length > 0) showToast("You have saved items in cart");
+                    } catch(e) { console.log("Cart load error"); }
+                }
+                cartLoaded = true;
+            }
+            renderMenu(); 
+            renderPopular(); 
+            updateCartDock();
+        });
         onValue(ref(db, 'coupons'), snap => { coupons=snap.val()||{}; });
+
+        // Helper to save cart
+        function saveCart() {
+            localStorage.setItem('radhe_cart', JSON.stringify(cart));
+        }
 
         function updateUI() {
             document.getElementById('scroll-text').innerText = conf.marqueeText || "Welcome to Radhe Krishna";
@@ -407,7 +429,7 @@
                     sessionStorage.setItem('ann_seen', 'true');
                 }
             }
-            renderMenu(); // Re-render to update closed button state
+            renderMenu(); 
         }
 
         // NEW: Render Popular Section
@@ -415,15 +437,13 @@
             const c = document.getElementById('pop-scroll-content');
             const p = document.getElementById('popular-container');
             
-            // Sort by orderCount (descending)
             let sorted = Object.entries(menu)
                 .sort((a,b) => (b[1].orderCount || 0) - (a[1].orderCount || 0))
-                .slice(0, 6); // Top 6
+                .slice(0, 6);
 
-            // Filter out items with 0 orders if preferred, or just show top
             sorted = sorted.filter(x => x[1].isAvailable !== false);
 
-            if(sorted.length < 3) { p.style.display = 'none'; return; } // Hide if not enough data
+            if(sorted.length < 3) { p.style.display = 'none'; return; }
             
             p.style.display = 'block';
             c.innerHTML = '';
@@ -459,7 +479,6 @@
                 let q=cart[id]||0;
                 let isFav = favorites.includes(id);
 
-                // FEATURE: Auto Close Mode (Disable ADD Button)
                 let action = "";
                 if(!conf.restaurantOpen) {
                     action = `<div class="btn-add-start disabled">CLOSED</div>`;
@@ -511,6 +530,9 @@
             if(!conf.restaurantOpen){showToast("Restaurant Closed!");return;}
             if(!cart[id]) cart[id]=0;
             cart[id]+=v; if(cart[id]<=0) delete cart[id];
+            
+            saveCart(); // Save on update
+            
             renderMenu(); updateCartDock();
             if(curModal==='modal-cart') calculateTotals();
         }
@@ -706,9 +728,16 @@
             let msg = `🧾 *NEW ORDER*\n*RADHE KRISHNA - Night Menu*\n................................................\n\n👤 *DETAILS*\nName: ${n}\nMobile: ${p}\nAddress: ${a}\nLandmark: ${l || '--'}\n\n🛒 *ORDER*\n................................................\n${itemsTxt}................................................${breakdown}\n\n💵 *TOTAL PAYABLE: ₹${grandTotal}*\n\n................................................\nPayment: ${document.getElementById('o-pay').value}\nTime: ${document.getElementById('o-time').value}`;
             
             window.open(`https://wa.me/${conf.whatsappOrderNumber}?text=${encodeURIComponent(msg)}`,'_blank');
+
+            // Clear Cart after successful order
+            cart = {};
+            localStorage.removeItem('radhe_cart');
+            updateCartDock();
+            renderMenu();
+            closeAny();
         }
 
-        // NEW: History Feature
+        // NEW: History Feature (Limited to last 3)
         window.checkHistory = () => {
             const p = document.getElementById('hist-phone').value.trim();
             const res = document.getElementById('history-results');
@@ -719,8 +748,11 @@
                 if(!snap.exists()) { res.innerHTML = "No previous orders found."; return; }
                 const orders = snap.val();
                 let html = "";
-                // Loop reversed for latest first
-                Object.values(orders).reverse().forEach(o => {
+                
+                // Get last 3 orders
+                let orderList = Object.values(orders).reverse().slice(0, 3);
+                
+                orderList.forEach(o => {
                     let date = new Date(o.date).toLocaleDateString();
                     let itemStr = o.items.map(x => `${x.qty} x ${x.name}`).join(', ');
                     html += `
@@ -736,12 +768,16 @@
 
         window.reOrder = (items) => {
             if(!conf.restaurantOpen) { showToast("Shop is Closed!"); return; }
-            cart = {};
+            
+            // Add items to existing cart or replace? Let's add.
             items.forEach(i => {
                 if(menu[i.id] && menu[i.id].isAvailable !== false) {
-                    cart[i.id] = i.qty;
+                    if(!cart[i.id]) cart[i.id] = 0;
+                    cart[i.id] += i.qty;
                 }
             });
+            
+            saveCart(); // Save updated cart
             renderMenu();
             updateCartDock();
             closeAny();
@@ -769,7 +805,6 @@
             }
         }
         
-        // FIX: Expose closeAny to global scope so HTML button onclick works
         window.closeAny = closeAny;
 
         window.addEventListener('popstate', () => { if(curModal) closeAny(); });
