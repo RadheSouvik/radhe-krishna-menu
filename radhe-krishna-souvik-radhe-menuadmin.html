@@ -385,7 +385,8 @@
             document.getElementById('disc-min').value = c.minOrderValue || '';
 
             // Announcement Fields
-            document.getElementById('ann-active').checked = c.announcementActive || false;
+            // Use logical OR to ensure it is false if undefined
+            document.getElementById('ann-active').checked = (c.announcementActive === true);
             document.getElementById('ann-title').value = c.announcementTitle || '';
             document.getElementById('ann-text').value = c.announcementText || '';
             document.getElementById('ann-img').value = c.announcementImg || '';
@@ -420,8 +421,10 @@
 
         window.saveAnnouncement=()=>{
             loader(1);
+            // Ensuring Strict Boolean Save
+            const isActive = document.getElementById('ann-active').checked === true;
             update(ref(db,'config'),{
-                announcementActive: document.getElementById('ann-active').checked,
+                announcementActive: isActive,
                 announcementTitle: document.getElementById('ann-title').value,
                 announcementText: document.getElementById('ann-text').value,
                 announcementImg: document.getElementById('ann-img').value
