@@ -1,53 +1,31 @@
-<!-- START OF FILE index.html (Updated with Anti-Cache) -->
-
+<!-- START OF FILE index.html (Updated with 4 New Features) -->
 <!DOCTYPE html>
 <html lang="bn">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     
-    <!-- ANTI-CACHE HEADERS (Forces browser to reload) -->
+    <!-- ANTI-CACHE HEADERS -->
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
     <meta http-equiv="Pragma" content="no-cache" />
     <meta http-equiv="Expires" content="0" />
 
     <title>Radhe Krishna | Order Food</title>
-
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#ffffff">
     <link rel="apple-touch-icon" href="icon-192.png">
 
-    <!-- Version Control & SW Updater Script -->
+    <!-- Version Control -->
     <script>
-        const CURRENT_VERSION = "2.5.0"; // Change this if you make major updates
-
-        // 1. Version Check: If stored version != current version, force reload
+        const CURRENT_VERSION = "2.6.0"; 
         const storedVer = localStorage.getItem('app_version');
         if (storedVer !== CURRENT_VERSION) {
-            console.log('New version detected! Clearing cache...');
             localStorage.setItem('app_version', CURRENT_VERSION);
             if ('serviceWorker' in navigator) {
                 navigator.serviceWorker.getRegistrations().then(function(registrations) {
-                    for(let registration of registrations) {
-                        registration.unregister();
-                    }
+                    for(let registration of registrations) { registration.unregister(); }
                 });
             }
-            // Optional: Force reload if needed, but the SW unregister helps
-        }
-
-        // 2. Service Worker Registration with Cache Busting
-        if ('serviceWorker' in navigator) {
-            window.addEventListener('load', () => {
-                // We add a timestamp to the URL to force the browser to check for a new sw.js file
-                navigator.serviceWorker.register('./sw.js?v=' + new Date().getTime())
-                    .then(reg => {
-                        console.log('SW Registered');
-                        // Force update
-                        reg.update(); 
-                    })
-                    .catch(err => console.log('SW Failed', err));
-            });
         }
     </script>
 
@@ -85,7 +63,6 @@
         body { margin: 0; font-family: 'Outfit', 'Hind Siliguri', sans-serif; background: var(--bg-gray); color: var(--text-main); padding-bottom: 160px; transition: 0.3s; }
         img { pointer-events: none; -webkit-touch-callout: none; }
 
-        /* Custom Toast */
         .toast { position: fixed; top: 80px; left: 50%; transform: translateX(-50%) translateY(-20px); background: #333; color: white; padding: 12px 24px; border-radius: 12px; font-weight: 600; z-index: 9999; opacity: 0; visibility: hidden; transition: 0.3s; display: flex; align-items: center; gap: 10px; box-shadow: 0 10px 20px rgba(0,0,0,0.2); font-size: 0.9rem; }
         .toast.show { opacity: 1; visibility: visible; transform: translateX(-50%) translateY(0); }
 
@@ -94,16 +71,17 @@
         .header-content { padding: 5px 20px; display: flex; justify-content: space-between; align-items: center; max-width: 600px; margin: 0 auto; height: 55px; }
         .brand-logo h1 { margin: 0; font-size: 1.2rem; font-weight: 900; color: var(--zomato-red); letter-spacing: -0.5px; }
         .brand-logo span { font-size: 0.65rem; font-weight: 700; color: var(--text-sub); text-transform: uppercase; letter-spacing: 1.5px; display: block; margin-top: -3px; }
-        .mode-btn { width: 34px; height: 34px; border-radius: 50%; background: var(--bg-gray); display: flex; align-items: center; justify-content: center; cursor: pointer; color: var(--text-main); font-size: 0.9rem; }
+        
+        .header-actions { display: flex; gap: 15px; align-items: center; }
+        .icon-btn { width: 34px; height: 34px; border-radius: 50%; background: var(--bg-gray); display: flex; align-items: center; justify-content: center; cursor: pointer; color: var(--text-main); font-size: 0.9rem; position: relative; }
 
-        /* Marquee */
+        /* Marquee & Banner */
         .marquee-container { padding: 10px 20px; max-width: 600px; margin: 0 auto; }
         .marquee-pill { background: var(--white); border-radius: 50px; padding: 6px 15px; display: flex; align-items: center; gap: 10px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.04); border: 1px solid rgba(226, 55, 68, 0.15); }
         .marquee-track { flex: 1; overflow: hidden; white-space: nowrap; }
         .marquee-content { display: inline-block; animation: scroll 15s linear infinite; font-weight: 700; font-size: 0.75rem; color: var(--text-main); padding-left: 100%; }
         @keyframes scroll { 0% { transform: translateX(0); } 100% { transform: translateX(-100%); } }
 
-        /* Banner */
         .banner-area { padding: 5px 15px; max-width: 600px; margin: 0 auto; }
         .slider-box { width: 100%; height: 140px; border-radius: 18px; overflow: hidden; position: relative; background: #eee; box-shadow: var(--shadow); }
         .slide { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0; transition: 0.8s; }
@@ -112,40 +90,34 @@
         .st-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--veg-green); }
         .closed .st-dot { background: var(--zomato-red); }
 
-        /* SEARCH BAR (NEW) */
+        /* Search & Promo */
         .search-area { padding: 0 15px; max-width: 600px; margin: 10px auto 0; position: sticky; top: 60px; z-index: 950; }
         .search-box { display: flex; align-items: center; background: var(--white); border-radius: 12px; padding: 0 15px; box-shadow: var(--shadow); border: 1px solid rgba(0,0,0,0.05); }
         .search-box i { color: var(--text-sub); }
         .search-box input { border: none; background: transparent; padding: 12px; margin: 0; font-size: 0.95rem; width: 100%; outline: none; color: var(--text-main); }
 
-        /* PROMO / OFFER BANNER STYLES */
         .promo-area { max-width: 600px; margin: 15px auto 5px; padding: 0 15px; display: none; }
-        .promo-card {
-            background: var(--offer-bg);
-            border: 1px dashed var(--zomato-red);
-            border-radius: 15px;
-            padding: 12px 15px;
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            position: relative;
-            overflow: hidden;
-        }
-        .promo-icon {
-            width: 40px; height: 40px; background: var(--zomato-red); color: white;
-            border-radius: 50%; display: flex; align-items: center; justify-content: center;
-            font-size: 1.2rem; flex-shrink: 0; box-shadow: 0 4px 10px rgba(226, 55, 68, 0.3);
-        }
+        .promo-card { background: var(--offer-bg); border: 1px dashed var(--zomato-red); border-radius: 15px; padding: 12px 15px; display: flex; align-items: center; gap: 15px; position: relative; overflow: hidden; }
+        .promo-icon { width: 40px; height: 40px; background: var(--zomato-red); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; flex-shrink: 0; box-shadow: 0 4px 10px rgba(226, 55, 68, 0.3); }
         .promo-text { display: flex; flex-direction: column; }
         .promo-title { font-weight: 900; font-size: 1.1rem; color: var(--zomato-red); line-height: 1.1; margin-bottom: 2px; }
         .promo-sub { font-size: 0.8rem; font-weight: 600; color: var(--text-sub); }
 
-        /* Categories */
-        .cats-bar { display: flex; gap: 10px; overflow-x: auto; padding: 15px 20px; scrollbar-width: none; position: sticky; top: 55px; z-index: 900; } /* Adjusted Z-index due to search bar */
+        /* NEW: Popular Section */
+        .popular-section { padding: 10px 15px; max-width: 600px; margin: 0 auto; display: none; }
+        .sec-title { font-size: 1.1rem; font-weight: 800; margin-bottom: 10px; display: flex; align-items: center; gap: 8px; }
+        .pop-scroll { display: flex; gap: 12px; overflow-x: auto; padding-bottom: 10px; scrollbar-width: none; }
+        .pop-card { min-width: 140px; width: 140px; background: var(--white); border-radius: 15px; padding: 10px; box-shadow: var(--shadow); flex-shrink: 0; position: relative; }
+        .pop-img { width: 100%; height: 90px; object-fit: cover; border-radius: 10px; margin-bottom: 8px; }
+        .pop-name { font-size: 0.9rem; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .pop-price { font-size: 0.85rem; font-weight: 600; color: var(--text-sub); }
+        .fire-badge { position: absolute; top: 5px; left: 5px; background: rgba(0,0,0,0.6); color: #ffa500; font-size: 0.7rem; padding: 2px 6px; border-radius: 4px; font-weight: 700; backdrop-filter: blur(2px); }
+
+        /* Categories & Menu */
+        .cats-bar { display: flex; gap: 10px; overflow-x: auto; padding: 15px 20px; scrollbar-width: none; position: sticky; top: 55px; z-index: 900; }
         .cat-btn { padding: 8px 18px; background: var(--white); border-radius: 12px; font-weight: 700; font-size: 0.85rem; color: var(--text-sub); white-space: nowrap; cursor: pointer; border: 1px solid transparent; box-shadow: var(--shadow); transition: 0.2s; }
         .cat-btn.active { border-color: var(--zomato-red); color: var(--zomato-red); background: #fff5f6; }
 
-        /* Menu Grid */
         .menu-grid { padding: 5px 15px; max-width: 600px; margin: 0 auto; display: grid; gap: 15px; }
         .food-card { background: var(--white); border-radius: 20px; padding: 15px; display: flex; justify-content: space-between; gap: 15px; box-shadow: var(--shadow); cursor: pointer; position: relative; }
         .food-details { flex: 1; display: flex; flex-direction: column; padding-right: 10px; }
@@ -160,28 +132,22 @@
         .fav-btn { position: absolute; top: 5px; right: 5px; background: rgba(255,255,255,0.8); width: 25px; height: 25px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #ccc; z-index: 5; transition: 0.2s; }
         .fav-btn.active { color: var(--zomato-red); }
 
-        /* ADD Button */
+        /* ADD Button & Disabled State */
         .add-action-box { position: absolute; bottom: -12px; left: 50%; transform: translateX(-50%); width: 90px; height: 36px; z-index: 10; box-shadow: 0 4px 10px rgba(0,0,0,0.15); border-radius: 8px; overflow: hidden; }
         .btn-add-start { width: 100%; height: 100%; background: var(--white); color: var(--zomato-red); font-weight: 800; font-size: 0.9rem; display: flex; align-items: center; justify-content: center; border: 1px solid #e0e0e0; cursor: pointer; text-transform: uppercase; }
+        .btn-add-start.disabled { background: #eee; color: #999; border-color: #ddd; cursor: not-allowed; font-size: 0.75rem; }
         .qty-controls { width: 100%; height: 100%; background: var(--zomato-red); display: flex; align-items: center; justify-content: space-between; color: white; }
         .q-btn { width: 30px; height: 100%; display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 1.1rem; cursor: pointer; }
         .q-num { font-weight: 700; font-size: 1rem; }
 
-        /* Floating Cart */
-        .cart-bar-float { 
-            position: fixed; bottom: 25px; left: 50%; transform: translateX(-50%) translateY(150px); 
-            width: 92%; max-width: 500px; background: var(--zomato-red); color: white; 
-            padding: 14px 20px; border-radius: 15px; display: flex; justify-content: space-between; 
-            align-items: center; box-shadow: 0 10px 30px rgba(226, 55, 68, 0.4); z-index: 1200; 
-            transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); cursor: pointer; visibility: hidden;
-        }
+        /* Cart & Fab */
+        .cart-bar-float { position: fixed; bottom: 25px; left: 50%; transform: translateX(-50%) translateY(150px); width: 92%; max-width: 500px; background: var(--zomato-red); color: white; padding: 14px 20px; border-radius: 15px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 10px 30px rgba(226, 55, 68, 0.4); z-index: 1200; transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); cursor: pointer; visibility: hidden; }
         .cart-bar-float.show { transform: translateX(-50%) translateY(0); visibility: visible; }
         .cart-info-left { display: flex; flex-direction: column; line-height: 1.2; }
         .cart-count-txt { font-weight: 800; font-size: 0.85rem; text-transform: uppercase; opacity: 0.9; }
         .cart-price-txt { font-weight: 900; font-size: 1.1rem; }
         .cart-view-txt { font-weight: 800; display: flex; align-items: center; gap: 5px; text-transform: uppercase; font-size: 0.9rem; }
 
-        /* FAB */
         .fab-container { position: fixed; bottom: 25px; right: 20px; z-index: 1100; display: flex; flex-direction: column; align-items: center; transition: 0.3s; }
         .fab-sub { width: 45px; height: 45px; border-radius: 50%; color: white; display: flex; align-items: center; justify-content: center; margin-bottom: 12px; box-shadow: 0 5px 15px rgba(0,0,0,0.2); cursor: pointer; transform: translateY(20px) scale(0); opacity: 0; transition: 0.3s; }
         .fab-call { background: #1E88E5; } .fab-wa { background: #24963F; }
@@ -202,7 +168,6 @@
         .discount-row { color: var(--veg-green); font-size: 0.9rem; margin-bottom: 8px; display: flex; justify-content: space-between; font-weight: 700; }
         .delivery-row { color: #666; font-size: 0.9rem; margin-bottom: 8px; display: flex; justify-content: space-between; }
         
-        /* COUPON INPUT */
         .coupon-input-group { display: flex; gap: 10px; margin-bottom: 15px; }
         .coupon-input-group input { margin-bottom: 0; text-transform: uppercase; font-weight: 700; letter-spacing: 1px; }
         .btn-apply { background: var(--text-main); color: white; border: none; border-radius: 12px; padding: 0 20px; font-weight: 700; cursor: pointer; }
@@ -216,20 +181,34 @@
         .loc-section { padding: 30px 20px; display: none; max-width: 600px; margin: 0 auto; }
         .loc-card { background: var(--white); border-radius: 25px; overflow: hidden; box-shadow: var(--shadow); text-align: center; }
         .map-frame { width: 100%; height: 200px; border: none; }
+
+        /* History & Announcement Modal Styles */
+        .history-item { background: var(--bg-gray); padding: 12px; border-radius: 12px; margin-bottom: 10px; border: 1px solid #eee; }
+        .h-header { display: flex; justify-content: space-between; margin-bottom: 8px; font-size: 0.85rem; color: var(--text-sub); }
+        .h-body { font-weight: 600; font-size: 0.95rem; margin-bottom: 8px; }
+        .btn-reorder { background: var(--text-main); color: white; border: none; padding: 6px 15px; border-radius: 8px; font-weight: 700; cursor: pointer; font-size: 0.8rem; }
+        
+        .announce-img { width: 100%; border-radius: 15px; margin-bottom: 15px; }
+        .announce-title { font-size: 1.3rem; font-weight: 800; margin-bottom: 10px; color: var(--zomato-red); }
+        .announce-text { font-size: 1rem; color: var(--text-main); line-height: 1.5; margin-bottom: 20px; }
     </style>
 </head>
 <body oncontextmenu="return false;">
 
     <div id="toast" class="toast"><i class="fas fa-check-circle"></i> <span id="toast-msg">Success</span></div>
 
+    <!-- Header -->
     <div class="header-fixed">
         <div class="header-content">
             <div class="brand-logo"><h1>Radhe Krishna</h1><span>Night Menu</span></div>
-            <div class="mode-btn" onclick="document.body.classList.toggle('dark-mode')"><i class="fas fa-moon"></i></div>
+            <div class="header-actions">
+                <div class="icon-btn" onclick="openModal('history')"><i class="fas fa-history"></i></div>
+                <div class="icon-btn" onclick="document.body.classList.toggle('dark-mode')"><i class="fas fa-moon"></i></div>
+            </div>
         </div>
     </div>
 
-    <!-- NEW: Live Search Bar -->
+    <!-- Search -->
     <div class="search-area">
         <div class="search-box">
             <i class="fas fa-search"></i>
@@ -257,6 +236,12 @@
         </div>
     </div>
 
+    <!-- NEW: Popular Section -->
+    <div class="popular-section" id="popular-container">
+        <div class="sec-title">🔥 Trending Now</div>
+        <div class="pop-scroll" id="pop-scroll-content"></div>
+    </div>
+
     <div class="cats-bar" id="cat-list"></div>
     <div class="menu-grid" id="menu-container"></div>
 
@@ -267,7 +252,7 @@
         </div>
     </div>
 
-    <!-- Fixed Floating Cart Bar -->
+    <!-- Floating Cart Bar -->
     <div class="cart-bar-float" id="z-cart-bar" onclick="openModal('cart')">
         <div class="cart-info-left">
             <div class="cart-count-txt" id="z-count-label">0 ITEMS</div>
@@ -283,28 +268,25 @@
     </div>
 
     <!-- Modals -->
+
+    <!-- Cart Modal -->
     <div class="modal-bg" id="modal-cart">
         <div class="sheet" id="sheet-cart">
             <div class="handle"></div>
             <h2 style="font-weight:800; margin-bottom:20px; text-align:center;">Order Summary</h2>
-            
             <div class="receipt-box">
                 <div id="cart-items-list"></div>
                 <hr style="margin:10px 0; border:0; border-top:1px dashed #ccc;">
-                
-                <!-- NEW: Coupon Section in Cart -->
                 <div class="coupon-input-group">
                     <input type="text" id="coupon-code-input" placeholder="Coupon Code">
                     <button class="btn-apply" onclick="applyCoupon()">APPLY</button>
                 </div>
                 <div id="coupon-msg" style="font-size:0.8rem; margin-bottom:10px;"></div>
                 <div class="coupon-list-avail" id="avail-coupons-list"></div>
-                
                 <div id="cart-summary-area"></div>
                 <div class="cart-total-row"><span>Grand Total</span><span id="m-total">₹0</span></div>
                 <div id="min-order-warning" style="color:red; font-size:0.85rem; margin-top:5px; display:none; text-align:right;"></div>
             </div>
-
             <input type="text" id="o-name" placeholder="Full Name (আপনার নাম)">
             <input type="tel" id="o-phone" placeholder="Mobile Number (মোবাইল Number)">
             <textarea id="o-addr" rows="2" placeholder="Full Address (ঠিকানা)"></textarea>
@@ -315,6 +297,7 @@
         </div>
     </div>
 
+    <!-- Detail Modal -->
     <div class="modal-bg" id="modal-detail">
         <div class="sheet" id="sheet-detail">
             <div class="handle"></div>
@@ -326,15 +309,42 @@
         </div>
     </div>
 
+    <!-- NEW: History Modal -->
+    <div class="modal-bg" id="modal-history">
+        <div class="sheet">
+            <div class="handle"></div>
+            <h2 style="font-weight:800; margin-bottom:20px;">My Orders</h2>
+            <div class="coupon-input-group">
+                <input type="tel" id="hist-phone" placeholder="Enter Mobile Number">
+                <button class="btn-apply" onclick="checkHistory()">CHECK</button>
+            </div>
+            <div id="history-results" style="padding-bottom:20px;">
+                <p style="color:#666; font-size:0.9rem; text-align:center;">Enter your number to see past orders.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- NEW: Announcement Modal -->
+    <div class="modal-bg" id="modal-announce" style="align-items:center; padding:20px;">
+        <div class="sheet" style="border-radius:20px; max-width:400px; padding:25px; animation:zoomIn 0.3s;">
+            <div style="text-align:right;"><i class="fas fa-times" style="font-size:1.2rem; cursor:pointer;" onclick="closeAny()"></i></div>
+            <img src="" id="ann-img" class="announce-img" style="display:none;">
+            <div id="ann-title" class="announce-title"></div>
+            <div id="ann-text" class="announce-text"></div>
+            <button class="checkout-btn" onclick="closeAny()">OK, Got it!</button>
+        </div>
+    </div>
+
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js";
-        import { getDatabase, ref, onValue, get, set } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-database.js";
+        import { getDatabase, ref, onValue, get, set, push, runTransaction } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-database.js";
         const firebaseConfig = { apiKey: "AIzaSyDifkwUmP5MehfgXdhFTs6DQzX-pNR2snE", authDomain: "radhe-krishna-1bc79.firebaseapp.com", databaseURL: "https://radhe-krishna-1bc79-default-rtdb.asia-southeast1.firebasedatabase.app", projectId: "radhe-krishna-1bc79", storageBucket: "radhe-krishna-1bc79.firebasestorage.app", messagingSenderId: "755534416421", appId: "1:755534416421:web:6b97cac0c954d223094dcc" };
         const app = initializeApp(firebaseConfig);
         const db = getDatabase(app);
 
         let menu={}, cats={}, conf={}, coupons={}, cart={}, activeCat='all', slideInt, curModal=null, appliedCoupon=null;
         let favorites = JSON.parse(localStorage.getItem('radhe_favs')) || [];
+        let announceSeen = sessionStorage.getItem('ann_seen');
 
         function showToast(msg) {
             const t = document.getElementById('toast');
@@ -352,7 +362,7 @@
 
         onValue(ref(db, 'config'), snap => { conf=snap.val()||{}; updateUI(); });
         onValue(ref(db, 'categories'), snap => { cats=snap.val()||{}; renderCats(); renderMenu(); });
-        onValue(ref(db, 'menu'), snap => { menu=snap.val()||{}; renderMenu(); });
+        onValue(ref(db, 'menu'), snap => { menu=snap.val()||{}; renderMenu(); renderPopular(); });
         onValue(ref(db, 'coupons'), snap => { coupons=snap.val()||{}; });
 
         function updateUI() {
@@ -385,6 +395,48 @@
             } else {
                 promoArea.style.display = 'none';
             }
+
+            // NEW: Announcement Logic
+            if(conf.announcementActive && !announceSeen) {
+                if(conf.announcementTitle || conf.announcementText) {
+                    document.getElementById('ann-title').innerText = conf.announcementTitle || "";
+                    document.getElementById('ann-text').innerText = conf.announcementText || "";
+                    const img = document.getElementById('ann-img');
+                    if(conf.announcementImg) { img.src=conf.announcementImg; img.style.display='block'; } else { img.style.display='none'; }
+                    openModal('announce');
+                    sessionStorage.setItem('ann_seen', 'true');
+                }
+            }
+            renderMenu(); // Re-render to update closed button state
+        }
+
+        // NEW: Render Popular Section
+        function renderPopular() {
+            const c = document.getElementById('pop-scroll-content');
+            const p = document.getElementById('popular-container');
+            
+            // Sort by orderCount (descending)
+            let sorted = Object.entries(menu)
+                .sort((a,b) => (b[1].orderCount || 0) - (a[1].orderCount || 0))
+                .slice(0, 6); // Top 6
+
+            // Filter out items with 0 orders if preferred, or just show top
+            sorted = sorted.filter(x => x[1].isAvailable !== false);
+
+            if(sorted.length < 3) { p.style.display = 'none'; return; } // Hide if not enough data
+            
+            p.style.display = 'block';
+            c.innerHTML = '';
+            
+            sorted.forEach(([id, item]) => {
+                c.innerHTML += `
+                <div class="pop-card" onclick="openDet('${id}')">
+                    <div class="fire-badge"><i class="fas fa-fire"></i> ${item.orderCount||0} Orders</div>
+                    <img src="${item.image || 'https://via.placeholder.com/100'}" class="pop-img">
+                    <div class="pop-name">${item.name}</div>
+                    <div class="pop-price">₹${item.price}</div>
+                </div>`;
+            });
         }
 
         function renderCats() {
@@ -407,13 +459,19 @@
                 let q=cart[id]||0;
                 let isFav = favorites.includes(id);
 
-                let action = q === 0 
-                    ? `<div class="btn-add-start" onclick="upd(event,'${id}',1)">ADD</div>`
-                    : `<div class="qty-controls" onclick="event.stopPropagation()">
-                         <div class="q-btn" onclick="upd(event,'${id}',-1)">-</div>
-                         <div class="q-num">${q}</div>
-                         <div class="q-btn" onclick="upd(event,'${id}',1)">+</div>
-                       </div>`;
+                // FEATURE: Auto Close Mode (Disable ADD Button)
+                let action = "";
+                if(!conf.restaurantOpen) {
+                    action = `<div class="btn-add-start disabled">CLOSED</div>`;
+                } else {
+                    action = q === 0 
+                        ? `<div class="btn-add-start" onclick="upd(event,'${id}',1)">ADD</div>`
+                        : `<div class="qty-controls" onclick="event.stopPropagation()">
+                             <div class="q-btn" onclick="upd(event,'${id}',-1)">-</div>
+                             <div class="q-num">${q}</div>
+                             <div class="q-btn" onclick="upd(event,'${id}',1)">+</div>
+                           </div>`;
+                }
 
                 let priceDisplay = `₹${i.price}`;
                 if(conf.discountActive && conf.discountType === 'percent' && conf.discountValue > 0) {
@@ -466,7 +524,6 @@
                 }
             }
             
-            // Basic approximation for dock
             let finalPrice = t;
             if(conf.discountActive && t >= (conf.minOrderValue || 0)) {
                 let discountAmt = (conf.discountType === 'percent') ? (t * conf.discountValue) / 100 : conf.discountValue;
@@ -486,8 +543,6 @@
 
         window.toggleFab = () => document.getElementById('fab-menu').classList.toggle('active');
 
-        // ---------- NEW CART LOGIC ----------
-        
         window.openModal = (type) => {
             curModal = 'modal-' + type;
             document.getElementById(curModal).style.display = 'flex';
@@ -495,18 +550,16 @@
             window.history.pushState({modal: true}, null, "");
             
             if(type==='cart') {
-                appliedCoupon = null; // Reset coupon on re-open
+                appliedCoupon = null; 
                 document.getElementById('coupon-code-input').value = "";
                 document.getElementById('coupon-msg').innerText = "";
                 
-                // Show available coupons
                 let cl = document.getElementById('avail-coupons-list'); cl.innerHTML = '';
                 for(let k in coupons) {
                     if(coupons[k].isActive) {
                         cl.innerHTML += `<div class="coupon-tag" onclick="fillCoupon('${k}')">${k}</div>`;
                     }
                 }
-                
                 calculateTotals();
             }
         }
@@ -520,33 +573,21 @@
             let code = document.getElementById('coupon-code-input').value.toUpperCase().trim();
             const msg = document.getElementById('coupon-msg');
             msg.style.color = 'red';
-            
             if(!code) { msg.innerText = "Enter a code"; return; }
             if(!coupons[code]) { msg.innerText = "Invalid Coupon"; appliedCoupon=null; calculateTotals(); return; }
-            
             let c = coupons[code];
             if(!c.isActive) { msg.innerText = "Coupon Inactive"; appliedCoupon=null; return; }
             
-            // Subtotal check happens in calculateTotals but preliminary check here
             let sub = 0;
             for(let id in cart) if(menu[id]) sub += menu[id].price * cart[id];
-
-            if(c.minOrder > sub) { 
-                msg.innerText = `Add ₹${c.minOrder - sub} more to apply`; 
-                appliedCoupon=null; 
-                calculateTotals();
-                return; 
-            }
-            
-            // Check Expiry
+            if(c.minOrder > sub) { msg.innerText = `Add ₹${c.minOrder - sub} more to apply`; appliedCoupon=null; calculateTotals(); return; }
             if(c.expiry) {
                 let today = new Date().toISOString().split('T')[0];
                 if(today > c.expiry) { msg.innerText = "Coupon Expired"; appliedCoupon=null; return; }
             }
-
             appliedCoupon = c;
             msg.style.color = 'green';
-            msg.innerText = "Coupon Applied! Discount will be calculated.";
+            msg.innerText = "Coupon Applied!";
             calculateTotals();
         }
 
@@ -564,60 +605,39 @@
                 }
             }
 
-            // --- DISCOUNT LOGIC ---
             let discount = 0;
             let discountName = "";
-            let discountMsg = "";
             
-            // Priority: Applied Coupon > Auto Config
             if(appliedCoupon) {
-                // Verify min order again
                 if(subTotal >= appliedCoupon.minOrder) {
                     if(appliedCoupon.type === 'percent') {
                         discount = (subTotal * appliedCoupon.value) / 100;
-                        if(appliedCoupon.maxDiscount > 0 && discount > appliedCoupon.maxDiscount) {
-                            discount = appliedCoupon.maxDiscount;
-                        }
+                        if(appliedCoupon.maxDiscount > 0 && discount > appliedCoupon.maxDiscount) discount = appliedCoupon.maxDiscount;
                     } else {
                         discount = appliedCoupon.value;
                     }
                     discount = Math.round(discount);
                     discountName = `Coupon (${appliedCoupon.code})`;
                 } else {
-                    appliedCoupon = null; // Remove if min order violated
-                    document.getElementById('coupon-msg').innerText = `Order value too low for coupon`;
-                    document.getElementById('coupon-msg').style.color = 'red';
+                    appliedCoupon = null; document.getElementById('coupon-msg').innerText = `Order value too low for coupon`;
                 }
             }
             
-            // Fallback to Auto Discount if no coupon applied
             if(!appliedCoupon && conf.discountActive && subTotal >= (conf.minOrderValue || 0)) {
-                if(conf.discountType === 'percent') {
-                    discount = Math.round((subTotal * (conf.discountValue || 0)) / 100);
-                } else {
-                    discount = parseInt(conf.discountValue || 0);
-                }
+                if(conf.discountType === 'percent') discount = Math.round((subTotal * (conf.discountValue || 0)) / 100);
+                else discount = parseInt(conf.discountValue || 0);
                 discountName = "Auto Discount";
             }
 
-            // --- DELIVERY LOGIC ---
             let delivery = conf.deliveryCharge || 0;
-            if(conf.freeDeliveryAbove && subTotal >= conf.freeDeliveryAbove) {
-                delivery = 0;
-            }
+            if(conf.freeDeliveryAbove && subTotal >= conf.freeDeliveryAbove) delivery = 0;
 
             let grandTotal = Math.max(0, subTotal - discount + delivery);
 
-            // RENDER SUMMARY
             let summaryHTML = `<div class="cart-row" style="color:#666;"><span>Subtotal</span><span>₹${subTotal}</span></div>`;
-            
-            if(discount > 0) {
-                summaryHTML += `<div class="discount-row"><span>${discountName}</span><span>- ₹${discount}</span></div>`;
-            }
-            
-            if(delivery === 0) {
-                summaryHTML += `<div class="delivery-row"><span>Delivery Charge</span><span style="color:green;">FREE</span></div>`;
-            } else {
+            if(discount > 0) summaryHTML += `<div class="discount-row"><span>${discountName}</span><span>- ₹${discount}</span></div>`;
+            if(delivery === 0) summaryHTML += `<div class="delivery-row"><span>Delivery Charge</span><span style="color:green;">FREE</span></div>`;
+            else {
                 summaryHTML += `<div class="delivery-row"><span>Delivery Charge</span><span>+ ₹${delivery}</span></div>`;
                 if(conf.freeDeliveryAbove) {
                     let more = conf.freeDeliveryAbove - subTotal;
@@ -628,19 +648,12 @@
             s.innerHTML = `<div style="border-top:1px solid #ddd; margin-top:10px; padding-top:10px;">${summaryHTML}</div>`;
             document.getElementById('m-total').innerText = `₹${grandTotal}`;
 
-            // GLOBAL MIN ORDER CHECK
             const minWarn = document.getElementById('min-order-warning');
             if(conf.minOrderValueGlobal && subTotal < conf.minOrderValueGlobal) {
-                btn.disabled = true;
-                btn.style.opacity = "0.5";
-                minWarn.style.display = "block";
-                minWarn.innerText = `Minimum order value is ₹${conf.minOrderValueGlobal}. Add more items.`;
+                btn.disabled = true; btn.style.opacity = "0.5"; minWarn.style.display = "block"; minWarn.innerText = `Minimum order value is ₹${conf.minOrderValueGlobal}.`;
             } else {
-                btn.disabled = false;
-                btn.style.opacity = "1";
-                minWarn.style.display = "none";
+                btn.disabled = false; btn.style.opacity = "1"; minWarn.style.display = "none";
             }
-
             return { subTotal, discount, delivery, grandTotal, discountName };
         }
 
@@ -654,48 +667,85 @@
 
             const { subTotal, discount, delivery, grandTotal, discountName } = calculateTotals();
 
-            // Check Coupon Usage in DB
-            if(appliedCoupon) {
-                const btn = document.getElementById('btn-conf-order');
-                btn.innerText = "Checking Coupon...";
-                btn.disabled = true;
-
-                try {
-                    const snap = await get(ref(db, `couponUsage/${p}/${appliedCoupon.code}`));
-                    if(snap.exists()) {
-                        showToast("Coupon already used by this number!");
-                        btn.innerText = "Confirm WhatsApp Order";
-                        btn.disabled = false;
-                        return;
-                    } else {
-                        // Mark as used
-                        await set(ref(db, `couponUsage/${p}/${appliedCoupon.code}`), true);
-                    }
-                } catch(e) {
-                    console.error(e);
-                    // Proceed anyway in case of error to not block sales
-                }
-            }
-
-            let itemsTxt = ""; let count = 1;
-            for(let id in cart){ 
+            // Store full order in Firebase for History
+            const orderItems = [];
+            for(let id in cart) {
                 if(menu[id]) {
-                    let i = menu[id]; 
-                    itemsTxt += `*${count}. ${i.name}* x ${cart[id]}\n`; 
-                    count++; 
+                    orderItems.push({ id: id, name: menu[id].name, qty: cart[id], price: menu[id].price });
+                    // Increment popularity
+                    runTransaction(ref(db, `menu/${id}/orderCount`), (currentVal) => (currentVal || 0) + 1);
                 }
             }
 
+            const orderData = {
+                id: Date.now(),
+                date: new Date().toISOString(),
+                items: orderItems,
+                total: grandTotal,
+                status: 'Placed',
+                details: { name:n, phone:p, addr:a }
+            };
+
+            // Save order to history node
+            push(ref(db, 'orders/' + p), orderData);
+
+            // Coupon Usage
+            if(appliedCoupon) {
+                await set(ref(db, `couponUsage/${p}/${appliedCoupon.code}`), true);
+            }
+
+            // WhatsApp Message
+            let itemsTxt = ""; let count = 1;
+            orderItems.forEach(i => { itemsTxt += `*${count}. ${i.name}* x ${i.qty}\n`; count++; });
+            
             let breakdown = `\n📜 Subtotal: ₹${subTotal}`;
             if(discount > 0) breakdown += `\n🎉 ${discountName}: - ₹${discount}`;
-            if(delivery > 0) breakdown += `\n🚚 Delivery: + ₹${delivery}`;
-            else breakdown += `\n🚚 Delivery: FREE`;
+            breakdown += delivery > 0 ? `\n🚚 Delivery: + ₹${delivery}` : `\n🚚 Delivery: FREE`;
 
             let l=document.getElementById('o-land').value.trim();
-            
             let msg = `🧾 *NEW ORDER*\n*RADHE KRISHNA - Night Menu*\n................................................\n\n👤 *DETAILS*\nName: ${n}\nMobile: ${p}\nAddress: ${a}\nLandmark: ${l || '--'}\n\n🛒 *ORDER*\n................................................\n${itemsTxt}................................................${breakdown}\n\n💵 *TOTAL PAYABLE: ₹${grandTotal}*\n\n................................................\nPayment: ${document.getElementById('o-pay').value}\nTime: ${document.getElementById('o-time').value}`;
             
             window.open(`https://wa.me/${conf.whatsappOrderNumber}?text=${encodeURIComponent(msg)}`,'_blank');
+        }
+
+        // NEW: History Feature
+        window.checkHistory = () => {
+            const p = document.getElementById('hist-phone').value.trim();
+            const res = document.getElementById('history-results');
+            if(p.length < 10) { res.innerHTML = "Invalid Number"; return; }
+            
+            res.innerHTML = "Loading...";
+            get(ref(db, 'orders/' + p)).then(snap => {
+                if(!snap.exists()) { res.innerHTML = "No previous orders found."; return; }
+                const orders = snap.val();
+                let html = "";
+                // Loop reversed for latest first
+                Object.values(orders).reverse().forEach(o => {
+                    let date = new Date(o.date).toLocaleDateString();
+                    let itemStr = o.items.map(x => `${x.qty} x ${x.name}`).join(', ');
+                    html += `
+                    <div class="history-item">
+                        <div class="h-header"><span>${date}</span><span>₹${o.total}</span></div>
+                        <div class="h-body">${itemStr}</div>
+                        <button class="btn-reorder" onclick='reOrder(${JSON.stringify(o.items)})'>RE-ORDER</button>
+                    </div>`;
+                });
+                res.innerHTML = html;
+            });
+        }
+
+        window.reOrder = (items) => {
+            if(!conf.restaurantOpen) { showToast("Shop is Closed!"); return; }
+            cart = {};
+            items.forEach(i => {
+                if(menu[i.id] && menu[i.id].isAvailable !== false) {
+                    cart[i.id] = i.qty;
+                }
+            });
+            renderMenu();
+            updateCartDock();
+            closeAny();
+            showToast("Items added to cart!");
         }
 
         window.triggerCall = () => { window.open(`tel:${conf.contactCallNumber}`, '_self'); }
