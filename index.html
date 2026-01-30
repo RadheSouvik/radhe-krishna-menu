@@ -1,4 +1,4 @@
-<!-- START OF FILE index.html (Updated with 4 New Features) -->
+<!-- START OF FILE index.html (Fix: Popup Buttons Working) -->
 <!DOCTYPE html>
 <html lang="bn">
 <head>
@@ -17,7 +17,7 @@
 
     <!-- Version Control -->
     <script>
-        const CURRENT_VERSION = "2.6.0"; 
+        const CURRENT_VERSION = "2.6.1"; 
         const storedVer = localStorage.getItem('app_version');
         if (storedVer !== CURRENT_VERSION) {
             localStorage.setItem('app_version', CURRENT_VERSION);
@@ -768,6 +768,10 @@
                 curModal = null;
             }
         }
+        
+        // FIX: Expose closeAny to global scope so HTML button onclick works
+        window.closeAny = closeAny;
+
         window.addEventListener('popstate', () => { if(curModal) closeAny(); });
     </script>
 </body>
