@@ -1,4 +1,4 @@
-<!-- START OF FILE index.html (Updated: History Limit & Cart Recovery) -->
+<!-- START OF FILE index.html (Fixed: Announcement Logic) -->
 <!DOCTYPE html>
 <html lang="bn">
 <head>
@@ -17,7 +17,7 @@
 
     <!-- Version Control -->
     <script>
-        const CURRENT_VERSION = "2.7.0"; 
+        const CURRENT_VERSION = "2.7.1"; 
         const storedVer = localStorage.getItem('app_version');
         if (storedVer !== CURRENT_VERSION) {
             localStorage.setItem('app_version', CURRENT_VERSION);
@@ -344,7 +344,6 @@
 
         let menu={}, cats={}, conf={}, coupons={}, cart={}, activeCat='all', slideInt, curModal=null, appliedCoupon=null;
         let favorites = JSON.parse(localStorage.getItem('radhe_favs')) || [];
-        let announceSeen = sessionStorage.getItem('ann_seen');
         let cartLoaded = false;
 
         function showToast(msg) {
@@ -418,8 +417,11 @@
                 promoArea.style.display = 'none';
             }
 
-            // NEW: Announcement Logic
-            if(conf.announcementActive && !announceSeen) {
+            // FIXED: Announcement Logic (Strict Boolean Check)
+            const isAnnounceActive = conf.announcementActive === true; // Strictly Check TRUE
+            const hasSeen = sessionStorage.getItem('ann_seen');
+
+            if(isAnnounceActive && !hasSeen) {
                 if(conf.announcementTitle || conf.announcementText) {
                     document.getElementById('ann-title').innerText = conf.announcementTitle || "";
                     document.getElementById('ann-text').innerText = conf.announcementText || "";
@@ -428,6 +430,9 @@
                     openModal('announce');
                     sessionStorage.setItem('ann_seen', 'true');
                 }
+            } else if (!isAnnounceActive && curModal === 'modal-announce') {
+                // Force close if it becomes inactive while viewing
+                closeAny();
             }
             renderMenu(); 
         }
